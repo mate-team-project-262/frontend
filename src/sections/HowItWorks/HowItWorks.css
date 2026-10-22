@@ -1,0 +1,59 @@
+.how-it-works {
+  padding-top: 120px;
+}
+
+.how-it-works__intro {
+  margin: 19px 0 0;
+  font-size: 17px;
+  line-height: 24px;
+}
+
+.how-it-works__steps {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  column-gap: 29.67px;
+  margin: 29px 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+/* Figma: 278x210 cards */
+.step-card {
+  height: 210px;
+  padding: 23px 24px 0;
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  background: var(--card);
+}
+
+.step-card__number {
+  display: block;
+  font-size: 14px;
+  line-height: 20px;
+}
+
+.step-card__title {
+  margin: 22px 0 0;
+  font-size: 20px;
+  font-weight: 600;
+  line-height: 28px;
+}
+
+.step-card__text {
+  margin: 14px 0 0;
+  font-size: 14px;
+  line-height: 17px;
+}
+
+@media (max-width: 1000px) {
+  .how-it-works__steps {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 24px;
+  }
+}
+
+@media (max-width: 560px) {
+  .how-it-works__steps {
+    grid-template-columns: 1fr;
+  }
+}
