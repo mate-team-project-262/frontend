@@ -1,0 +1,80 @@
+.account {
+  padding-top: 120px;
+}
+
+.account__inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.account__content {
+  margin-top: 3px;
+}
+
+.account__title {
+  font-size: 34px;
+}
+
+.account__lead {
+  margin: 21px 0 0;
+  font-size: 18px;
+  line-height: 26px;
+}
+
+.account__benefits-title {
+  margin: 47px 0 0;
+  font-size: 22px;
+  font-weight: 600;
+  line-height: 30px;
+}
+
+.account__benefits {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  margin: 22px 0 0;
+  padding: 0;
+  font-size: 15px;
+  line-height: 22px;
+  list-style: none;
+}
+
+.account__actions {
+  display: flex;
+  align-items: center;
+  margin-top: 69px;
+}
+
+.account__sign-in-text {
+  margin-left: 36px;
+  font-size: 14px;
+}
+
+.account__sign-in {
+  margin-left: 11px;
+}
+
+@media (max-width: 1000px) {
+  .account__inner {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 48px;
+  }
+
+  .account__content {
+    margin-top: 0;
+  }
+
+  .account__actions {
+    flex-wrap: wrap;
+    row-gap: 12px;
+  }
+}
+
+@media (max-width: 600px) {
+  .account__title {
+    font-size: 28px;
+    line-height: 36px;
+  }
+}

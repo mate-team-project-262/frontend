@@ -1,0 +1,40 @@
+.header__inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 96px;
+}
+
+.header__logo {
+  padding: 0 6px;
+  font-size: 24px;
+  font-weight: 700;
+  line-height: 32px;
+}
+
+.header__nav {
+  display: flex;
+  white-space: nowrap;
+  align-items: center;
+  gap: 17px;
+  margin-right: 5px;
+}
+
+.header__sign-in {
+  margin-left: 5px;
+}
+
+@media (max-width: 640px) {
+  .header__nav-link {
+    display: none;
+  }
+
+  .header__nav {
+    gap: 0;
+    margin-right: 0;
+  }
+
+  .header__sign-in {
+    margin-left: 0;
+  }
+}
