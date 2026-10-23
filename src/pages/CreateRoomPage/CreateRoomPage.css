@@ -1,0 +1,58 @@
+/* Figma "Create your movie room" (1440x1216 frame): panel 752px wide at x=344, y=96. */
+.create-room-page {
+  --bg: #f7f7f7;
+  --line: #b5b5b5;
+
+  min-height: 100vh;
+  background: var(--bg);
+}
+
+.create-room {
+  padding-bottom: 92px;
+}
+
+.create-room__panel {
+  max-width: 752px;
+  margin: 0 auto;
+  padding: 64px 120px;
+  border-radius: 22px;
+  background: var(--surface);
+}
+
+.create-room__title {
+  margin: 0;
+  font-size: 40px;
+  font-weight: 600;
+  line-height: 52px;
+  text-align: center;
+}
+
+.create-room__subtitle {
+  margin: 10px 0 0;
+  font-size: 18px;
+  line-height: 28px;
+  text-align: center;
+}
+
+.create-room__fields {
+  margin-top: 44px;
+}
+
+.create-room__submit {
+  margin-top: 40px;
+}
+
+@media (max-width: 800px) {
+  .create-room {
+    padding: 0 16px 48px;
+  }
+
+  .create-room__panel {
+    padding: 40px 20px;
+  }
+
+  .create-room__title {
+    font-size: 30px;
+    line-height: 38px;
+  }
+}

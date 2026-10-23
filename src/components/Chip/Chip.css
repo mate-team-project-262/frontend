@@ -1,0 +1,44 @@
+.chip {
+  display: inline-flex;
+  align-items: center;
+  height: 42px;
+  padding: 0 16px;
+  border: 1px solid var(--line);
+  border-radius: 21px;
+  background: var(--card);
+  font-size: 13px;
+  line-height: 20px;
+  cursor: pointer;
+  user-select: none;
+  transition:
+    transform 0.12s ease,
+    background-color 0.12s ease,
+    border-color 0.12s ease,
+    color 0.12s ease;
+}
+
+.chip:hover {
+  background: #f7f7f7;
+  border-color: #8a8a8a;
+}
+
+.chip:active {
+  background: #e2e2e2;
+  transform: scale(0.96);
+}
+
+.chip--selected {
+  border-color: var(--btn-bg);
+  background: var(--btn-bg);
+  color: var(--btn-text);
+}
+
+.chip--selected:hover {
+  border-color: #2b2b2b;
+  background: #2b2b2b;
+}
+
+.chip--selected:active {
+  border-color: #555;
+  background: #555;
+}

@@ -1,19 +1,14 @@
-import Header from './components/Header/Header.jsx';
-import AccountBenefits from './sections/AccountBenefits/AccountBenefits.jsx';
-import CtaBanner from './sections/CtaBanner/CtaBanner.jsx';
-import Hero from './sections/Hero/Hero.jsx';
-import HowItWorks from './sections/HowItWorks/HowItWorks.jsx';
+import { Navigate, Route, Routes } from 'react-router';
+import CreateRoomPage from './pages/CreateRoomPage/CreateRoomPage.jsx';
+import LandingPage from './pages/LandingPage/LandingPage.jsx';
+import { ROUTES } from './routes.js';
 
 export default function App() {
   return (
-    <>
-      <Header />
-      <main className="page">
-        <Hero />
-        <HowItWorks />
-        <AccountBenefits />
-        <CtaBanner />
-      </main>
-    </>
+    <Routes>
+      <Route path={ROUTES.home} element={<LandingPage />} />
+      <Route path={ROUTES.createRoom} element={<CreateRoomPage />} />
+      <Route path="*" element={<Navigate to={ROUTES.home} replace />} />
+    </Routes>
   );
 }

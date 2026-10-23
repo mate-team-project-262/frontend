@@ -1,22 +1,36 @@
+import { Link, useNavigate } from 'react-router';
 import { onNavAccountBenefits, onNavHowItWorks, onSignIn } from '../../handlers.js';
+import { ROUTES } from '../../routes.js';
+import { cx } from '../../utils/classNames.js';
 import LinkButton from '../LinkButton/LinkButton.jsx';
 import './Header.css';
 
-export default function Header() {
+export default function Header({ variant = 'landing' }) {
+  const navigate = useNavigate();
+  const isBack = variant === 'back';
+
   return (
     <header className="header">
       <div className="container header__inner">
-        <span className="header__logo">LOGO</span>
-        <nav className="header__nav">
-          <LinkButton className="header__nav-link" onClick={onNavHowItWorks}>
-            How it works
-          </LinkButton>
-          <LinkButton className="header__nav-link" onClick={onNavAccountBenefits}>
-            Account benefits
-          </LinkButton>
-          <LinkButton bold className="header__sign-in" onClick={onSignIn}>
-            Sign in
-          </LinkButton>
+        <Link to={ROUTES.home} className="header__logo">
+          LOGO
+        </Link>
+        <nav className={cx('header__nav', isBack && 'header__nav--back')}>
+          {isBack ? (
+            <LinkButton onClick={() => navigate(ROUTES.home)}>Back to home</LinkButton>
+          ) : (
+            <>
+              <LinkButton className="header__nav-link" onClick={onNavHowItWorks}>
+                How it works
+              </LinkButton>
+              <LinkButton className="header__nav-link" onClick={onNavAccountBenefits}>
+                Account benefits
+              </LinkButton>
+              <LinkButton bold className="header__sign-in" onClick={onSignIn}>
+                Sign in
+              </LinkButton>
+            </>
+          )}
         </nav>
       </div>
     </header>
