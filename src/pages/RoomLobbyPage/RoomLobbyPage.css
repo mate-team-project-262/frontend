@@ -1,0 +1,111 @@
+/* Figma "Invite friends" (1440x1024 frame): content column starts at x=120, title at y=150. */
+.room-lobby-page {
+  --bg: #f7f7f7;
+  --line: #9c9c9c;
+
+  min-height: 100vh;
+  background: var(--bg);
+}
+
+.room-lobby {
+  padding-top: 54px;
+  padding-bottom: 98px;
+}
+
+.room-lobby__title {
+  margin: 0;
+  font-size: 33px;
+  font-weight: 600;
+  line-height: 44px;
+}
+
+.room-lobby__subtitle {
+  margin: 10px 0 0;
+  font-size: 16px;
+  line-height: 24px;
+}
+
+.room-lobby__message {
+  margin: 0;
+  font-size: 16px;
+  line-height: 24px;
+}
+
+/* Left: link + buttons (512px). Right: QR code (260px) at x=830. */
+.room-lobby__top {
+  display: grid;
+  grid-template-columns: 512px 260px;
+  column-gap: 198px;
+  margin-top: 43px;
+}
+
+.room-lobby__share {
+  margin-top: 5px;
+}
+
+.room-lobby__actions {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+  margin-top: 24px;
+}
+
+.room-lobby__action {
+  width: 100%;
+}
+
+.room-lobby__qr-label,
+.room-lobby__label {
+  font-size: 16px;
+  font-weight: 600;
+  line-height: 20px;
+}
+
+.room-lobby__qr-label {
+  margin-bottom: 15px;
+}
+
+.room-lobby__people {
+  max-width: 512px;
+  margin-top: 28px;
+}
+
+.room-lobby__label {
+  margin: 0 0 12px;
+}
+
+.room-lobby__list {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.room-lobby__start {
+  margin-top: 32px;
+}
+
+.room-lobby__hint {
+  margin: 16px 0 0;
+  font-size: 14px;
+  line-height: 20px;
+  text-align: center;
+}
+
+@media (max-width: 900px) {
+  .room-lobby__top {
+    grid-template-columns: 1fr;
+    row-gap: 32px;
+  }
+
+  .room-lobby__share {
+    margin-top: 0;
+  }
+
+  .room-lobby__title {
+    font-size: 30px;
+    line-height: 38px;
+  }
+}

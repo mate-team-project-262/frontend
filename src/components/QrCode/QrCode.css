@@ -1,0 +1,17 @@
+.qr-code {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 260px;
+  max-width: 100%;
+  aspect-ratio: 1;
+  border: 1px solid #aeaeae;
+  border-radius: 24px;
+  background: var(--card);
+}
+
+.qr-code__placeholder {
+  font-size: 18px;
+  font-weight: 600;
+  line-height: 24px;
+}
