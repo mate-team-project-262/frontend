@@ -1,10 +1,14 @@
 import { cx } from '../../utils/classNames.js';
 import './Button.css';
 
-export default function Button({ variant, block = false, className, ...props }) {
+/**
+ * variant: undefined (solid) | 'ghost'. `block`: full-width 56px-tall button (form submit).
+ * `as="a"` renders a link that looks like a button.
+ */
+export default function Button({ as: Tag = 'button', variant, block = false, className, ...props }) {
   return (
-    <button
-      type="button"
+    <Tag
+      {...(Tag === 'button' && { type: 'button' })}
       className={cx('button', variant && `button--${variant}`, block && 'button--block', className)}
       {...props}
     />

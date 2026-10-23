@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { useNavigate } from 'react-router';
 import { createRoom } from '../../api/roomsApi.js';
 import Button from '../../components/Button/Button.jsx';
 import Chip from '../../components/Chip/Chip.jsx';
@@ -11,7 +12,7 @@ import {
   MAX_DURATIONS_MIN,
   STREAMING_SERVICES,
 } from '../../data/content.js';
-import { onRoomCreated } from '../../handlers.js';
+import { roomPath } from '../../routes.js';
 import './CreateRoomPage.css';
 
 const INITIAL_FORM = {
@@ -23,6 +24,7 @@ const INITIAL_FORM = {
 };
 
 export default function CreateRoomPage() {
+  const navigate = useNavigate();
   const [form, setForm] = useState(INITIAL_FORM);
   const [nameError, setNameError] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -62,7 +64,7 @@ export default function CreateRoomPage() {
         maxDurationMin: form.maxDurationMin,
         streamingServices: form.streamingServices,
       });
-      onRoomCreated(room);
+      navigate(roomPath(room.code));
     } finally {
       setIsSubmitting(false);
     }

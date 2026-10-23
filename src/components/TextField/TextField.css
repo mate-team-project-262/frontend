@@ -33,3 +33,7 @@
   font-size: 13px;
   line-height: 16px;
 }
+
+.text-field--compact .text-field__input {
+  padding: 0 16px;
+}
