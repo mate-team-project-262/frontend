@@ -11,7 +11,7 @@ export const onCreateAccount = () => {};
 export const onStart = () => {};
 
 /**
- * Called by the "Create your movie room" page after the backend created a room.
- * TODO: navigate to the room lobby page when it exists, e.g. navigate(`/room/${room.code}`).
+ * Called by the room lobby after the backend started the session.
+ * TODO: navigate to the swipe page when it exists, e.g. navigate(`/room/${code}/swipe`).
  */
-export const onRoomCreated = () => {};
+export const onSessionStarted = () => {};

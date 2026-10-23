@@ -1,12 +1,14 @@
 import { useId } from 'react';
+import { cx } from '../../utils/classNames.js';
 import './TextField.css';
 
-export default function TextField({ label, error, ...inputProps }) {
+/** Text input with a label above it and an optional error message below. variant: 'compact' = 16px side padding. */
+export default function TextField({ label, error, variant, ...inputProps }) {
   const id = useId();
   const errorId = `${id}-error`;
 
   return (
-    <div className="text-field">
+    <div className={cx('text-field', variant && `text-field--${variant}`)}>
       <label className="text-field__label" htmlFor={id}>
         {label}
       </label>
