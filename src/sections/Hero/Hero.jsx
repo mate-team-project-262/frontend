@@ -1,8 +1,12 @@
+import { useNavigate } from 'react-router';
 import Button from '../../components/Button/Button.jsx';
-import { onCreateRoom, onJoinRoom } from '../../handlers.js';
+import { onJoinRoom } from '../../handlers.js';
+import { ROUTES } from '../../routes.js';
 import './Hero.css';
 
 export default function Hero() {
+  const navigate = useNavigate();
+
   return (
     <section className="hero">
       <div className="container hero__inner">
@@ -13,7 +17,7 @@ export default function Hero() {
             required
           </p>
           <div className="hero__actions">
-            <Button onClick={onCreateRoom}>Create a room</Button>
+            <Button onClick={() => navigate(ROUTES.createRoom)}>Create a room</Button>
             <Button variant="ghost" onClick={onJoinRoom}>
               Join a room
             </Button>
