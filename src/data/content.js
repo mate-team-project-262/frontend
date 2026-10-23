@@ -27,3 +27,37 @@ export const SAMPLE_TASTE_PROFILE = {
   ],
   actors: ['Actor 1', 'Actor 2', 'Actor 3'],
 };
+
+// "Create your movie room" form options
+export const CONTENT_TYPES = [
+  { value: 'movie', label: 'Movies' },
+  { value: 'tv', label: 'Tv Shows' },
+];
+
+export const GENRES = [
+  'Action',
+  'Animation',
+  'Adventure',
+  'Comedy',
+  'Crime',
+  'Documentary',
+  'Drama',
+  'Family',
+  'Fantasy',
+  'History',
+  'Horror',
+  'Kids',
+  'Music',
+  'Mystery',
+  'Reality',
+  'Romance',
+  'Science Fiction',
+  'Thriller',
+  'War',
+  'Politics',
+  'Western',
+];
+
+export const MAX_DURATIONS_MIN = [90, 120, 150];
+
+export const STREAMING_SERVICES = ['Netflix', 'Amazon Prime Video', 'Disney +', 'Apple TV'];
