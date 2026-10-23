@@ -1,0 +1,39 @@
+.text-field__label {
+  display: block;
+  margin-bottom: 12px;
+  font-size: 16px;
+  font-weight: 600;
+  line-height: 20px;
+}
+
+.text-field__input {
+  display: block;
+  width: 100%;
+  height: 48px;
+  padding: 0 20px;
+  border: 1px solid #b8b8b8;
+  border-radius: 24px;
+  background: var(--card);
+  font: inherit;
+  font-size: 16px;
+  color: var(--text);
+}
+
+.text-field__input:hover {
+  border-color: #8a8a8a;
+}
+
+.text-field__input[aria-invalid='true'] {
+  border-color: #c0392b;
+}
+
+.text-field__error {
+  margin: 8px 0 0 20px;
+  color: #c0392b;
+  font-size: 13px;
+  line-height: 16px;
+}
+
+.text-field--compact .text-field__input {
+  padding: 0 16px;
+}

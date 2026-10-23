@@ -12,6 +12,7 @@
   font-size: 15px;
   font-weight: 600;
   line-height: 1;
+  text-decoration: none;
   cursor: pointer;
   user-select: none;
   transition:
@@ -45,4 +46,16 @@
 .button--ghost:active {
   border-color: #8a8a8a;
   background: #e2e2e2;
+}
+
+.button--block {
+  width: 100%;
+  height: 56px;
+  border-radius: 28px;
+  font-size: 15px;
+}
+
+.button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
 }
