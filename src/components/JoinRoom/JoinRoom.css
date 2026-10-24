@@ -1,0 +1,54 @@
+/* Figma "Join room" / "Join via invite" (1440x1024): form column 512px, title centered at y=178. */
+.join-room-page {
+  --bg: #f7f7f7;
+
+  min-height: 100vh;
+  background: var(--bg);
+}
+
+.join-room {
+  padding: 60px 16px 98px;
+}
+
+.join-room__title {
+  margin: 0;
+  font-size: 32px;
+  font-weight: 600;
+  line-height: 44px;
+  text-align: center;
+}
+
+.join-room__subtitle {
+  margin: 12px 0 0;
+  padding-left: 9px; /* Figma: the subtitle sits 4.5px right of the exact center */
+  font-size: 18px;
+  line-height: 28px;
+  text-align: center;
+}
+
+.join-room__form {
+  max-width: 512px;
+  margin: 52px auto 0;
+}
+
+.join-room__fields {
+  display: flex;
+  flex-direction: column;
+  gap: 28px;
+}
+
+.join-room__submit {
+  width: 100%;
+  margin-top: 24px;
+}
+
+@media (max-width: 600px) {
+  .join-room__title {
+    font-size: 26px;
+    line-height: 34px;
+  }
+
+  .join-room__subtitle {
+    font-size: 16px;
+  }
+}
