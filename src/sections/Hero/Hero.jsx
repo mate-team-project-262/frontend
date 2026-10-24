@@ -1,6 +1,5 @@
 import { useNavigate } from 'react-router';
 import Button from '../../components/Button/Button.jsx';
-import { onJoinRoom } from '../../handlers.js';
 import { ROUTES } from '../../routes.js';
 import './Hero.css';
 
@@ -18,7 +17,7 @@ export default function Hero() {
           </p>
           <div className="hero__actions">
             <Button onClick={() => navigate(ROUTES.createRoom)}>Create a room</Button>
-            <Button variant="ghost" onClick={onJoinRoom}>
+            <Button variant="ghost" onClick={() => navigate(ROUTES.join)}>
               Join a room
             </Button>
           </div>

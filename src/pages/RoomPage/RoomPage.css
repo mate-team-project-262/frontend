@@ -1,0 +1,12 @@
+.room-page {
+  --bg: #f7f7f7;
+
+  min-height: 100vh;
+  background: var(--bg);
+}
+
+.room-page__message {
+  margin: 54px 0 0;
+  font-size: 16px;
+  line-height: 24px;
+}

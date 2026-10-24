@@ -15,7 +15,8 @@
  *       { id: '3', name: 'Peter', isHost: false, isMe: false },
  *     ] }))
  *
- * and open /room/GMX2I.
+ * and open /room/GMX2I. A tab that did NOT create the room (or any unknown code) is treated as a
+ * visitor and sees the invite page, as a guest opening the shared link would.
  */
 
 /**
@@ -88,19 +89,16 @@ export async function createRoom(payload) {
 
 /**
  * Loads a room. Resolves to `null` when the room does not exist (real version: 404).
+ * Who is looking decides the view: no participant with `isMe` = visitor (invite page),
+ * `isMe` + `isHost` = host lobby.
  * Real version: GET /api/rooms/:code
  *
  * @param {string} code
  * @returns {Promise<Room | null>}
  */
 export async function getRoom(code) {
-  return (
-    readStubRoom(code) ?? {
-      code,
-      status: 'lobby',
-      participants: [{ id: 'stub-host', name: 'Host', isHost: true, isMe: true }],
-    }
-  );
+  // Unknown codes behave like a room the visitor is not part of (no participant has isMe).
+  return readStubRoom(code) ?? { code, status: 'lobby', participants: [] };
 }
 
 /**
@@ -125,5 +123,19 @@ export function subscribeToRoom(code, onChange) {
  */
 export async function startSession(code) {
   if (import.meta.env.DEV) console.info('[stub] startSession', code);
+  return { ok: true };
+}
+
+/**
+ * Joins a room as a guest ("Join a movie room" page and the invite page).
+ * Real version: POST /api/rooms/:code/join with { name }; throw an Error when it fails
+ * (for example 404 - there is no such room, 409 - the session already started).
+ *
+ * @param {string} code
+ * @param {{ name: string }} guest
+ * @returns {Promise<{ ok: boolean }>}
+ */
+export async function joinRoom(code, guest) {
+  if (import.meta.env.DEV) console.info('[stub] joinRoom', code, guest);
   return { ok: true };
 }

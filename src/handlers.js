@@ -6,7 +6,6 @@
 export const onNavHowItWorks = () => {};
 export const onNavAccountBenefits = () => {};
 export const onSignIn = () => {};
-export const onJoinRoom = () => {};
 export const onCreateAccount = () => {};
 export const onStart = () => {};
 
@@ -15,3 +14,9 @@ export const onStart = () => {};
  * TODO: navigate to the swipe page when it exists, e.g. navigate(`/room/${code}/swipe`).
  */
 export const onSessionStarted = () => {};
+
+/**
+ * Called after the backend let a guest into a room (from "Join a movie room" or the invite page).
+ * TODO: navigate to the waiting room page ("You're in!") when it exists.
+ */
+export const onRoomJoined = () => {};
