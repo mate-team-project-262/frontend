@@ -5,7 +5,11 @@ import { cx } from '../../utils/classNames.js';
 import LinkButton from '../LinkButton/LinkButton.jsx';
 import './Header.css';
 
-export default function Header({ variant = 'landing' }) {
+/**
+ * variant: 'landing' (navigation + Sign in) | 'back' (only a "Back to home" link)
+ *          | 'leave' (only a "Leave room" button that calls `onLeave`).
+ */
+export default function Header({ variant = 'landing', onLeave }) {
   const navigate = useNavigate();
   const isBack = variant === 'back';
 
@@ -16,7 +20,9 @@ export default function Header({ variant = 'landing' }) {
           LOGO
         </Link>
         <nav className={cx('header__nav', isBack && 'header__nav--back')}>
-          {isBack ? (
+          {variant === 'leave' ? (
+            <LinkButton onClick={onLeave}>Leave room</LinkButton>
+          ) : isBack ? (
             <LinkButton onClick={() => navigate(ROUTES.home)}>Back to home</LinkButton>
           ) : (
             <>

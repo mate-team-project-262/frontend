@@ -37,3 +37,10 @@
 .text-field--compact .text-field__input {
   padding: 0 16px;
 }
+
+.text-field__hint {
+  margin: 8px 0 0;
+  color: #6b6b6b;
+  font-size: 13px;
+  line-height: 16px;
+}

@@ -1,6 +1,7 @@
 import { useId } from 'react';
 import './FormSection.css';
 
+/** Labelled group of options (chips). */
 export default function FormSection({ title, children }) {
   const titleId = useId();
   return (

@@ -6,7 +6,6 @@
 export const onNavHowItWorks = () => {};
 export const onNavAccountBenefits = () => {};
 export const onSignIn = () => {};
-export const onJoinRoom = () => {};
 export const onCreateAccount = () => {};
 export const onStart = () => {};
 

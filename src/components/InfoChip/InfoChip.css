@@ -1,0 +1,12 @@
+/* Figma (waiting room): 45px tall pill, 16px text */
+.info-chip {
+  display: inline-flex;
+  align-items: center;
+  height: 45px;
+  padding: 0 16px;
+  border: 1px solid #b3b3b3;
+  border-radius: 23px;
+  background: var(--card);
+  font-size: 16px;
+  line-height: 24px;
+}

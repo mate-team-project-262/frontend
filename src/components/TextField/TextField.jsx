@@ -3,9 +3,10 @@ import { cx } from '../../utils/classNames.js';
 import './TextField.css';
 
 /** Text input with a label above it and an optional error message below. variant: 'compact' = 16px side padding. */
-export default function TextField({ label, error, variant, ...inputProps }) {
+export default function TextField({ label, hint, error, variant, ...inputProps }) {
   const id = useId();
   const errorId = `${id}-error`;
+  const hintId = `${id}-hint`;
 
   return (
     <div className={cx('text-field', variant && `text-field--${variant}`)}>
@@ -18,13 +19,19 @@ export default function TextField({ label, error, variant, ...inputProps }) {
         type="text"
         autoComplete="off"
         aria-invalid={Boolean(error)}
-        aria-describedby={error ? errorId : undefined}
+        aria-describedby={error ? errorId : hint ? hintId : undefined}
         {...inputProps}
       />
-      {error && (
+      {error ? (
         <p className="text-field__error" id={errorId} role="alert">
           {error}
         </p>
+      ) : (
+        hint && (
+          <p className="text-field__hint" id={hintId}>
+            {hint}
+          </p>
+        )
       )}
     </div>
   );

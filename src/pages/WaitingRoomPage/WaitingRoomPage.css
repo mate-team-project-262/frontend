@@ -1,0 +1,92 @@
+/* Figma "Waiting room" (1440x1024): title centered at y=183, panel 655px wide at y=324. */
+.waiting-room-page {
+  --bg: #f7f7f7;
+
+  min-height: 100vh;
+  background: var(--bg);
+}
+
+.waiting-room {
+  padding: 63px 16px 98px;
+}
+
+.waiting-room__title {
+  margin: 0;
+  font-size: 38.5px;
+  font-weight: 600;
+  line-height: 48px;
+  text-align: center;
+}
+
+.waiting-room__subtitle {
+  margin: 21px 0 0;
+  font-size: 19.2px;
+  line-height: 28px;
+  text-align: center;
+}
+
+.waiting-room__panel {
+  width: 100%;
+  max-width: 655px;
+  margin: 68px auto 0;
+  padding: 41px 120px 40px;
+  border-radius: 24px;
+  background: var(--surface);
+}
+
+.waiting-room__session {
+  margin: 0;
+  font-size: 24px;
+  font-weight: 600;
+  line-height: 32px;
+}
+
+.waiting-room__label {
+  margin: 38px 0 18px;
+  font-size: 16px;
+  font-weight: 600;
+  line-height: 20px;
+}
+
+.waiting-room__label--next {
+  margin-top: 28px;
+}
+
+.waiting-room__chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  align-items: center;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+/* The dot between preference groups: 25px in total with the two 8px gaps. */
+.waiting-room__separator {
+  width: 9px;
+  font-size: 16px;
+  line-height: 24px;
+  text-align: center;
+}
+
+.waiting-room__empty {
+  margin: 0;
+  font-size: 16px;
+  line-height: 24px;
+}
+
+@media (max-width: 700px) {
+  .waiting-room__panel {
+    padding: 32px 20px;
+  }
+
+  .waiting-room__title {
+    font-size: 32px;
+    line-height: 40px;
+  }
+
+  .waiting-room__subtitle {
+    font-size: 18px;
+  }
+}
