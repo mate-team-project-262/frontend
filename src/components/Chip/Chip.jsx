@@ -1,6 +1,7 @@
 import { cx } from '../../utils/classNames.js';
 import './Chip.css';
 
+/** Toggle chip (pill). */
 export default function Chip({ label, selected = false, onToggle }) {
   return (
     <button

@@ -109,3 +109,11 @@
     line-height: 38px;
   }
 }
+
+.room-lobby__error {
+  margin: 12px 0 0;
+  color: #c0392b;
+  font-size: 13px;
+  line-height: 16px;
+  text-align: center;
+}

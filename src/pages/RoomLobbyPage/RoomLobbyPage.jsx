@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { startSession } from '../../api/roomsApi.js';
+import { RoomApiError, startSession } from '../../api/roomsApi.js';
 import Button from '../../components/Button/Button.jsx';
 import Header from '../../components/Header/Header.jsx';
 import Participant from '../../components/Participant/Participant.jsx';
@@ -19,6 +19,7 @@ const COPY_BUTTON_LABELS = { idle: 'Copy link', copied: 'Copied!', failed: 'Copy
 export default function RoomLobbyPage({ code, room }) {
   const { status: copyStatus, copy } = useCopyToClipboard();
   const [isStarting, setIsStarting] = useState(false);
+  const [startError, setStartError] = useState('');
 
   const inviteLink = getInviteLink(code);
   const participants = room.participants;
@@ -26,9 +27,16 @@ export default function RoomLobbyPage({ code, room }) {
 
   const handleStartSession = async () => {
     setIsStarting(true);
+    setStartError('');
     try {
       await startSession(code);
       onSessionStarted(room);
+    } catch (error) {
+      setStartError(
+        error instanceof RoomApiError
+          ? error.message
+          : 'Could not start the session. Please try again.',
+      );
     } finally {
       setIsStarting(false);
     }
@@ -98,6 +106,11 @@ export default function RoomLobbyPage({ code, room }) {
           >
             Start session
           </Button>
+          {startError && (
+            <p className="room-lobby__error" role="alert">
+              {startError}
+            </p>
+          )}
           <p className="room-lobby__hint">Host starts when everyone has joined</p>
         </section>
       </main>

@@ -38,6 +38,7 @@
   margin-top: 44px;
 }
 
+/* The first field starts right under the subtitle; later sections add their own top margin. */
 .create-room__submit {
   margin-top: 40px;
 }

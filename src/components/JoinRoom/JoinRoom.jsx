@@ -1,6 +1,5 @@
 import { useState } from 'react';
-import { joinRoom } from '../../api/roomsApi.js';
-import { onRoomJoined } from '../../handlers.js';
+import { RoomApiError, joinRoom } from '../../api/roomsApi.js';
 import { extractRoomCode } from '../../utils/roomLinks.js';
 import Button from '../Button/Button.jsx';
 import Header from '../Header/Header.jsx';
@@ -12,8 +11,9 @@ const JOIN_FAILED_MESSAGE = 'We could not join this room. Check the link and try
 /**
  * Whole "join" screen. Without `code` it asks for a room link (page "Join a movie room");
  * with `code` the room is already known (page opened from an invite link or QR code).
+ * `onJoined({ code, name })` is called after the backend let the guest in.
  */
-export default function JoinRoom({ title, code }) {
+export default function JoinRoom({ title, code, onJoined }) {
   const [link, setLink] = useState('');
   const [name, setName] = useState('');
   const [errors, setErrors] = useState({});
@@ -35,9 +35,10 @@ export default function JoinRoom({ title, code }) {
     setIsSubmitting(true);
     try {
       await joinRoom(roomCode, { name: guestName });
-      onRoomJoined({ code: roomCode, name: guestName });
-    } catch {
-      setErrors({ [code ? 'name' : 'link']: JOIN_FAILED_MESSAGE });
+      onJoined({ code: roomCode, name: guestName });
+    } catch (error) {
+      const message = error instanceof RoomApiError ? error.message : JOIN_FAILED_MESSAGE;
+      setErrors({ [code ? 'name' : 'link']: message });
     } finally {
       setIsSubmitting(false);
     }
