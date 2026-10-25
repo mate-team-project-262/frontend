@@ -273,17 +273,3 @@ export async function startSession(code) {
   writeStoredRoom({ ...room, status: 'started' });
   return { ok: true };
 }
-
-/**
- * Joins a room as a guest ("Join a movie room" page and the invite page).
- * Real version: POST /api/rooms/:code/join with { name }; throw an Error when it fails
- * (for example 404 - there is no such room, 409 - the session already started).
- *
- * @param {string} code
- * @param {{ name: string }} guest
- * @returns {Promise<{ ok: boolean }>}
- */
-export async function joinRoom(code, guest) {
-  if (import.meta.env.DEV) console.info('[stub] joinRoom', code, guest);
-  return { ok: true };
-}
