@@ -1,24 +1,26 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router';
-import { createRoom } from '../../api/roomsApi.js';
+import { RoomApiError, createRoom } from '../../api/roomsApi.js';
 import Button from '../../components/Button/Button.jsx';
 import Chip from '../../components/Chip/Chip.jsx';
 import FormSection from '../../components/FormSection/FormSection.jsx';
 import Header from '../../components/Header/Header.jsx';
 import TextField from '../../components/TextField/TextField.jsx';
+import { FEATURES } from '../../config/features.js';
 import {
   CONTENT_TYPES,
-  GENRES,
+  GENRES_BY_CONTENT_TYPE,
   MAX_DURATIONS_MIN,
   STREAMING_SERVICES,
 } from '../../data/content.js';
 import { roomPath } from '../../routes.js';
+import { DISPLAY_NAME_MAX_LENGTH, validateDisplayName } from '../../utils/validation.js';
 import './CreateRoomPage.css';
 
 const INITIAL_FORM = {
   hostName: '',
-  contentType: null, // 'movie' | 'tv' | null
-  genres: [],
+  contentType: 'MOVIES', // 'MOVIES' | 'TV_SERIES' - the backend always needs one (Movies by default)
+  genreIds: [],
   maxDurationMin: null,
   streamingServices: [],
 };
@@ -27,7 +29,24 @@ export default function CreateRoomPage() {
   const navigate = useNavigate();
   const [form, setForm] = useState(INITIAL_FORM);
   const [nameError, setNameError] = useState('');
+  const [formError, setFormError] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
+
+  const genres = GENRES_BY_CONTENT_TYPE[form.contentType];
+
+  /**
+   * Exactly one content type is always selected. Genres belong to a content type: switching it
+   * keeps the selected genres that exist in the new list (e.g. Comedy) and drops the rest.
+   */
+  const selectContentType = (contentType) =>
+    setForm((current) => {
+      const available = GENRES_BY_CONTENT_TYPE[contentType];
+      return {
+        ...current,
+        contentType,
+        genreIds: current.genreIds.filter((id) => available.some((genre) => genre.id === id)),
+      };
+    });
 
   /** Single choice: clicking the selected chip again clears it. */
   const toggleSingle = (field, value) =>
@@ -50,21 +69,29 @@ export default function CreateRoomPage() {
   const handleSubmit = async (event) => {
     event.preventDefault();
     const hostName = form.hostName.trim();
-    if (!hostName) {
-      setNameError('Please enter your name');
+    const validationError = validateDisplayName(hostName);
+    if (validationError) {
+      setNameError(validationError);
       return;
     }
 
     setIsSubmitting(true);
+    setFormError('');
     try {
-      const room = await createRoom({
+      const payload = {
         hostName,
         contentType: form.contentType,
-        genres: form.genres,
+        genreIds: form.genreIds,
         maxDurationMin: form.maxDurationMin,
-        streamingServices: form.streamingServices,
-      });
+      };
+      if (FEATURES.streamingServices) payload.streamingServices = form.streamingServices;
+      const room = await createRoom(payload);
       navigate(roomPath(room.code));
+    } catch (error) {
+      const message =
+        error instanceof RoomApiError ? error.message : 'Something went wrong. Please try again.';
+      if (error.field === 'name') setNameError(message);
+      else setFormError(message);
     } finally {
       setIsSubmitting(false);
     }
@@ -85,7 +112,7 @@ export default function CreateRoomPage() {
               label="Your name"
               value={form.hostName}
               error={nameError}
-              maxLength={40}
+              maxLength={DISPLAY_NAME_MAX_LENGTH}
               onChange={handleNameChange}
             />
 
@@ -95,18 +122,18 @@ export default function CreateRoomPage() {
                   key={value}
                   label={label}
                   selected={form.contentType === value}
-                  onToggle={() => toggleSingle('contentType', value)}
+                  onToggle={() => selectContentType(value)}
                 />
               ))}
             </FormSection>
 
             <FormSection title="Genres">
-              {GENRES.map((genre) => (
+              {genres.map(({ id, name }) => (
                 <Chip
-                  key={genre}
-                  label={genre}
-                  selected={form.genres.includes(genre)}
-                  onToggle={() => toggleMany('genres', genre)}
+                  key={id}
+                  label={name}
+                  selected={form.genreIds.includes(id)}
+                  onToggle={() => toggleMany('genreIds', id)}
                 />
               ))}
             </FormSection>
@@ -122,18 +149,25 @@ export default function CreateRoomPage() {
               ))}
             </FormSection>
 
-            <FormSection title="Streaming services">
-              {STREAMING_SERVICES.map((service) => (
-                <Chip
-                  key={service}
-                  label={service}
-                  selected={form.streamingServices.includes(service)}
-                  onToggle={() => toggleMany('streamingServices', service)}
-                />
-              ))}
-            </FormSection>
+            {FEATURES.streamingServices && (
+              <FormSection title="Streaming services">
+                {STREAMING_SERVICES.map((service) => (
+                  <Chip
+                    key={service}
+                    label={service}
+                    selected={form.streamingServices.includes(service)}
+                    onToggle={() => toggleMany('streamingServices', service)}
+                  />
+                ))}
+              </FormSection>
+            )}
           </div>
 
+          {formError && (
+            <p className="create-room__error" role="alert">
+              {formError}
+            </p>
+          )}
           <Button block type="submit" className="create-room__submit" disabled={isSubmitting}>
             Create room
           </Button>

@@ -1,5 +1,6 @@
 .how-it-works {
   padding-top: 120px;
+  scroll-margin-top: -96px; /* nav click: the heading lands near the top, not under 120px of padding */
 }
 
 .how-it-works__intro {

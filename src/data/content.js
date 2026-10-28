@@ -30,33 +30,57 @@ export const SAMPLE_TASTE_PROFILE = {
 
 // "Create your movie room" form options
 export const CONTENT_TYPES = [
-  { value: 'movie', label: 'Movies' },
-  { value: 'tv', label: 'Tv Shows' },
+  { value: 'MOVIES', label: 'Movies' },
+  { value: 'TV_SERIES', label: 'Tv Shows' },
 ];
 
-export const GENRES = [
-  'Action',
-  'Animation',
-  'Adventure',
-  'Comedy',
-  'Crime',
-  'Documentary',
-  'Drama',
-  'Family',
-  'Fantasy',
-  'History',
-  'Horror',
-  'Kids',
-  'Music',
-  'Mystery',
-  'Reality',
-  'Romance',
-  'Science Fiction',
-  'Thriller',
-  'War',
-  'Politics',
-  'Western',
+/**
+ * Genres per content type, exactly as the backend defines them (the request sends only `id`).
+ * The lists differ: for example Action is 28 for movies, but TV shows have "Action & Adventure".
+ */
+export const MOVIE_GENRES = [
+  { id: 28, name: 'Action' },
+  { id: 12, name: 'Adventure' },
+  { id: 16, name: 'Animation' },
+  { id: 35, name: 'Comedy' },
+  { id: 80, name: 'Crime' },
+  { id: 99, name: 'Documentary' },
+  { id: 18, name: 'Drama' },
+  { id: 10751, name: 'Family' },
+  { id: 14, name: 'Fantasy' },
+  { id: 36, name: 'History' },
+  { id: 27, name: 'Horror' },
+  { id: 10402, name: 'Music' },
+  { id: 9648, name: 'Mystery' },
+  { id: 10749, name: 'Romance' },
+  { id: 878, name: 'Science Fiction' },
+  { id: 10770, name: 'TV Movie' },
+  { id: 53, name: 'Thriller' },
+  { id: 10752, name: 'War' },
+  { id: 37, name: 'Western' },
 ];
+
+export const TV_GENRES = [
+  { id: 10759, name: 'Action & Adventure' },
+  { id: 16, name: 'Animation' },
+  { id: 35, name: 'Comedy' },
+  { id: 80, name: 'Crime' },
+  { id: 99, name: 'Documentary' },
+  { id: 18, name: 'Drama' },
+  { id: 10751, name: 'Family' },
+  { id: 10762, name: 'Kids' },
+  { id: 9648, name: 'Mystery' },
+  { id: 10763, name: 'News' },
+  { id: 10764, name: 'Reality' },
+  { id: 10765, name: 'Sci-Fi & Fantasy' },
+  { id: 10766, name: 'Soap' },
+  { id: 10767, name: 'Talk' },
+  { id: 10768, name: 'War & Politics' },
+  { id: 37, name: 'Western' },
+];
+
+/** Keyed by the content type value sent to the backend ('MOVIES' | 'TV_SERIES'). */
+export const GENRES_BY_CONTENT_TYPE = { MOVIES: MOVIE_GENRES, TV_SERIES: TV_GENRES };
 
 export const MAX_DURATIONS_MIN = [90, 120, 150];
 
