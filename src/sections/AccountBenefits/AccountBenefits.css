@@ -1,5 +1,6 @@
 .account {
   padding-top: 120px;
+  scroll-margin-top: -96px;
 }
 
 .account__inner {

@@ -1,275 +1,208 @@
 /**
- * Rooms API.
+ * Rooms API - talks to the backend (see docs: POST /rooms, POST /rooms/{code}/join,
+ * GET /rooms/{code}). The pages only use the functions below and the `Room` shape; the backend
+ * details (field names, enum values, tokens) stay in this file.
  *
- * STUBS: there is no backend yet. Every function keeps its final signature - when the backend is
- * ready, replace only the bodies (the real requests are described in each comment) and the pages
- * keep working unchanged.
- *
- * How the stub behaves: rooms are stored in localStorage, which all tabs of one browser share, and
- * every tab is a different person (its id lives in sessionStorage). A change made in one tab
- * reaches the others through the browser's `storage` event, so the whole flow can be tried with
- * several tabs: create a room in one tab, open the invite link in another tab and join - the
- * host's lobby shows the new person right away. Nobody is simulated: only what the tabs really do
- * appears. A duplicated tab copies sessionStorage (= the same person), so open a fresh tab.
- *
- * To look at a room with ready-made people, run this in the browser console and open /room/GMX2I:
- *
- *   localStorage.setItem('stub-room:GMX2I', JSON.stringify({ code: 'GMX2I', status: 'lobby',
- *     preferences: { contentType: 'movie', genres: ['Comedy'], maxDurationMin: null,
- *       streamingServices: ['Netflix'] },
- *     participants: [
- *       { id: 'a', name: 'Sofiia', isHost: true },
- *       { id: 'b', name: 'Anna', isHost: false },
- *       { id: 'c', name: 'Peter', isHost: false },
- *     ] }))
- *   sessionStorage.setItem('stub-participant-id', 'b') // look at it as Anna ('a' = the host)
+ * Not available on the backend yet (kept as stubs): starting a session, leaving a room.
  */
+import { RoomApiError, toRoomApiError } from './errors.js';
+import { apiRequest } from './http.js';
+import { clearRoomSession, getRoomSession, saveRoomSession } from './roomSession.js';
+
+export { RoomApiError };
 
 /**
  * @typedef {Object} CreateRoomPayload
- * @property {string} hostName                      Name of the person creating the room
- * @property {'movie' | 'tv' | null} contentType    null = no preference
- * @property {string[]} genres                      Empty = any genre
- * @property {number | null} maxDurationMin         90 | 120 | 150, null = no limit
- * @property {string[]} streamingServices           Empty = any service
+ * @property {string} hostName                      3-20 characters
+ * @property {'MOVIES' | 'TV_SERIES'} contentType
+ * @property {number[]} genreIds                    Backend genre ids for the content type. Empty = any
+ * @property {number | null} maxDurationMin         30-150 minutes, null = no limit
  */
 
 /**
  * @typedef {Object} Participant
- * @property {string} id
+ * @property {number} id
  * @property {string} name
  * @property {boolean} isHost
- * @property {boolean} isMe    true for the person who is looking at the page (set by the backend)
+ * @property {boolean} isMe    true for the person who is looking at the page
  */
 
 /**
  * @typedef {Object} RoomPreferences
- * @property {'movie' | 'tv' | null} contentType
- * @property {string[]} genres
+ * @property {'MOVIES' | 'TV_SERIES'} contentType
+ * @property {number[]} genreIds
  * @property {number | null} maxDurationMin
- * @property {string[]} streamingServices
  */
 
 /**
  * @typedef {Object} Room
- * @property {string} code                    Room code from the invite link
- * @property {'lobby' | 'started'} status
- * @property {Participant[]} participants     Everyone in the room, host included.
- *                                            Empty for a visitor who has not joined yet.
- * @property {RoomPreferences} preferences    What the host picked (same fields as when creating)
+ * @property {string} code
+ * @property {'LOBBY' | 'VOTING' | 'FINISHED'} status
+ * @property {Participant[]} participants     Everyone in the room, host included, ordered by id
+ * @property {RoomPreferences} preferences
+ * @property {number} maxParticipants
  */
 
-/**
- * An error whose message is safe to show to the user (map backend errors to this class:
- * 404 "Room not found", 409 "This session has already started", ...).
- */
-export class RoomApiError extends Error {
-  constructor(message) {
-    super(message);
-    this.name = 'RoomApiError';
-  }
-}
+const POLL_INTERVAL_MS = 3000; // the backend has no WebSocket, it asks to poll every ~3 seconds
+const SESSION_ERROR_CODES = ['INVALID_TOKEN', 'WRONG_ROOM', 'ROOM_NOT_FOUND', 'NO_SESSION'];
 
-const ROOM_CODE_ALPHABET = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
-const MIN_PARTICIPANTS_TO_START = 2;
-const PARTICIPANT_ID_KEY = 'stub-participant-id';
-const roomKey = (code) => `stub-room:${code}`;
+const SESSION_EXPIRED_MESSAGE = 'Your session has expired. Please join the room again.';
+const encode = encodeURIComponent;
 
-// ---------- stub internals (the real backend replaces all of this) ----------
-
-let fallbackParticipantId = null; // used when sessionStorage is unavailable
-
-function createId() {
-  return (
-    globalThis.crypto?.randomUUID?.() ??
-    `${Date.now().toString(36)}${Math.random().toString(36).slice(2)}`
-  );
-}
-
-/** The id of the person using this tab. */
-function getMyId() {
+async function call(path, options) {
   try {
-    let id = sessionStorage.getItem(PARTICIPANT_ID_KEY);
-    if (!id) {
-      id = createId();
-      sessionStorage.setItem(PARTICIPANT_ID_KEY, id);
-    }
-    return id;
-  } catch {
-    fallbackParticipantId ??= createId();
-    return fallbackParticipantId;
+    return await apiRequest(path, options);
+  } catch (error) {
+    throw toRoomApiError(error);
   }
 }
 
-function generateCode() {
-  return Array.from(
-    { length: 5 },
-    () => ROOM_CODE_ALPHABET[Math.floor(Math.random() * ROOM_CODE_ALPHABET.length)],
-  ).join('');
-}
-
-function readStoredRoom(code) {
-  try {
-    return JSON.parse(localStorage.getItem(roomKey(code)));
-  } catch {
-    return null;
-  }
-}
-
-/** Changes made in this tab; other tabs are notified by the browser's `storage` event. */
-const localListeners = new Set();
-
-function writeStoredRoom(room) {
-  localStorage.setItem(roomKey(room.code), JSON.stringify(room));
-  localListeners.forEach((listener) => listener(room.code));
-}
-
-function deleteStoredRoom(code) {
-  localStorage.removeItem(roomKey(code));
-  localListeners.forEach((listener) => listener(code));
-}
-
-/** What the backend would answer to the person in this tab: adds `isMe`, hides people from visitors. */
-function toRoomView(stored) {
-  if (!stored) return null;
-  const myId = getMyId();
-  const isMember = stored.participants.some((person) => person.id === myId);
+/** Backend lobby response -> the shape the pages use. */
+function toRoom(data, session) {
+  const preferences = data.preferences ?? {};
   return {
-    code: stored.code,
-    status: stored.status,
-    preferences: stored.preferences,
-    participants: isMember
-      ? stored.participants.map((person) => ({ ...person, isMe: person.id === myId }))
-      : [],
+    code: data.code,
+    status: data.status,
+    maxParticipants: data.maxParticipants,
+    preferences: {
+      contentType: preferences.contentType,
+      genreIds: preferences.genreIds ?? [],
+      maxDurationMin: preferences.maxDurationMinutes ?? null,
+    },
+    participants: data.participants.map((person) => ({
+      id: person.id,
+      name: person.displayName,
+      isHost: person.host,
+      isMe: person.id === session.participantId,
+    })),
   };
 }
 
-function requireStoredRoom(code) {
-  const room = readStoredRoom(code);
-  if (!room) throw new RoomApiError('We could not find this room.');
-  return room;
-}
-
-// ---------- public API ----------
-
 /**
- * Creates a room; the caller becomes its host.
- * Real version: POST /api/rooms with `payload`, return the response ({ code }).
+ * Creates a room; the caller becomes its host and gets a token (kept in sessionStorage).
+ * POST /rooms
  *
  * @param {CreateRoomPayload} payload
  * @returns {Promise<{ code: string }>}
+ * @throws {RoomApiError}
  */
 export async function createRoom(payload) {
-  let code = generateCode();
-  while (readStoredRoom(code)) code = generateCode();
-
-  writeStoredRoom({
-    code,
-    status: 'lobby',
-    preferences: {
-      contentType: payload.contentType,
-      genres: payload.genres,
-      maxDurationMin: payload.maxDurationMin,
-      streamingServices: payload.streamingServices,
+  const data = await call('/rooms', {
+    method: 'POST',
+    body: {
+      displayName: payload.hostName,
+      preferences: {
+        contentType: payload.contentType,
+        genreIds: payload.genreIds,
+        maxDurationMinutes: payload.maxDurationMin,
+      },
     },
-    participants: [{ id: getMyId(), name: payload.hostName, isHost: true }],
   });
-  return { code };
+  saveRoomSession(data.code, { token: data.participant.token, participantId: data.participant.id });
+  return { code: data.code };
 }
 
 /**
- * Loads a room as seen by the person who is looking at it. Resolves to `null` when the room
- * does not exist (real version: 404).
- * Who is looking decides the view: no participant with `isMe` = visitor (invite page),
- * `isMe` + `isHost` = host lobby, `isMe` guest = waiting room.
- * Real version: GET /api/rooms/:code
+ * Joins a room as a guest and keeps the guest's token (sessionStorage).
+ * POST /rooms/{code}/join
  *
  * @param {string} code
- * @returns {Promise<Room | null>}
+ * @param {{ name: string }} guest              name: 3-20 characters, unique in the room
+ * @returns {Promise<{ ok: boolean, code: string }>}   `code` is the room's own spelling of the code
+ * @throws {RoomApiError}                       NAME_TAKEN, ROOM_FULL, ROOM_NOT_JOINABLE, ROOM_NOT_FOUND...
+ */
+export async function joinRoom(code, guest) {
+  const data = await call(`/rooms/${encode(code)}/join`, {
+    method: 'POST',
+    body: { displayName: guest.name },
+  });
+  const { token, id } = data.currentParticipant;
+  saveRoomSession(data.code, { token, participantId: id });
+  return { ok: true, code: data.code };
+}
+
+/**
+ * Loads the room for the person in this tab (uses their saved token).
+ * GET /rooms/{code}
+ * When the token is missing, expired or belongs to another room the saved pass is dropped.
+ *
+ * @param {string} code
+ * @returns {Promise<Room>}
+ * @throws {RoomApiError}   code NO_SESSION, INVALID_TOKEN, WRONG_ROOM, ROOM_NOT_FOUND or a network error
  */
 export async function getRoom(code) {
-  return toRoomView(readStoredRoom(code));
+  const session = getRoomSession(code);
+  if (!session) throw new RoomApiError('You are not in this room yet.', { code: 'NO_SESSION' });
+
+  try {
+    const room = toRoom(await call(`/rooms/${encode(code)}`, { token: session.token }), session);
+    if (!room.participants.some((person) => person.isMe)) {
+      throw new RoomApiError(SESSION_EXPIRED_MESSAGE, { code: 'INVALID_TOKEN' });
+    }
+    return room;
+  } catch (error) {
+    if (SESSION_ERROR_CODES.includes(error.code)) clearRoomSession(code);
+    throw error;
+  }
 }
 
 /**
- * Live updates of a room (people joining or leaving, the session starting).
- * `onChange` receives the whole updated Room, or `null` when the room was closed.
- * Real version: WebSocket / SSE / polling; return a function that stops the updates.
+ * Live updates of the room: asks the backend again every 3 seconds (no WebSocket available).
+ * `onChange(room)` gets every fresh Room. `onError(error)` is called only when the person can
+ * no longer use this room (expired token, room gone) and then polling stops; temporary network
+ * errors are ignored and retried.
  *
  * @param {string} code
- * @param {(room: Room | null) => void} onChange
+ * @param {(room: Room) => void} onChange
+ * @param {(error: RoomApiError) => void} [onError]
  * @returns {() => void} unsubscribe
  */
-export function subscribeToRoom(code, onChange) {
-  const notify = () => onChange(toRoomView(readStoredRoom(code)));
-  const handleLocalChange = (changedCode) => changedCode === code && notify();
-  const handleStorageEvent = (event) => event.key === roomKey(code) && notify();
+export function subscribeToRoom(code, onChange, onError) {
+  let isActive = true;
+  let timer;
 
-  localListeners.add(handleLocalChange);
-  window.addEventListener('storage', handleStorageEvent);
+  const poll = async () => {
+    try {
+      const room = await getRoom(code);
+      if (isActive) onChange(room);
+    } catch (error) {
+      if (SESSION_ERROR_CODES.includes(error.code)) {
+        if (isActive) onError?.(error);
+        return;
+      }
+    }
+    if (isActive) timer = setTimeout(poll, POLL_INTERVAL_MS);
+  };
+
+  timer = setTimeout(poll, POLL_INTERVAL_MS);
   return () => {
-    localListeners.delete(handleLocalChange);
-    window.removeEventListener('storage', handleStorageEvent);
+    isActive = false;
+    clearTimeout(timer);
   };
 }
 
 /**
- * Joins a room as a guest ("Join a movie room" page and the invite page).
- * Real version: POST /api/rooms/:code/join with { name }; throw a RoomApiError when it fails
- * (404 - there is no such room, 409 - the session already started).
- *
- * @param {string} code
- * @param {{ name: string }} guest
- * @returns {Promise<{ ok: boolean }>}
- */
-export async function joinRoom(code, guest) {
-  const room = readStoredRoom(code);
-  if (!room) throw new RoomApiError('We could not find this room. Check the link and try again.');
-
-  const myId = getMyId();
-  if (room.participants.some((person) => person.id === myId)) return { ok: true };
-  if (room.status !== 'lobby') throw new RoomApiError('This session has already started.');
-
-  writeStoredRoom({
-    ...room,
-    participants: [...room.participants, { id: myId, name: guest.name, isHost: false }],
-  });
-  return { ok: true };
-}
-
-/**
- * Leaves the room ("Leave room" on the waiting room page). When the host leaves, the room closes.
- * Real version: POST /api/rooms/:code/leave
+ * Leaves the room ("Leave room" on the waiting room page).
+ * STUB: the backend has no "leave" endpoint yet, so this only forgets the token on this device -
+ * the person stays in the room's participant list until the backend supports leaving.
  *
  * @param {string} code
  * @returns {Promise<{ ok: boolean }>}
  */
 export async function leaveRoom(code) {
-  const room = readStoredRoom(code);
-  if (!room) return { ok: true };
-
-  const myId = getMyId();
-  const me = room.participants.find((person) => person.id === myId);
-  if (me?.isHost) deleteStoredRoom(code);
-  else writeStoredRoom({ ...room, participants: room.participants.filter((p) => p.id !== myId) });
+  clearRoomSession(code);
   return { ok: true };
 }
 
 /**
  * Starts the swiping session for everyone in the room (host only).
- * Real version: POST /api/rooms/:code/start
+ * STUB: the backend does not implement status changes yet. When it does, call it here
+ * (e.g. POST /rooms/{code}/start) and throw a RoomApiError when it fails.
  *
  * @param {string} code
  * @returns {Promise<{ ok: boolean }>}
  */
 export async function startSession(code) {
-  const room = requireStoredRoom(code);
-  const host = room.participants.find((person) => person.isHost);
-  if (host?.id !== getMyId()) throw new RoomApiError('Only the host can start the session.');
-  if (room.participants.length < MIN_PARTICIPANTS_TO_START) {
-    throw new RoomApiError('Invite at least one friend to start a session.');
-  }
-
-  writeStoredRoom({ ...room, status: 'started' });
+  if (import.meta.env.DEV) console.info('[stub] startSession', code);
   return { ok: true };
 }

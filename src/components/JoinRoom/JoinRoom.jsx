@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { RoomApiError, joinRoom } from '../../api/roomsApi.js';
 import { extractRoomCode } from '../../utils/roomLinks.js';
+import { DISPLAY_NAME_MAX_LENGTH, validateDisplayName } from '../../utils/validation.js';
 import Button from '../Button/Button.jsx';
 import Header from '../Header/Header.jsx';
 import TextField from '../TextField/TextField.jsx';
@@ -28,17 +29,20 @@ export default function JoinRoom({ title, code, onJoined }) {
     if (!code && !link.trim()) nextErrors.link = 'Paste the room link or code';
     else if (!roomCode)
       nextErrors.link = 'That does not look like a room link. Check it and try again.';
-    if (!guestName) nextErrors.name = 'Please enter your name';
+    const nameError = validateDisplayName(guestName);
+    if (nameError) nextErrors.name = nameError;
     setErrors(nextErrors);
     if (Object.keys(nextErrors).length > 0) return;
 
     setIsSubmitting(true);
     try {
-      await joinRoom(roomCode, { name: guestName });
-      onJoined({ code: roomCode, name: guestName });
+      const joined = await joinRoom(roomCode, { name: guestName });
+      onJoined({ code: joined.code, name: guestName });
     } catch (error) {
       const message = error instanceof RoomApiError ? error.message : JOIN_FAILED_MESSAGE;
-      setErrors({ [code ? 'name' : 'link']: message });
+      // Room problems belong under the room link (or under the name when there is no link field).
+      const field = error.field === 'room' && !code ? 'link' : 'name';
+      setErrors({ [field]: message });
     } finally {
       setIsSubmitting(false);
     }
@@ -73,7 +77,7 @@ export default function JoinRoom({ title, code, onJoined }) {
             <TextField
               label="Your name"
               error={errors.name}
-              maxLength={40}
+              maxLength={DISPLAY_NAME_MAX_LENGTH}
               value={name}
               onChange={(event) => {
                 setName(event.target.value);
