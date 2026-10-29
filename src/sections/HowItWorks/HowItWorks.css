@@ -1,60 +1,59 @@
+/* Figma: 893px tall cream section, heading ink at y=83, cards start at y=242 */
 .how-it-works {
-  padding-top: 120px;
-  scroll-margin-top: -96px; /* nav click: the heading lands near the top, not under 120px of padding */
+  /* Nav click: the heading lands near the top of the window and the whole carousel stays in view */
+  scroll-margin-top: -70px;
+  min-height: 893px;
+  padding: 80px 0 82px;
+  background: var(--l-cream);
+  color: var(--l-ink);
+  font-family: var(--l-font-display);
 }
 
-.how-it-works__intro {
-  margin: 19px 0 0;
-  font-size: 17px;
-  line-height: 24px;
+.how-it-works__title {
+  margin: 0 0 0 -6px; /* the heading ink starts at x=119 in the design */
+  font-size: 64px;
+  font-weight: 900;
+  line-height: 1;
+  letter-spacing: -0.02em;
 }
 
-.how-it-works__steps {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  column-gap: 29.67px;
-  margin: 29px 0 0;
-  padding: 0;
-  list-style: none;
+.how-it-works__lead {
+  margin: 24px 0 0 -6px;
+  color: var(--l-muted);
+  font-size: 24px;
+  font-weight: 400;
+  line-height: 1.35;
 }
 
-/* Figma: 278x210 cards */
-.step-card {
-  height: 210px;
-  padding: 23px 24px 0;
-  border: 1px solid var(--line);
-  border-radius: 16px;
-  background: var(--card);
+.how-it-works__carousel {
+  margin-top: 40px;
 }
 
-.step-card__number {
-  display: block;
-  font-size: 14px;
-  line-height: 20px;
-}
-
-.step-card__title {
-  margin: 22px 0 0;
-  font-size: 20px;
-  font-weight: 600;
-  line-height: 28px;
-}
-
-.step-card__text {
-  margin: 14px 0 0;
-  font-size: 14px;
-  line-height: 17px;
-}
-
-@media (max-width: 1000px) {
-  .how-it-works__steps {
-    grid-template-columns: repeat(2, 1fr);
-    gap: 24px;
+@media (max-width: 700px) {
+  .how-it-works {
+    scroll-margin-top: -36px;
   }
-}
 
-@media (max-width: 560px) {
-  .how-it-works__steps {
-    grid-template-columns: 1fr;
+  .how-it-works__title,
+  .how-it-works__lead {
+    margin-left: 0;
+  }
+
+  .how-it-works {
+    min-height: 0;
+    padding: 48px 0 56px;
+  }
+
+  .how-it-works__title {
+    font-size: 40px;
+  }
+
+  .how-it-works__lead {
+    margin-top: 12px;
+    font-size: 18px;
+  }
+
+  .how-it-works__carousel {
+    margin-top: 28px;
   }
 }

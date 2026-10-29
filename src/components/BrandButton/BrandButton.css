@@ -1,0 +1,72 @@
+/* States follow the UI kit: default / hover / pressed / disabled */
+.brand-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  height: 56px;
+  padding: 0 32px;
+  border: 1px solid transparent;
+  border-radius: 999px;
+  color: #fff;
+  font-family: var(--l-font-display);
+  font-size: 16px;
+  font-weight: 400;
+  line-height: 1;
+  cursor: pointer;
+  user-select: none;
+  transition:
+    transform 0.12s ease,
+    box-shadow 0.2s ease,
+    background 0.2s ease,
+    border-color 0.2s ease,
+    filter 0.2s ease;
+}
+
+.brand-button--primary {
+  background: linear-gradient(90deg, var(--l-violet-light), var(--l-violet-dark));
+}
+
+.brand-button--primary:hover {
+  box-shadow: 0 8px 28px rgba(118, 52, 252, 0.45);
+  filter: brightness(1.12);
+}
+
+.brand-button--primary:active {
+  background: linear-gradient(90deg, #5d24d4, #3b0f94);
+  box-shadow: none;
+  filter: none;
+  transform: translateY(1px) scale(0.98);
+}
+
+.brand-button--ghost {
+  border-color: var(--l-accent);
+  background: transparent;
+}
+
+.brand-button--ghost:hover {
+  background: rgba(177, 138, 255, 0.14);
+  box-shadow: 0 0 0 3px rgba(177, 138, 255, 0.12);
+}
+
+.brand-button--ghost:active {
+  background: rgba(177, 138, 255, 0.28);
+  box-shadow: none;
+  transform: translateY(1px) scale(0.98);
+}
+
+.brand-button:focus-visible {
+  outline: 2px solid var(--l-cream);
+  outline-offset: 3px;
+}
+
+.brand-button:disabled,
+.brand-button:disabled:hover,
+.brand-button:disabled:active {
+  border-color: transparent;
+  background: #6f6a8c;
+  box-shadow: none;
+  color: rgba(255, 255, 255, 0.7);
+  cursor: not-allowed;
+  filter: none;
+  transform: none;
+}

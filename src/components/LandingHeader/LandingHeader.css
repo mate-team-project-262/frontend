@@ -1,0 +1,69 @@
+/* Figma: 96px header, logo at x=120, nav links 35px apart, "Sign In" text ends at x=1306 */
+.landing-header {
+  position: relative;
+  z-index: 2;
+}
+
+.landing-header__inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 96px;
+}
+
+.landing-header__logo {
+  display: block;
+}
+
+.landing-header__nav {
+  display: flex;
+  align-items: center;
+  gap: 33px;
+  margin-right: 11px;
+}
+
+.landing-header__link {
+  padding: 8px 0;
+  border: 0;
+  background: none;
+  color: #fffaef;
+  font-family: var(--l-font-display);
+  font-size: 16px;
+  font-weight: 400;
+  line-height: 1;
+  cursor: pointer;
+  transition:
+    opacity 0.12s ease,
+    transform 0.12s ease;
+}
+
+.landing-header__link--bold {
+  font-weight: 700;
+}
+
+.landing-header__link:hover {
+  text-decoration: underline;
+  text-underline-offset: 6px;
+}
+
+.landing-header__link:active {
+  opacity: 0.65;
+  transform: scale(0.97);
+}
+
+.landing-header__link:focus-visible {
+  outline: 2px solid var(--l-cream);
+  outline-offset: 4px;
+  border-radius: 4px;
+}
+
+@media (max-width: 640px) {
+  .landing-header__nav {
+    gap: 18px;
+    margin-right: 0;
+  }
+
+  .landing-header__link:not(.landing-header__link--bold) {
+    display: none;
+  }
+}

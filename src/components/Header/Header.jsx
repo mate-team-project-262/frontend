@@ -1,15 +1,15 @@
 import { Link, useNavigate } from 'react-router';
-import { onNavAccountBenefits, onNavHowItWorks, onSignIn } from '../../handlers.js';
 import { ROUTES } from '../../routes.js';
 import { cx } from '../../utils/classNames.js';
 import LinkButton from '../LinkButton/LinkButton.jsx';
 import './Header.css';
 
 /**
- * variant: 'landing' (navigation + Sign in) | 'back' (only a "Back to home" link)
+ * variant: 'back' (only a "Back to home" link)
  *          | 'leave' (only a "Leave room" button that calls `onLeave`).
+ * The landing page has its own header (LandingHeader).
  */
-export default function Header({ variant = 'landing', onLeave }) {
+export default function Header({ variant = 'back', onLeave }) {
   const navigate = useNavigate();
   const isBack = variant === 'back';
 
@@ -22,20 +22,8 @@ export default function Header({ variant = 'landing', onLeave }) {
         <nav className={cx('header__nav', isBack && 'header__nav--back')}>
           {variant === 'leave' ? (
             <LinkButton onClick={onLeave}>Leave room</LinkButton>
-          ) : isBack ? (
-            <LinkButton onClick={() => navigate(ROUTES.home)}>Back to home</LinkButton>
           ) : (
-            <>
-              <LinkButton className="header__nav-link" onClick={onNavHowItWorks}>
-                How it works
-              </LinkButton>
-              <LinkButton className="header__nav-link" onClick={onNavAccountBenefits}>
-                Account benefits
-              </LinkButton>
-              <LinkButton bold className="header__sign-in" onClick={onSignIn}>
-                Sign in
-              </LinkButton>
-            </>
+            <LinkButton onClick={() => navigate(ROUTES.home)}>Back to home</LinkButton>
           )}
         </nav>
       </div>
