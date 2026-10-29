@@ -1,4 +1,7 @@
 import '@fontsource-variable/inter';
+import '@fontsource/geologica/400.css';
+import '@fontsource/geologica/700.css';
+import '@fontsource/geologica/900.css';
 import './styles/base.css'; // first, so component styles can override it
 import { StrictMode } from 'react';
 import { createRoot } from 'react-dom/client';

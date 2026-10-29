@@ -1,26 +1,86 @@
+/*
+ * Figma: 676px tall. The cream block ends with a curve (an ellipse 1760 x 480 wide, bottom at y=451)
+ * and the poster strip shows below it, fading to dark at the bottom.
+ */
 .cta-banner {
-  margin-top: 140px;
-  padding: 81px 0 80px;
-  background: var(--band);
+  position: relative;
+  overflow: hidden;
+  min-height: max(676px, 46.94vw); /* grows with the strip on screens wider than 1440px */
+  background: var(--l-night);
+  font-family: var(--l-font-display);
+}
+
+.cta-banner__posters {
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  display: flex;
+  align-items: flex-end;
+  width: max(1440px, 100%);
+  transform: translateX(-50%);
+}
+
+.cta-banner__posters::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, transparent 60%, rgba(8, 2, 39, 0.96) 100%);
+}
+
+.cta-banner__poster {
+  display: block;
+  flex: none;
+  height: auto;
+  user-select: none;
+}
+
+.cta-banner__bowl {
+  position: absolute;
+  top: 0;
+  left: 50%;
+  width: max(1760px, 122.3vw);
+  height: max(451px, 31.32vw);
+  border-radius: 0 0 max(880px, 61.11vw) max(880px, 61.11vw) / 0 0 max(240px, 16.67vw)
+    max(240px, 16.67vw);
+  background: var(--l-cream);
+  transform: translateX(-50%);
 }
 
 .cta-banner__inner {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
+  position: relative;
+  padding-top: 81px;
   text-align: center;
 }
 
-.cta-banner__text {
-  max-width: 440px;
-  margin: 25px 0 40px;
-  font-size: 17px;
-  line-height: 26px;
+.cta-banner__title {
+  margin: 0;
+  color: var(--l-ink);
+  font-size: 48px;
+  font-weight: 700;
+  line-height: 1.2;
+  letter-spacing: -0.02em;
 }
 
-@media (max-width: 600px) {
-  .cta-banner .title {
+.cta-banner__text {
+  max-width: 560px;
+  margin: 23px auto 0;
+  color: #2f2270;
+  font-size: 24px;
+  font-weight: 400;
+  line-height: 1.34;
+}
+
+.cta-banner__button {
+  width: 240px;
+  margin-top: 33px;
+}
+
+@media (max-width: 700px) {
+  .cta-banner__title {
     font-size: 34px;
-    line-height: 42px;
+  }
+
+  .cta-banner__text {
+    font-size: 18px;
   }
 }

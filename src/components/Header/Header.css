@@ -22,26 +22,14 @@
   margin-right: 5px;
 }
 
-.header__sign-in {
-  margin-left: 5px;
-}
-
-/* "Back to home" sits 13px closer to the edge than the landing navigation (Figma) */
+/* "Back to home" sits 13px closer to the edge than the old landing navigation (Figma) */
 .header__nav--back {
   margin-right: -8px;
 }
 
 @media (max-width: 640px) {
-  .header__nav-link {
-    display: none;
-  }
-
   .header__nav {
     gap: 0;
     margin-right: 0;
-  }
-
-  .header__sign-in {
-    margin-left: 0;
   }
 }

@@ -6,27 +6,11 @@ export const HOW_IT_WORKS_STEPS = [
 ];
 
 export const ACCOUNT_BENEFITS = [
-  'Save your past rooms and winners',
-  'Avoid seeing the same movies again',
-  'Build a personal taste profile from your swipes',
-  'See favorite and avoided genres',
-  'Discover actors, eras and origins you tend to like',
+  { title: 'Save your sessions', text: 'Past rooms and winners' },
+  { title: 'Avoid repeats', text: 'Fewer movies you’ve seen' },
+  { title: 'Learn your taste', text: 'Genres, actors & patterns' },
+  { title: 'Get better picks', text: 'More relevant over time' },
 ];
-
-export const SAMPLE_TASTE_PROFILE = {
-  viewerType: 'The Explorer',
-  viewerDescription: 'You like variety across many genres.',
-  topGenre: 'Romance',
-  leastLikedGenre: 'Documentary',
-  genreMix: [
-    ['Action', 17],
-    ['Adventure', 14],
-    ['Comedy', 13],
-    ['Drama', 10],
-    ['Others', 46],
-  ],
-  actors: ['Actor 1', 'Actor 2', 'Actor 3'],
-};
 
 // "Create your movie room" form options
 export const CONTENT_TYPES = [
