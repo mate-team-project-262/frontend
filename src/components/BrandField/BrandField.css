@@ -77,3 +77,12 @@
 .brand-field--error .brand-field__message {
   color: #ff7a80;
 }
+
+/* Larger text, e.g. the invite link (Figma: 16px) */
+.brand-field--lg .brand-field__input {
+  font-size: 16px;
+}
+
+.brand-field__input:read-only:not(:disabled) {
+  cursor: text;
+}

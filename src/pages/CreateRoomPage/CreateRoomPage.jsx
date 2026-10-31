@@ -16,6 +16,7 @@ import {
 } from '../../data/content.js';
 import { roomPath } from '../../routes.js';
 import { DISPLAY_NAME_MAX_LENGTH, validateDisplayName } from '../../utils/validation.js';
+import '../../styles/cinema.css';
 import '../../styles/landing.css';
 import './CreateRoomPage.css';
 
@@ -112,7 +113,7 @@ export default function CreateRoomPage() {
   const isGenreLimitReached = form.genreIds.length >= MAX_GENRES;
 
   return (
-    <div className="create-room-page landing">
+    <div className="create-room-page cinema-page cinema-page--create landing">
       <BrandHeader />
       <main className="create-room">
         <form className="create-room__panel" onSubmit={handleSubmit} noValidate>

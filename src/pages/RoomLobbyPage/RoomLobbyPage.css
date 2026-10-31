@@ -1,119 +1,186 @@
-/* Figma "Invite friends" (1440x1024 frame): content column starts at x=120, title at y=150. */
-.room-lobby-page {
-  --bg: #f7f7f7;
-  --line: #9c9c9c;
-
-  min-height: 100vh;
-  background: var(--bg);
+/*
+ * Room lobby (host), "W2W" dark theme. Figma frame 1440 wide: glass panel 861 x 837 at x=290, y=136;
+ * content 619px wide; left column 384px, divider, QR column 154px. The photo is in styles/cinema.css.
+ */
+.room-lobby {
+  padding: 40px 24px 48px;
 }
 
-.room-lobby {
-  padding-top: 54px;
-  padding-bottom: 98px;
+.room-lobby__panel {
+  box-sizing: border-box;
+  max-width: 861px;
+  margin: 0 auto;
+  padding: 80px 120px 80px;
+  border: 1px solid var(--l-accent);
+  border-radius: 48px;
+  background:
+    linear-gradient(180deg, rgba(0, 0, 20, 0) 55%, rgba(0, 0, 20, 0.35) 100%),
+    linear-gradient(
+      100deg,
+      rgba(27, 7, 68, 0.94) 0%,
+      rgba(20, 4, 54, 0.94) 45%,
+      rgba(10, 2, 33, 0.95) 100%
+    );
+  box-shadow: 0 0 32px rgba(150, 90, 255, 0.28);
+  -webkit-backdrop-filter: blur(24px);
+  backdrop-filter: blur(24px);
 }
 
 .room-lobby__title {
   margin: 0;
-  font-size: 33px;
-  font-weight: 600;
-  line-height: 44px;
+  color: var(--l-cream);
+  font-family: var(--l-font-display);
+  font-size: 36px;
+  font-weight: 700;
+  line-height: 1.2;
+  text-align: center;
 }
 
 .room-lobby__subtitle {
   margin: 10px 0 0;
+  color: var(--l-lavender);
+  font-family: var(--l-font-text);
   font-size: 16px;
-  line-height: 24px;
+  line-height: 1.5;
+  text-align: center;
 }
 
-.room-lobby__message {
-  margin: 0;
-  font-size: 16px;
-  line-height: 24px;
-}
-
-/* Left: link + buttons (512px). Right: QR code (260px) at x=830. */
 .room-lobby__top {
   display: grid;
-  grid-template-columns: 512px 260px;
-  column-gap: 198px;
-  margin-top: 43px;
+  grid-template-columns: minmax(0, 384px) 1px 154px;
+  column-gap: 40px;
+  justify-content: space-between;
+  margin-top: 31px;
 }
 
 .room-lobby__share {
-  margin-top: 5px;
+  min-width: 0;
 }
 
 .room-lobby__actions {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
+  display: flex;
   gap: 16px;
-  margin-top: 24px;
+  margin-top: 16px;
 }
 
 .room-lobby__action {
-  width: 100%;
+  height: 52px;
+  padding: 0 12px;
+  white-space: nowrap;
 }
 
-.room-lobby__qr-label,
+.room-lobby__action--copy {
+  flex: 161 1 0;
+}
+
+.room-lobby__action--telegram {
+  flex: 207 1 0;
+  gap: 14px;
+}
+
+.room-lobby__divider {
+  background: #645b8d;
+}
+
 .room-lobby__label {
+  margin: 0 0 10px;
+  color: var(--l-cream);
+  font-family: var(--l-font-text);
   font-size: 16px;
-  font-weight: 600;
-  line-height: 20px;
+  font-weight: 400;
+  line-height: 1.5;
 }
 
-.room-lobby__qr-label {
-  margin-bottom: 15px;
+.room-lobby__qr .room-lobby__label {
+  margin-bottom: 8px;
+}
+
+.room-lobby__caption {
+  margin: 9px 0 0;
+  color: var(--l-muted);
+  font-family: var(--l-font-text);
+  font-size: 14px;
+  line-height: 1.5;
+  text-align: center;
+  white-space: nowrap;
 }
 
 .room-lobby__people {
-  max-width: 512px;
-  margin-top: 28px;
+  margin-top: 31px;
 }
 
-.room-lobby__label {
-  margin: 0 0 12px;
+.room-lobby__people .room-lobby__label {
+  margin-bottom: 8px;
 }
 
 .room-lobby__list {
   display: flex;
   flex-direction: column;
-  gap: 16px;
+  gap: 8px;
   margin: 0;
   padding: 0;
-  list-style: none;
 }
 
 .room-lobby__start {
+  width: 100%;
+  height: 54px;
   margin-top: 32px;
 }
 
-.room-lobby__hint {
+.room-lobby__error {
   margin: 16px 0 0;
+  color: #ff7a80;
+  font-family: var(--l-font-text);
   font-size: 14px;
-  line-height: 20px;
+  line-height: 1.5;
+  text-align: center;
+}
+
+.room-lobby__hint {
+  margin: 8px 0 0;
+  color: var(--l-lavender);
+  font-family: var(--l-font-text);
+  font-size: 14px;
+  line-height: 1.5;
   text-align: center;
 }
 
 @media (max-width: 900px) {
-  .room-lobby__top {
-    grid-template-columns: 1fr;
-    row-gap: 32px;
-  }
-
-  .room-lobby__share {
-    margin-top: 0;
-  }
-
-  .room-lobby__title {
-    font-size: 30px;
-    line-height: 38px;
+  .room-lobby__panel {
+    padding: 56px 40px 48px;
+    border-radius: 40px;
   }
 }
 
-.room-lobby__error {
-  margin: 12px 0 0;
-  color: #c0392b;
-  font-size: 13px;
-  line-height: 16px;
-  text-align: center;
+@media (max-width: 700px) {
+  .room-lobby__top {
+    grid-template-columns: 1fr;
+    row-gap: 24px;
+  }
+
+  .room-lobby__divider {
+    width: 100%;
+    height: 1px;
+  }
+
+  .room-lobby__qr {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+}
+
+@media (max-width: 560px) {
+  .room-lobby {
+    padding: 8px 12px 24px;
+  }
+
+  .room-lobby__panel {
+    padding: 40px 20px 32px;
+    border-radius: 32px;
+  }
+
+  .room-lobby__title {
+    font-size: 28px;
+  }
 }

@@ -1,0 +1,47 @@
+/* Figma: 52px tall pill with a 1px #b18aff border, 36px avatar, "Host" badge 32px tall */
+.brand-participant {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  box-sizing: border-box;
+  height: 52px;
+  padding: 0 8px;
+  border: 1px solid #b18aff;
+  border-radius: 999px;
+  color: #fffaef;
+  font-family: var(--l-font-text);
+  font-size: 14px;
+  line-height: 1.5;
+  list-style: none;
+}
+
+.brand-participant__avatar {
+  flex: none;
+  display: grid;
+  place-items: center;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  font-size: 14px;
+  line-height: 1;
+}
+
+.brand-participant__name {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.brand-participant__you {
+  color: #9b95b8;
+}
+
+.brand-participant__badge {
+  flex: none;
+  margin-left: auto;
+  padding: 0 16px;
+  border-radius: 999px;
+  background: #070125;
+  line-height: 32px;
+}

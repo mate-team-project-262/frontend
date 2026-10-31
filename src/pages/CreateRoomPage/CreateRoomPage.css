@@ -1,39 +1,7 @@
 /*
- * Create room, "W2W" dark theme (Figma frame 1440 wide).
- * Background: the cinema photo. As in the design it always scales with the page WIDTH (so the faces
- * keep their size relative to the form), starts at the top and is darkened to about 70% with a violet
- * tint under the header. If the page is taller than the photo, the photo fades into the dark page
- * colour; if it is shorter (wide screens), the bottom of the photo is simply cut off.
- * The form sits on a glass panel with a 1px #b18aff border and a soft glow.
+ * Create room, "W2W" dark theme (Figma frame 1440 wide). The photo background is in
+ * styles/cinema.css. The form sits on a glass panel with a 1px #b18aff border and a soft glow.
  */
-.create-room-page {
-  position: relative;
-  /* At least as tall as the whole photo at this width, so its bottom (the knee) is always in the page */
-  min-height: max(100vh, 87.7vw);
-  overflow: hidden;
-  isolation: isolate;
-  background-color: #07040f;
-}
-
-.create-room-page::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  right: 0;
-  left: 0;
-  z-index: -1;
-  aspect-ratio: 1339 / 1174;
-  background-image:
-    linear-gradient(180deg, rgba(30, 0, 70, 0.28) 0, rgba(30, 0, 70, 0) 120px),
-    linear-gradient(rgba(9, 0, 20, 0.31), rgba(9, 0, 20, 0.31)),
-    url('../../assets/landing/cinema-bg.webp');
-  background-position: top center;
-  background-size: 100% 100%;
-  background-repeat: no-repeat;
-  -webkit-mask-image: linear-gradient(180deg, #000 calc(100% - 16px), transparent);
-  mask-image: linear-gradient(180deg, #000 calc(100% - 16px), transparent);
-}
-
 .create-room {
   padding: 40px 24px 48px;
 }
@@ -112,18 +80,6 @@
 }
 
 @media (max-width: 560px) {
-  /* Phone: the panel covers most of the screen, so the photo just fills the whole page */
-  .create-room-page::before {
-    bottom: 0;
-    aspect-ratio: auto;
-    background-size:
-      100% 100%,
-      100% 100%,
-      cover;
-    -webkit-mask-image: none;
-    mask-image: none;
-  }
-
   .create-room {
     padding: 8px 12px 24px;
   }

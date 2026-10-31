@@ -1,0 +1,72 @@
+/*
+ * Pages on the cinema photo (Create room, the room lobby ...). As in Figma the photo scales with
+ * the page WIDTH, starts at the top and is darkened to about 70% with a violet tint under the
+ * header. The page is at least as tall as the whole photo; if it is taller (long content) the
+ * photo fades into the dark page colour.
+ *
+ * Use: <div className="cinema-page cinema-page--create"> ... </div>
+ * A photo is a modifier that sets --cinema-photo, --cinema-ratio (width / height) and
+ * --cinema-height (height / width, as a number).
+ */
+.cinema-page {
+  --cinema-height: 0.877;
+
+  position: relative;
+  min-height: max(100vh, calc(100vw * var(--cinema-height)));
+  overflow: hidden;
+  isolation: isolate;
+  background-color: #07040f;
+}
+
+.cinema-page::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  right: 0;
+  left: 0;
+  z-index: -1;
+  aspect-ratio: var(--cinema-ratio);
+  background-image:
+    var(--cinema-extra-tint, linear-gradient(transparent, transparent)),
+    linear-gradient(180deg, rgba(30, 0, 70, 0.28) 0, rgba(30, 0, 70, 0) 120px),
+    linear-gradient(rgba(9, 0, 20, 0.31), rgba(9, 0, 20, 0.31)), var(--cinema-photo);
+  background-position: top center;
+  background-size: 100% 100%;
+  background-repeat: no-repeat;
+  -webkit-mask-image: linear-gradient(180deg, #000 calc(100% - 16px), transparent);
+  mask-image: linear-gradient(180deg, #000 calc(100% - 16px), transparent);
+}
+
+/* Create room: the photo with the man, the woman and the empty seats (1339 x 1174) */
+.cinema-page--create {
+  --cinema-photo: url('../assets/landing/cinema-bg.webp');
+  --cinema-ratio: 1339 / 1174;
+  --cinema-height: 0.8768;
+}
+
+/* Room lobby: the photo with the whole audience (1487 x 1058); the left corner of the header is lighter */
+.cinema-page--crowd {
+  --cinema-photo: url('../assets/landing/cinema-bg-crowd.webp');
+  --cinema-ratio: 1487 / 1058;
+  --cinema-height: 0.7115;
+  --cinema-extra-tint: radial-gradient(
+    520px 150px at 0 0,
+    rgba(110, 100, 190, 0.22),
+    rgba(110, 100, 190, 0)
+  );
+}
+
+@media (max-width: 560px) {
+  /* Phone: the panel covers most of the screen, so the photo just fills the whole page */
+  .cinema-page::before {
+    bottom: 0;
+    aspect-ratio: auto;
+    background-size:
+      100% 100%,
+      100% 100%,
+      100% 100%,
+      cover;
+    -webkit-mask-image: none;
+    mask-image: none;
+  }
+}
