@@ -1,12 +1,22 @@
-.room-page {
-  --bg: #f7f7f7;
-
-  min-height: 100vh;
-  background: var(--bg);
+/* Loading / "room not found" / error message on the cinema photo */
+.room-page__main {
+  padding: 120px 24px 48px;
 }
 
 .room-page__message {
-  margin: 54px 0 0;
+  box-sizing: border-box;
+  max-width: 520px;
+  margin: 0 auto;
+  padding: 24px 40px;
+  border: 1px solid var(--l-accent);
+  border-radius: 32px;
+  background: rgba(13, 4, 56, 0.78);
+  box-shadow: 0 0 32px rgba(150, 90, 255, 0.28);
+  -webkit-backdrop-filter: blur(24px);
+  backdrop-filter: blur(24px);
+  color: var(--l-cream);
+  font-family: var(--l-font-text);
   font-size: 16px;
-  line-height: 24px;
+  line-height: 1.5;
+  text-align: center;
 }

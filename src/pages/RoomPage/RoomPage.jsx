@@ -1,7 +1,9 @@
 import { Navigate, useParams } from 'react-router';
-import Header from '../../components/Header/Header.jsx';
+import BrandHeader from '../../components/BrandHeader/BrandHeader.jsx';
 import { useRoom } from '../../hooks/useRoom.js';
 import { invitePath } from '../../routes.js';
+import '../../styles/cinema.css';
+import '../../styles/landing.css';
 import RoomLobbyPage from '../RoomLobbyPage/RoomLobbyPage.jsx';
 import WaitingRoomPage from '../WaitingRoomPage/WaitingRoomPage.jsx';
 import './RoomPage.css';
@@ -14,10 +16,12 @@ const STATUS_MESSAGES = {
 
 function RoomMessage({ status }) {
   return (
-    <div className="room-page">
-      <Header variant="back" />
-      <main className="container">
-        <p className="room-page__message">{STATUS_MESSAGES[status]}</p>
+    <div className="room-page cinema-page cinema-page--audience landing">
+      <BrandHeader />
+      <main className="room-page__main">
+        <p className="room-page__message" role="status">
+          {STATUS_MESSAGES[status]}
+        </p>
       </main>
     </div>
   );

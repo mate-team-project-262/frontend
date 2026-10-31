@@ -1,0 +1,29 @@
+/* Figma: 21px ring, 3px stroke, a bright violet arc over a dim violet track */
+.brand-spinner {
+  flex: none;
+  box-sizing: border-box;
+  width: 21px;
+  height: 21px;
+  border: 3px solid #2f1b78;
+  border-top-color: #8f63ff;
+  border-radius: 50%;
+  animation: brand-spinner-turn 0.9s linear infinite;
+}
+
+@keyframes brand-spinner-turn {
+  from {
+    transform: rotate(45deg);
+  }
+
+  to {
+    transform: rotate(405deg);
+  }
+}
+
+/* No motion: keep the ring still, at the angle it has in the design */
+@media (prefers-reduced-motion: reduce) {
+  .brand-spinner {
+    animation: none;
+    transform: rotate(45deg);
+  }
+}

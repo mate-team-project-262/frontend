@@ -1,92 +1,154 @@
-/* Figma "Waiting room" (1440x1024): title centered at y=183, panel 655px wide at y=324. */
-.waiting-room-page {
-  --bg: #f7f7f7;
-
-  min-height: 100vh;
-  background: var(--bg);
+/*
+ * Waiting room (guest), "W2W" dark theme. Figma 1440 wide: glass panel 773px wide at x=333, y=136;
+ * content 531px wide with 120px side padding. The photo is in styles/cinema.css.
+ */
+.waiting-room {
+  padding: 40px 24px 48px;
 }
 
-.waiting-room {
-  padding: 63px 16px 98px;
+.waiting-room__panel {
+  box-sizing: border-box;
+  max-width: 773px;
+  margin: 0 auto;
+  padding: 80px 120px 40px;
+  border: 1px solid var(--l-accent);
+  border-radius: 48px;
+  background: rgba(13, 4, 56, 0.78);
+  box-shadow: 0 0 32px rgba(150, 90, 255, 0.28);
+  -webkit-backdrop-filter: blur(24px);
+  backdrop-filter: blur(24px);
 }
 
 .waiting-room__title {
   margin: 0;
-  font-size: 38.5px;
-  font-weight: 600;
-  line-height: 48px;
+  color: var(--l-cream);
+  font-family: var(--l-font-display);
+  font-size: 36px;
+  font-weight: 700;
+  line-height: 1.2;
   text-align: center;
 }
 
-.waiting-room__subtitle {
-  margin: 21px 0 0;
-  font-size: 19.2px;
-  line-height: 28px;
+.waiting-room__host {
+  margin: 9px 0 0;
+  color: var(--l-lavender);
+  font-family: var(--l-font-text);
+  font-size: 16px;
+  line-height: 1.5;
   text-align: center;
 }
 
-.waiting-room__panel {
-  width: 100%;
-  max-width: 655px;
-  margin: 68px auto 0;
-  padding: 41px 120px 40px;
-  border-radius: 24px;
-  background: var(--surface);
+.waiting-room__auto {
+  margin: 7px 0 0;
+  color: var(--l-muted);
+  font-family: var(--l-font-text);
+  font-size: 14px;
+  line-height: 1.5;
+  text-align: center;
 }
 
-.waiting-room__session {
-  margin: 0;
-  font-size: 24px;
-  font-weight: 600;
-  line-height: 32px;
+.waiting-room__status {
+  box-sizing: border-box;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: fit-content;
+  height: 42px;
+  margin: 16px auto 0;
+  padding: 0 17px 0 9px;
+  border: 1px solid var(--l-accent);
+  border-radius: 999px;
+  background: #070125;
+  color: var(--l-cream);
+  font-family: var(--l-font-text);
+  font-size: 16px;
+  line-height: 1;
+}
+
+.waiting-room__people {
+  margin-top: 41px;
+}
+
+.waiting-room__people .waiting-room__label {
+  margin-bottom: 7px;
 }
 
 .waiting-room__label {
-  margin: 38px 0 18px;
+  margin: 0 0 8px;
+  color: var(--l-cream);
+  font-family: var(--l-font-text);
   font-size: 16px;
-  font-weight: 600;
-  line-height: 20px;
+  font-weight: 400;
+  line-height: 1.5;
 }
 
-.waiting-room__label--next {
-  margin-top: 28px;
+.waiting-room__label--chips {
+  margin-bottom: 10px;
 }
 
+.waiting-room__list,
 .waiting-room__chips {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
-  align-items: center;
   margin: 0;
   padding: 0;
   list-style: none;
 }
 
-/* The dot between preference groups: 25px in total with the two 8px gaps. */
-.waiting-room__separator {
-  width: 9px;
-  font-size: 16px;
-  line-height: 24px;
-  text-align: center;
+.waiting-room__list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.waiting-room__preferences {
+  margin-top: 42px;
+}
+
+.waiting-room__chips {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+}
+
+.waiting-room__divider {
+  width: 2px;
+  height: 24px;
+  background: #261f49;
 }
 
 .waiting-room__empty {
   margin: 0;
-  font-size: 16px;
-  line-height: 24px;
+  color: var(--l-muted);
+  font-family: var(--l-font-text);
+  font-size: 14px;
+  line-height: 1.5;
 }
 
-@media (max-width: 700px) {
+.waiting-room__leave {
+  width: 100%;
+  height: 54px;
+  margin-top: 40px;
+  gap: 20px;
+}
+
+@media (max-width: 900px) {
   .waiting-room__panel {
-    padding: 32px 20px;
+    padding: 56px 40px 32px;
+    border-radius: 40px;
+  }
+}
+
+@media (max-width: 560px) {
+  .waiting-room {
+    padding: 8px 12px 24px;
+  }
+
+  .waiting-room__panel {
+    padding: 40px 20px 28px;
+    border-radius: 32px;
   }
 
   .waiting-room__title {
-    font-size: 32px;
-    line-height: 40px;
-  }
-
-  .waiting-room__subtitle {
-    font-size: 18px;
+    font-size: 28px;
   }
 }

@@ -89,6 +89,37 @@
   mask-image: none;
 }
 
+/*
+ * Waiting room: the audience photo (1536 x 1024). In the frame it is 3% taller than the page and
+ * glued to the right edge; it never gets narrower than the window.
+ */
+.cinema-page--audience {
+  --cinema-photo: url('../assets/landing/cinema-bg-audience.webp');
+  --cinema-height: 0;
+  --cinema-extra-tint: radial-gradient(
+    520px 150px at 0 0,
+    rgba(110, 100, 190, 0.22),
+    rgba(110, 100, 190, 0)
+  );
+}
+
+.cinema-page--audience::before {
+  bottom: 0;
+  aspect-ratio: auto;
+  background-position:
+    top center,
+    top center,
+    top center,
+    right center;
+  background-size:
+    100% 100%,
+    100% 100%,
+    100% 100%,
+    auto max(103%, calc(100vw / 1.5));
+  -webkit-mask-image: none;
+  mask-image: none;
+}
+
 @media (max-width: 560px) {
   /* Phone: the panel covers most of the screen, so the photo just fills the whole page */
   .cinema-page::before {
