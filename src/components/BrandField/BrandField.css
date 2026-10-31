@@ -86,3 +86,8 @@
 .brand-field__input:read-only:not(:disabled) {
   cursor: text;
 }
+
+/* Lighter fill, as on the "Join a movie room" page */
+.brand-field--raised .brand-field__input {
+  background: #2f2270;
+}

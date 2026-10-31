@@ -1,10 +1,13 @@
 import { useState } from 'react';
 import { RoomApiError, joinRoom } from '../../api/roomsApi.js';
+import { cx } from '../../utils/classNames.js';
 import { extractRoomCode } from '../../utils/roomLinks.js';
 import { DISPLAY_NAME_MAX_LENGTH, validateDisplayName } from '../../utils/validation.js';
-import Button from '../Button/Button.jsx';
-import Header from '../Header/Header.jsx';
-import TextField from '../TextField/TextField.jsx';
+import BrandButton from '../BrandButton/BrandButton.jsx';
+import BrandField from '../BrandField/BrandField.jsx';
+import BrandHeader from '../BrandHeader/BrandHeader.jsx';
+import '../../styles/cinema.css';
+import '../../styles/landing.css';
 import './JoinRoom.css';
 
 const JOIN_FAILED_MESSAGE = 'We could not join this room. Check the link and try again.';
@@ -19,6 +22,9 @@ export default function JoinRoom({ title, code, onJoined }) {
   const [name, setName] = useState('');
   const [errors, setErrors] = useState({});
   const [isSubmitting, setIsSubmitting] = useState(false);
+
+  // The button is disabled until all visible fields are filled (the room link only when it is asked).
+  const isFilled = (code || link.trim() !== '') && name.trim() !== '';
 
   const handleSubmit = async (event) => {
     event.preventDefault();
@@ -51,44 +57,60 @@ export default function JoinRoom({ title, code, onJoined }) {
   const clearError = (field) => setErrors((current) => ({ ...current, [field]: undefined }));
 
   return (
-    <div className="join-room-page">
-      <Header variant="back" />
+    <div className="join-room-page cinema-page cinema-page--theatre landing">
+      <BrandHeader />
       <main className="join-room">
-        <h1 className="join-room__title">{title}</h1>
-        <p className="join-room__subtitle">
-          Join to swipe through the same 20 movies as your friends
-        </p>
+        <section
+          className={cx('join-room__panel', code && 'join-room__panel--invite')}
+          aria-labelledby="join-room-title"
+        >
+          <h1 className="join-room__title" id="join-room-title">
+            {title}
+          </h1>
+          <p className="join-room__subtitle">
+            Join to swipe through the same 20 movies as your friends
+          </p>
 
-        <form className="join-room__form" onSubmit={handleSubmit} noValidate>
-          <div className="join-room__fields">
-            {!code && (
-              <TextField
-                label="Room link"
-                hint="You can paste the full invite link from Telegram, Messenger or any other chat."
-                error={errors.link}
-                maxLength={300}
-                value={link}
+          <form className="join-room__form" onSubmit={handleSubmit} noValidate>
+            <div className="join-room__fields">
+              {!code && (
+                <BrandField
+                  tone="raised"
+                  label="Room link"
+                  placeholder="Paste the invite link or the room code"
+                  error={errors.link}
+                  maxLength={300}
+                  value={link}
+                  onChange={(event) => {
+                    setLink(event.target.value);
+                    clearError('link');
+                  }}
+                />
+              )}
+              <BrandField
+                tone={code ? undefined : 'raised'}
+                label="Your name"
+                placeholder="Enter your name"
+                hint={code ? undefined : 'This is how other participants will see you.'}
+                error={errors.name}
+                maxLength={DISPLAY_NAME_MAX_LENGTH}
+                value={name}
                 onChange={(event) => {
-                  setLink(event.target.value);
-                  clearError('link');
+                  setName(event.target.value);
+                  clearError('name');
                 }}
               />
-            )}
-            <TextField
-              label="Your name"
-              error={errors.name}
-              maxLength={DISPLAY_NAME_MAX_LENGTH}
-              value={name}
-              onChange={(event) => {
-                setName(event.target.value);
-                clearError('name');
-              }}
-            />
-          </div>
-          <Button type="submit" className="join-room__submit" disabled={isSubmitting}>
-            Join room
-          </Button>
-        </form>
+            </div>
+            <BrandButton
+              type="submit"
+              className="join-room__submit"
+              disabled={!isFilled || isSubmitting}
+            >
+              Join room
+            </BrandButton>
+            <p className="join-room__note">No account needed to join</p>
+          </form>
+        </section>
       </main>
     </div>
   );

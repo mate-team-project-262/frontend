@@ -13,7 +13,7 @@ export default function InvitePage() {
 
   return (
     <JoinRoom
-      title="You’re invited to Movie room"
+      title="You’re invited to movie room"
       code={code}
       onJoined={({ code: joinedCode }) => navigate(roomPath(joinedCode))}
     />
