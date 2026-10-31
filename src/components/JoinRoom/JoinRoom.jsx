@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { RoomApiError, joinRoom } from '../../api/roomsApi.js';
 import { cx } from '../../utils/classNames.js';
 import { extractRoomCode } from '../../utils/roomLinks.js';
-import { DISPLAY_NAME_MAX_LENGTH, validateDisplayName } from '../../utils/validation.js';
+import { getNameFeedback, validateDisplayName } from '../../utils/validation.js';
 import BrandButton from '../BrandButton/BrandButton.jsx';
 import BrandField from '../BrandField/BrandField.jsx';
 import BrandHeader from '../BrandHeader/BrandHeader.jsx';
@@ -11,50 +11,51 @@ import '../../styles/landing.css';
 import './JoinRoom.css';
 
 const JOIN_FAILED_MESSAGE = 'We could not join this room. Check the link and try again.';
+const BAD_LINK_MESSAGE = 'That does not look like a room link. Check it and try again.';
+const MAX_INPUT_LENGTH = 60; // only a safety limit: a too long name must be typeable to show the error
 
 /**
  * Whole "join" screen. Without `code` it asks for a room link (page "Join a movie room");
  * with `code` the room is already known (page opened from an invite link or QR code).
  * `onJoined({ code, name })` is called after the backend let the guest in.
+ *
+ * The name is checked while typing; "Join room" stays disabled until the name is valid and
+ * (when asked) the room link is a real link or code. The link error appears when the field
+ * loses focus. Errors from the backend (name taken, room full ...) replace the hint.
  */
 export default function JoinRoom({ title, code, onJoined }) {
   const [link, setLink] = useState('');
   const [name, setName] = useState('');
-  const [errors, setErrors] = useState({});
+  const [isLinkTouched, setIsLinkTouched] = useState(false);
+  const [serverErrors, setServerErrors] = useState({});
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  // The button is disabled until all visible fields are filled (the room link only when it is asked).
-  const isFilled = (code || link.trim() !== '') && name.trim() !== '';
+  const roomCode = code ?? extractRoomCode(link);
+  const isValid = Boolean(roomCode) && !validateDisplayName(name);
+
+  const linkError =
+    !code && isLinkTouched && link.trim() && !roomCode ? BAD_LINK_MESSAGE : serverErrors.link;
+  const nameError = getNameFeedback(name) || serverErrors.name;
 
   const handleSubmit = async (event) => {
     event.preventDefault();
-    const guestName = name.trim();
-    const roomCode = code ?? extractRoomCode(link);
-
-    const nextErrors = {};
-    if (!code && !link.trim()) nextErrors.link = 'Paste the room link or code';
-    else if (!roomCode)
-      nextErrors.link = 'That does not look like a room link. Check it and try again.';
-    const nameError = validateDisplayName(guestName);
-    if (nameError) nextErrors.name = nameError;
-    setErrors(nextErrors);
-    if (Object.keys(nextErrors).length > 0) return;
+    if (!isValid) return;
 
     setIsSubmitting(true);
     try {
-      const joined = await joinRoom(roomCode, { name: guestName });
-      onJoined({ code: joined.code, name: guestName });
+      const joined = await joinRoom(roomCode, { name: name.trim() });
+      onJoined({ code: joined.code, name: name.trim() });
     } catch (error) {
       const message = error instanceof RoomApiError ? error.message : JOIN_FAILED_MESSAGE;
       // Room problems belong under the room link (or under the name when there is no link field).
       const field = error.field === 'room' && !code ? 'link' : 'name';
-      setErrors({ [field]: message });
+      setServerErrors({ [field]: message });
     } finally {
       setIsSubmitting(false);
     }
   };
 
-  const clearError = (field) => setErrors((current) => ({ ...current, [field]: undefined }));
+  const clearServerError = () => setServerErrors({});
 
   return (
     <div className="join-room-page cinema-page cinema-page--theatre landing">
@@ -78,12 +79,13 @@ export default function JoinRoom({ title, code, onJoined }) {
                   tone="raised"
                   label="Room link"
                   placeholder="Paste the invite link or the room code"
-                  error={errors.link}
+                  error={linkError}
                   maxLength={300}
                   value={link}
+                  onBlur={() => setIsLinkTouched(true)}
                   onChange={(event) => {
                     setLink(event.target.value);
-                    clearError('link');
+                    clearServerError();
                   }}
                 />
               )}
@@ -92,19 +94,19 @@ export default function JoinRoom({ title, code, onJoined }) {
                 label="Your name"
                 placeholder="Enter your name"
                 hint={code ? undefined : 'This is how other participants will see you.'}
-                error={errors.name}
-                maxLength={DISPLAY_NAME_MAX_LENGTH}
+                error={nameError}
+                maxLength={MAX_INPUT_LENGTH}
                 value={name}
                 onChange={(event) => {
                   setName(event.target.value);
-                  clearError('name');
+                  clearServerError();
                 }}
               />
             </div>
             <BrandButton
               type="submit"
               className="join-room__submit"
-              disabled={!isFilled || isSubmitting}
+              disabled={!isValid || isSubmitting}
             >
               Join room
             </BrandButton>
