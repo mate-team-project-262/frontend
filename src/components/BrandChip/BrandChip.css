@@ -1,0 +1,58 @@
+.brand-chip {
+  display: inline-flex;
+  align-items: center;
+  height: 42px;
+  padding: 0 16px;
+  border: 1px solid #645b8d;
+  border-radius: 999px;
+  background: #170e43;
+  color: #fffaef;
+  font-family: var(--l-font-text);
+  font-size: 14px;
+  line-height: 1;
+  cursor: pointer;
+  user-select: none;
+  transition:
+    transform 0.12s ease,
+    background-color 0.15s ease,
+    border-color 0.15s ease,
+    color 0.15s ease,
+    opacity 0.15s ease;
+}
+
+.brand-chip:hover {
+  border-color: #b18aff;
+  background: #20155a;
+}
+
+.brand-chip:active {
+  background: #2b1c75;
+  transform: scale(0.96);
+}
+
+.brand-chip--selected,
+.brand-chip--selected:hover {
+  border-color: #b18aff;
+  background: #b18aff;
+  color: #070125;
+}
+
+.brand-chip--selected:active {
+  border-color: #9a6df0;
+  background: #9a6df0;
+}
+
+.brand-chip:focus-visible {
+  outline: 2px solid #fffaef;
+  outline-offset: 3px;
+}
+
+.brand-chip:disabled,
+.brand-chip:disabled:hover,
+.brand-chip:disabled:active {
+  border-color: #3a3262;
+  background: #170e43;
+  color: rgba(255, 250, 239, 0.4);
+  cursor: not-allowed;
+  transform: none;
+}

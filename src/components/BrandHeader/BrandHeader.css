@@ -1,0 +1,57 @@
+/* Figma: 96px header, logo at x=120, the "Back" text ends at x=1306 */
+.brand-header {
+  position: relative;
+  z-index: 2;
+}
+
+.brand-header__inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 96px;
+}
+
+.brand-header__logo {
+  display: block;
+  margin-left: -1px; /* the logo's left edge sits 1px outside the 120px margin in Figma */
+}
+
+.brand-header__logo img {
+  display: block;
+}
+
+.brand-header__back {
+  display: inline-flex;
+  align-items: center;
+  gap: 16px;
+  margin-right: 12px;
+  padding: 8px 0;
+  border: 0;
+  background: none;
+  color: #fffaef;
+  font-family: var(--l-font-display);
+  font-size: 16px;
+  font-weight: 700;
+  line-height: 1;
+  cursor: pointer;
+  transition:
+    opacity 0.12s ease,
+    transform 0.12s ease;
+}
+
+.brand-header__back:hover {
+  text-decoration: underline;
+  text-underline-offset: 6px;
+}
+
+.brand-header__back:active {
+  opacity: 0.65;
+  transform: scale(0.97);
+}
+
+.brand-header__back:focus-visible,
+.brand-header__logo:focus-visible {
+  outline: 2px solid #fffaef;
+  outline-offset: 4px;
+  border-radius: 4px;
+}

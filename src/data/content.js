@@ -15,7 +15,7 @@ export const ACCOUNT_BENEFITS = [
 // "Create your movie room" form options
 export const CONTENT_TYPES = [
   { value: 'MOVIES', label: 'Movies' },
-  { value: 'TV_SERIES', label: 'Tv Shows' },
+  { value: 'TV_SERIES', label: 'TV Shows' },
 ];
 
 /**
@@ -67,5 +67,8 @@ export const TV_GENRES = [
 export const GENRES_BY_CONTENT_TYPE = { MOVIES: MOVIE_GENRES, TV_SERIES: TV_GENRES };
 
 export const MAX_DURATIONS_MIN = [90, 120, 150];
+
+/** The most genres a host can pick for one room. */
+export const MAX_GENRES = 5;
 
 export const STREAMING_SERVICES = ['Netflix', 'Amazon Prime Video', 'Disney +', 'Apple TV'];
