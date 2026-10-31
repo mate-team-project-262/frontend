@@ -11,3 +11,11 @@
   flex-wrap: wrap;
   gap: 16px 12px;
 }
+
+.brand-form-section__error {
+  margin: 10px 0 0;
+  color: #ff7a80;
+  font-family: var(--l-font-text);
+  font-size: 14px;
+  line-height: 1.5;
+}

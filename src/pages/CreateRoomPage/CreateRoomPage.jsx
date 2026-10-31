@@ -15,7 +15,7 @@ import {
   STREAMING_SERVICES,
 } from '../../data/content.js';
 import { roomPath } from '../../routes.js';
-import { DISPLAY_NAME_MAX_LENGTH, validateDisplayName } from '../../utils/validation.js';
+import { getNameFeedback, validateDisplayName } from '../../utils/validation.js';
 import '../../styles/cinema.css';
 import '../../styles/landing.css';
 import './CreateRoomPage.css';
@@ -31,11 +31,16 @@ const INITIAL_FORM = {
 export default function CreateRoomPage() {
   const navigate = useNavigate();
   const [form, setForm] = useState(INITIAL_FORM);
-  const [nameError, setNameError] = useState('');
+  const [serverNameError, setServerNameError] = useState('');
   const [formError, setFormError] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const genres = GENRES_BY_CONTENT_TYPE[form.contentType];
+
+  // Live feedback: the name is checked while typing, genres are counted. The button waits for both.
+  const nameError = getNameFeedback(form.hostName) || serverNameError;
+  const genreError = form.genreIds.length > MAX_GENRES ? `Choose up to ${MAX_GENRES} genres` : '';
+  const canSubmit = !validateDisplayName(form.hostName) && !genreError;
 
   /**
    * Exactly one content type is always selected. Genres belong to a content type: switching it
@@ -64,29 +69,15 @@ export default function CreateRoomPage() {
         : [...current[field], value],
     }));
 
-  /** Genres: up to MAX_GENRES; once the limit is reached the other chips are locked. */
-  const toggleGenre = (id) =>
-    setForm((current) => {
-      if (current.genreIds.includes(id)) {
-        return { ...current, genreIds: current.genreIds.filter((item) => item !== id) };
-      }
-      if (current.genreIds.length >= MAX_GENRES) return current;
-      return { ...current, genreIds: [...current.genreIds, id] };
-    });
-
   const handleNameChange = (event) => {
     setForm((current) => ({ ...current, hostName: event.target.value }));
-    setNameError('');
+    setServerNameError('');
   };
 
   const handleSubmit = async (event) => {
     event.preventDefault();
     const hostName = form.hostName.trim();
-    const validationError = validateDisplayName(hostName);
-    if (validationError) {
-      setNameError(validationError);
-      return;
-    }
+    if (!canSubmit) return;
 
     setIsSubmitting(true);
     setFormError('');
@@ -103,14 +94,14 @@ export default function CreateRoomPage() {
     } catch (error) {
       const message =
         error instanceof RoomApiError ? error.message : 'Something went wrong. Please try again.';
-      if (error.field === 'name') setNameError(message);
+      if (error.field === 'name') setServerNameError(message);
       else setFormError(message);
     } finally {
       setIsSubmitting(false);
     }
   };
 
-  const isGenreLimitReached = form.genreIds.length >= MAX_GENRES;
+  // The button stays disabled until the name is valid and no more than MAX_GENRES genres are chosen.
 
   return (
     <div className="create-room-page cinema-page cinema-page--create landing">
@@ -129,7 +120,7 @@ export default function CreateRoomPage() {
               hint="This is how other participants will see you."
               value={form.hostName}
               error={nameError}
-              maxLength={DISPLAY_NAME_MAX_LENGTH}
+              maxLength={60}
               onChange={handleNameChange}
             />
 
@@ -144,7 +135,11 @@ export default function CreateRoomPage() {
               ))}
             </BrandFormSection>
 
-            <BrandFormSection title="Genres" counter={`(${form.genreIds.length}/${MAX_GENRES})`}>
+            <BrandFormSection
+              title="Genres"
+              counter={`(${form.genreIds.length}/${MAX_GENRES})`}
+              error={genreError}
+            >
               {genres.map(({ id, name }) => {
                 const selected = form.genreIds.includes(id);
                 return (
@@ -152,8 +147,7 @@ export default function CreateRoomPage() {
                     key={id}
                     label={name}
                     selected={selected}
-                    disabled={!selected && isGenreLimitReached}
-                    onToggle={() => toggleGenre(id)}
+                    onToggle={() => toggleMany('genreIds', id)}
                   />
                 );
               })}
@@ -189,7 +183,11 @@ export default function CreateRoomPage() {
               {formError}
             </p>
           )}
-          <BrandButton type="submit" className="create-room__submit" disabled={isSubmitting}>
+          <BrandButton
+            type="submit"
+            className="create-room__submit"
+            disabled={!canSubmit || isSubmitting}
+          >
             Create room
           </BrandButton>
         </form>
