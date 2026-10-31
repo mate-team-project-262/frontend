@@ -10,6 +10,7 @@
  */
 .cinema-page {
   --cinema-height: 0.877;
+  --cinema-overlay: rgba(9, 0, 20, 0.31);
 
   position: relative;
   min-height: max(100vh, calc(100vw * var(--cinema-height)));
@@ -29,7 +30,7 @@
   background-image:
     var(--cinema-extra-tint, linear-gradient(transparent, transparent)),
     linear-gradient(180deg, rgba(30, 0, 70, 0.28) 0, rgba(30, 0, 70, 0) 120px),
-    linear-gradient(rgba(9, 0, 20, 0.31), rgba(9, 0, 20, 0.31)), var(--cinema-photo);
+    linear-gradient(var(--cinema-overlay), var(--cinema-overlay)), var(--cinema-photo);
   background-position: top center;
   background-size: 100% 100%;
   background-repeat: no-repeat;
@@ -54,6 +55,38 @@
     rgba(110, 100, 190, 0.22),
     rgba(110, 100, 190, 0)
   );
+}
+
+/*
+ * Join pages: the theatre photo with the five friends at the bottom (1536 x 1024). It simply fills
+ * the window (cover) and stays glued to the bottom so the people are always in view.
+ */
+.cinema-page--theatre {
+  --cinema-photo: url('../assets/landing/cinema-bg-theatre.webp');
+  --cinema-height: 0;
+  --cinema-overlay: rgba(17, 11, 44, 0.18);
+  --cinema-extra-tint: radial-gradient(
+    520px 150px at 0 0,
+    rgba(110, 100, 190, 0.22),
+    rgba(110, 100, 190, 0)
+  );
+}
+
+.cinema-page--theatre::before {
+  bottom: 0;
+  aspect-ratio: auto;
+  background-position:
+    top center,
+    top center,
+    top center,
+    center bottom;
+  background-size:
+    100% 100%,
+    100% 100%,
+    100% 100%,
+    cover;
+  -webkit-mask-image: none;
+  mask-image: none;
 }
 
 @media (max-width: 560px) {
