@@ -1,20 +1,22 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router';
 import { RoomApiError, createRoom } from '../../api/roomsApi.js';
-import Button from '../../components/Button/Button.jsx';
-import Chip from '../../components/Chip/Chip.jsx';
-import FormSection from '../../components/FormSection/FormSection.jsx';
-import Header from '../../components/Header/Header.jsx';
-import TextField from '../../components/TextField/TextField.jsx';
+import BrandButton from '../../components/BrandButton/BrandButton.jsx';
+import BrandChip from '../../components/BrandChip/BrandChip.jsx';
+import BrandField from '../../components/BrandField/BrandField.jsx';
+import BrandFormSection from '../../components/BrandFormSection/BrandFormSection.jsx';
+import BrandHeader from '../../components/BrandHeader/BrandHeader.jsx';
 import { FEATURES } from '../../config/features.js';
 import {
   CONTENT_TYPES,
   GENRES_BY_CONTENT_TYPE,
   MAX_DURATIONS_MIN,
+  MAX_GENRES,
   STREAMING_SERVICES,
 } from '../../data/content.js';
 import { roomPath } from '../../routes.js';
 import { DISPLAY_NAME_MAX_LENGTH, validateDisplayName } from '../../utils/validation.js';
+import '../../styles/landing.css';
 import './CreateRoomPage.css';
 
 const INITIAL_FORM = {
@@ -61,6 +63,16 @@ export default function CreateRoomPage() {
         : [...current[field], value],
     }));
 
+  /** Genres: up to MAX_GENRES; once the limit is reached the other chips are locked. */
+  const toggleGenre = (id) =>
+    setForm((current) => {
+      if (current.genreIds.includes(id)) {
+        return { ...current, genreIds: current.genreIds.filter((item) => item !== id) };
+      }
+      if (current.genreIds.length >= MAX_GENRES) return current;
+      return { ...current, genreIds: [...current.genreIds, id] };
+    });
+
   const handleNameChange = (event) => {
     setForm((current) => ({ ...current, hostName: event.target.value }));
     setNameError('');
@@ -97,9 +109,11 @@ export default function CreateRoomPage() {
     }
   };
 
+  const isGenreLimitReached = form.genreIds.length >= MAX_GENRES;
+
   return (
-    <div className="create-room-page">
-      <Header variant="back" />
+    <div className="create-room-page landing">
+      <BrandHeader />
       <main className="create-room">
         <form className="create-room__panel" onSubmit={handleSubmit} noValidate>
           <h1 className="create-room__title">Create your movie room</h1>
@@ -108,58 +122,64 @@ export default function CreateRoomPage() {
           </p>
 
           <div className="create-room__fields">
-            <TextField
+            <BrandField
               label="Your name"
+              placeholder="Enter your name"
+              hint="This is how other participants will see you."
               value={form.hostName}
               error={nameError}
               maxLength={DISPLAY_NAME_MAX_LENGTH}
               onChange={handleNameChange}
             />
 
-            <FormSection title="Content type">
+            <BrandFormSection title="Content type">
               {CONTENT_TYPES.map(({ value, label }) => (
-                <Chip
+                <BrandChip
                   key={value}
                   label={label}
                   selected={form.contentType === value}
                   onToggle={() => selectContentType(value)}
                 />
               ))}
-            </FormSection>
+            </BrandFormSection>
 
-            <FormSection title="Genres">
-              {genres.map(({ id, name }) => (
-                <Chip
-                  key={id}
-                  label={name}
-                  selected={form.genreIds.includes(id)}
-                  onToggle={() => toggleMany('genreIds', id)}
-                />
-              ))}
-            </FormSection>
+            <BrandFormSection title="Genres" counter={`(${form.genreIds.length}/${MAX_GENRES})`}>
+              {genres.map(({ id, name }) => {
+                const selected = form.genreIds.includes(id);
+                return (
+                  <BrandChip
+                    key={id}
+                    label={name}
+                    selected={selected}
+                    disabled={!selected && isGenreLimitReached}
+                    onToggle={() => toggleGenre(id)}
+                  />
+                );
+              })}
+            </BrandFormSection>
 
-            <FormSection title="Max duration">
+            <BrandFormSection title="Duration">
               {MAX_DURATIONS_MIN.map((minutes) => (
-                <Chip
+                <BrandChip
                   key={minutes}
                   label={`${minutes} min`}
                   selected={form.maxDurationMin === minutes}
                   onToggle={() => toggleSingle('maxDurationMin', minutes)}
                 />
               ))}
-            </FormSection>
+            </BrandFormSection>
 
             {FEATURES.streamingServices && (
-              <FormSection title="Streaming services">
+              <BrandFormSection title="Streaming services">
                 {STREAMING_SERVICES.map((service) => (
-                  <Chip
+                  <BrandChip
                     key={service}
                     label={service}
                     selected={form.streamingServices.includes(service)}
                     onToggle={() => toggleMany('streamingServices', service)}
                   />
                 ))}
-              </FormSection>
+              </BrandFormSection>
             )}
           </div>
 
@@ -168,9 +188,9 @@ export default function CreateRoomPage() {
               {formError}
             </p>
           )}
-          <Button block type="submit" className="create-room__submit" disabled={isSubmitting}>
+          <BrandButton type="submit" className="create-room__submit" disabled={isSubmitting}>
             Create room
-          </Button>
+          </BrandButton>
         </form>
       </main>
     </div>

@@ -1,0 +1,79 @@
+/* Figma: 52px tall pill, violet border, hint 14px under the input */
+.brand-field__label {
+  display: block;
+  margin-bottom: 8px;
+  color: #fffaef;
+  font-family: var(--l-font-text);
+  font-size: 16px;
+  line-height: 1.5;
+}
+
+.brand-field__control {
+  position: relative;
+}
+
+.brand-field__input {
+  display: block;
+  width: 100%;
+  height: 52px;
+  padding: 0 16px;
+  border: 1px solid #b18aff;
+  border-radius: 999px;
+  background: #170e43;
+  color: #fffaef;
+  font-family: var(--l-font-text);
+  font-size: 14px;
+  transition:
+    border-color 0.15s ease,
+    box-shadow 0.15s ease,
+    background-color 0.15s ease;
+}
+
+.brand-field__input::placeholder {
+  color: #9b95b8;
+  opacity: 1;
+}
+
+.brand-field__input:hover {
+  border-color: #d0b6ff;
+}
+
+.brand-field__input:focus {
+  border-color: #e6d8ff;
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(177, 138, 255, 0.28);
+}
+
+.brand-field__input:disabled {
+  border-color: transparent;
+  background: #6f6a8c;
+  cursor: not-allowed;
+}
+
+.brand-field--error .brand-field__input {
+  padding-right: 52px;
+  border-color: #c1272d;
+}
+
+.brand-field--error .brand-field__input:focus {
+  box-shadow: 0 0 0 3px rgba(193, 39, 45, 0.3);
+}
+
+.brand-field__error-icon {
+  position: absolute;
+  top: 16px;
+  right: 20px;
+  color: #ff7a80;
+}
+
+.brand-field__message {
+  margin: 8px 0 0;
+  color: #9b95b8;
+  font-family: var(--l-font-text);
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+.brand-field--error .brand-field__message {
+  color: #ff7a80;
+}
