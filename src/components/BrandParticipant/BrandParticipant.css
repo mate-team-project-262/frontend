@@ -33,10 +33,6 @@
   white-space: nowrap;
 }
 
-.brand-participant__you {
-  color: #9b95b8;
-}
-
 .brand-participant__badge {
   flex: none;
   margin-left: auto;

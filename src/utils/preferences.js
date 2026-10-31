@@ -21,7 +21,7 @@ export function getPreferenceGroups({
   return [
     typeLabel ? [typeLabel] : [],
     genreNames,
-    maxDurationMin ? [`Up to ${maxDurationMin} min`] : [],
+    maxDurationMin ? [`${maxDurationMin} min`] : [],
     FEATURES.streamingServices ? streamingServices : [],
   ].filter((group) => group.length > 0);
 }
