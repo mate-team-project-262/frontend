@@ -17,8 +17,11 @@ function ArrowLeft() {
   );
 }
 
-/** Header of the dark pages: W2W logo and a "Back" link (to the landing page). */
-export default function BrandHeader() {
+/**
+ * Header of the dark pages: W2W logo and a "Back" button. Without `onBack` it goes to the
+ * landing page; pass `onBack` when going back must do something first (e.g. leave the room).
+ */
+export default function BrandHeader({ onBack }) {
   const navigate = useNavigate();
 
   return (
@@ -27,7 +30,11 @@ export default function BrandHeader() {
         <Link to={ROUTES.home} className="brand-header__logo" aria-label="W2W, home page">
           <img src={logo} width="106" height="48" alt="" />
         </Link>
-        <button type="button" className="brand-header__back" onClick={() => navigate(ROUTES.home)}>
+        <button
+          type="button"
+          className="brand-header__back"
+          onClick={onBack ?? (() => navigate(ROUTES.home))}
+        >
           <ArrowLeft />
           Back
         </button>

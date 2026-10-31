@@ -22,13 +22,20 @@ function ErrorIcon() {
  * Text input of the dark theme: label above, hint under the input (replaced by the error
  * message when there is one). States: default / hover / focus / filled / error / disabled.
  */
-export default function BrandField({ label, hint, error, className, ...inputProps }) {
+export default function BrandField({ label, hint, error, size, className, ...inputProps }) {
   const id = useId();
   const messageId = `${id}-message`;
   const message = error || hint;
 
   return (
-    <div className={cx('brand-field', error && 'brand-field--error', className)}>
+    <div
+      className={cx(
+        'brand-field',
+        size === 'lg' && 'brand-field--lg',
+        error && 'brand-field--error',
+        className,
+      )}
+    >
       <label className="brand-field__label" htmlFor={id}>
         {label}
       </label>
