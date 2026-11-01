@@ -8,3 +8,16 @@ Figma exports for the "What to Watch" (W2W) redesign. Keep them as the source of
 - `ui-kit/text-styles.png` - typography: Hero Geologica Black 96/100, H1 Geologica Black 64/100, H2 Geologica Bold 48/120,
   H3 Geologica Bold 36/120, H4 Geologica Regular 24/135, Main text Inter Regular 16/150, Secondary text Inter Regular 14/150,
   Button text Geologica Regular 16/100 (size / line-height %).
+
+## UI kit v2 (November 2026)
+
+- `ui-kit/UI-Kit-v2.png` - updated kit. Inputs (dark): default #2f2270 fill, hover / focus / filled #170e43, 1px border
+  #b18aff, error border #930002, success border #00924e, disabled #645b8d, no error icon, no glow; focus fades the placeholder.
+  Buttons: ghost hover border #7835ff, pressed #2f2270 fill, disabled #645b8d; new cream "light" button and violet text
+  links for light surfaces; light (cream) inputs.
+- Not built yet (movie picking / results / account pages): progress bar "7 / 20", round icon button (heart),
+  movie navigation (X / heart, "Swipe or tap to vote"), participant progress chips (Done / Swiping... / Waiting...),
+  user menu (name pill with Profile / Settings / Log out), swipe movie card, movie details card (Director, Cast,
+  Age rating, Budget, Revenue, Original language, Close details), result cards ("4 / 4 liked it" with crown, View details;
+  compact "3 / 4 liked it" with Details), translucent header variant, icons (check, crown, star, heart, x, arrow right,
+  mail, lock, eye / eye-off, user, chevrons, Google, Facebook).

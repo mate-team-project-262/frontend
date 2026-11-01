@@ -2,7 +2,8 @@ import { cx } from '../../utils/classNames.js';
 import './BrandButton.css';
 
 /**
- * Pill button of the new design. variant: 'primary' (violet gradient) | 'ghost' (outlined).
+ * Pill button of the new design. variant: 'primary' (violet gradient) | 'ghost' (outlined)
+ * | 'light' (cream, for light surfaces).
  * `as="a"` renders a link that looks the same (e.g. "Share on Telegram").
  */
 export default function BrandButton({
