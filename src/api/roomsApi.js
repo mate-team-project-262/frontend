@@ -16,7 +16,11 @@ export { RoomApiError };
  * @property {string} hostName                      3-20 characters
  * @property {'MOVIES' | 'TV_SERIES'} contentType
  * @property {number[]} genreIds                    Backend genre ids for the content type. Empty = any
- * @property {number | null} maxDurationMin         30-150 minutes, null = no limit
+ * @property {number[]} durationsMin              Durations the host ticked (90, 120, 150). Empty = no limit.
+ *                                                 The backend takes ONE number (`maxDurationMinutes`),
+ *                                                 so the longest one is sent: "up to 150 min" already
+ *                                                 includes "up to 90 min". Send the whole list here
+ *                                                 when the backend can store it.
  */
 
 /**
@@ -94,7 +98,7 @@ export async function createRoom(payload) {
       preferences: {
         contentType: payload.contentType,
         genreIds: payload.genreIds,
-        maxDurationMinutes: payload.maxDurationMin,
+        maxDurationMinutes: payload.durationsMin.length ? Math.max(...payload.durationsMin) : null,
       },
     },
   });

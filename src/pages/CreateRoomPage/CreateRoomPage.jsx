@@ -24,7 +24,7 @@ const INITIAL_FORM = {
   hostName: '',
   contentType: 'MOVIES', // 'MOVIES' | 'TV_SERIES' - the backend always needs one (Movies by default)
   genreIds: [],
-  maxDurationMin: null,
+  durationsMin: [], // any number of 90 / 120 / 150
   streamingServices: [],
 };
 
@@ -56,10 +56,6 @@ export default function CreateRoomPage() {
       };
     });
 
-  /** Single choice: clicking the selected chip again clears it. */
-  const toggleSingle = (field, value) =>
-    setForm((current) => ({ ...current, [field]: current[field] === value ? null : value }));
-
   /** Multiple choice. */
   const toggleMany = (field, value) =>
     setForm((current) => ({
@@ -86,7 +82,7 @@ export default function CreateRoomPage() {
         hostName,
         contentType: form.contentType,
         genreIds: form.genreIds,
-        maxDurationMin: form.maxDurationMin,
+        durationsMin: form.durationsMin,
       };
       if (FEATURES.streamingServices) payload.streamingServices = form.streamingServices;
       const room = await createRoom(payload);
@@ -158,8 +154,8 @@ export default function CreateRoomPage() {
                 <BrandChip
                   key={minutes}
                   label={`${minutes} min`}
-                  selected={form.maxDurationMin === minutes}
-                  onToggle={() => toggleSingle('maxDurationMin', minutes)}
+                  selected={form.durationsMin.includes(minutes)}
+                  onToggle={() => toggleMany('durationsMin', minutes)}
                 />
               ))}
             </BrandFormSection>
