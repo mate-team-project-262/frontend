@@ -116,6 +116,7 @@ export default function CreateRoomPage() {
               hint="This is how other participants will see you."
               value={form.hostName}
               error={nameError}
+              success={!validateDisplayName(form.hostName)}
               maxLength={60}
               onChange={handleNameChange}
             />

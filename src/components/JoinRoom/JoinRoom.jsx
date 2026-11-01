@@ -31,7 +31,8 @@ export default function JoinRoom({ title, code, onJoined }) {
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const roomCode = code ?? extractRoomCode(link);
-  const isValid = Boolean(roomCode) && !validateDisplayName(name);
+  const isNameValid = !validateDisplayName(name);
+  const isValid = Boolean(roomCode) && isNameValid;
 
   const linkError =
     !code && isLinkTouched && link.trim() && !roomCode ? BAD_LINK_MESSAGE : serverErrors.link;
@@ -76,10 +77,10 @@ export default function JoinRoom({ title, code, onJoined }) {
             <div className="join-room__fields">
               {!code && (
                 <BrandField
-                  tone="raised"
                   label="Room link"
                   placeholder="Paste the invite link or the room code"
                   error={linkError}
+                  success={Boolean(roomCode)}
                   maxLength={300}
                   value={link}
                   onBlur={() => setIsLinkTouched(true)}
@@ -90,11 +91,11 @@ export default function JoinRoom({ title, code, onJoined }) {
                 />
               )}
               <BrandField
-                tone={code ? undefined : 'raised'}
                 label="Your name"
                 placeholder="Enter your name"
                 hint={code ? undefined : 'This is how other participants will see you.'}
                 error={nameError}
+                success={isNameValid}
                 maxLength={MAX_INPUT_LENGTH}
                 value={name}
                 onChange={(event) => {

@@ -33,7 +33,7 @@
   line-height: 1;
   cursor: pointer;
   transition:
-    opacity 0.12s ease,
+    color 0.12s ease,
     transform 0.12s ease;
 }
 
@@ -46,8 +46,11 @@
   text-underline-offset: 6px;
 }
 
+/* pressed (UI kit): lavender text, underline stays */
 .landing-header__link:active {
-  opacity: 0.65;
+  color: #d8d2e6;
+  text-decoration: underline;
+  text-underline-offset: 6px;
   transform: scale(0.97);
 }
 

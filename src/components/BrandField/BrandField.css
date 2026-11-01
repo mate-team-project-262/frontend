@@ -1,4 +1,4 @@
-/* Figma: 52px tall pill, violet border, hint 14px under the input */
+/* Figma: 52px tall pill, 1px border, hint 14px under the input */
 .brand-field__label {
   display: block;
   margin-bottom: 8px;
@@ -12,6 +12,11 @@
   position: relative;
 }
 
+/*
+ * UI kit states (dark): every state keeps a 1px border, only the fill and the border colour change.
+ * default (empty, idle) #2f2270 fill · hover / focus / filled #170e43 fill · error #930002 border ·
+ * success #00924e border · disabled #645b8d. No glow ring and no icon (removed in the new kit).
+ */
 .brand-field__input {
   display: block;
   width: 100%;
@@ -21,49 +26,46 @@
   border-radius: 999px;
   background: #170e43;
   color: #fffaef;
+  caret-color: #fffaef;
   font-family: var(--l-font-text);
   font-size: 14px;
   transition:
     border-color 0.15s ease,
-    box-shadow 0.15s ease,
     background-color 0.15s ease;
 }
 
 .brand-field__input::placeholder {
   color: #9b95b8;
   opacity: 1;
+  transition: color 0.15s ease;
 }
 
-.brand-field__input:hover {
-  border-color: #d0b6ff;
+/* default: empty and not hovered / focused */
+.brand-field__input:placeholder-shown:not(:hover, :focus, :disabled) {
+  background: #2f2270;
 }
 
 .brand-field__input:focus {
-  border-color: #e6d8ff;
   outline: none;
-  box-shadow: 0 0 0 3px rgba(177, 138, 255, 0.28);
 }
 
-.brand-field__input:disabled {
-  border-color: transparent;
-  background: #6f6a8c;
-  cursor: not-allowed;
+/* focus: the placeholder fades into the fill, only the caret stays visible */
+.brand-field__input:focus::placeholder {
+  color: #2f2270;
 }
 
 .brand-field--error .brand-field__input {
-  padding-right: 52px;
-  border-color: #c1272d;
+  border-color: #930002;
 }
 
-.brand-field--error .brand-field__input:focus {
-  box-shadow: 0 0 0 3px rgba(193, 39, 45, 0.3);
+.brand-field--success .brand-field__input {
+  border-color: #00924e;
 }
 
-.brand-field__error-icon {
-  position: absolute;
-  top: 16px;
-  right: 20px;
-  color: #ff7a80;
+.brand-field__input:disabled {
+  border-color: #645b8d;
+  background: #645b8d;
+  cursor: not-allowed;
 }
 
 .brand-field__message {
@@ -85,9 +87,4 @@
 
 .brand-field__input:read-only:not(:disabled) {
   cursor: text;
-}
-
-/* Lighter fill, as on the "Join a movie room" page */
-.brand-field--raised .brand-field__input {
-  background: #2f2270;
 }
