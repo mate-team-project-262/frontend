@@ -1,0 +1,23 @@
+/*
+ * Landing theme ("W2W" redesign). Tokens live on .landing so the other pages keep their own look.
+ * Typography (Figma text styles, size / line-height):
+ *   Hero  Geologica Black 96/100     H1 Geologica Black 64/100    H2 Geologica Bold 48/120
+ *   H3    Geologica Bold 36/120      H4 Geologica Regular 24/135
+ *   Main  Inter Regular 16/150       Secondary Inter Regular 14/150   Button Geologica Regular 16/100
+ */
+.landing {
+  --l-night: #080227;
+  --l-cream: #fff9ea;
+  --l-ink: #070125;
+  --l-muted: #9b95b8;
+  --l-lavender: #d8d2e6;
+  --l-accent: #b18aff;
+  --l-violet-light: #7634fc;
+  --l-violet-dark: #4b16b6;
+  --l-font-display: 'Geologica', 'Inter Variable', system-ui, sans-serif;
+  --l-font-text: 'Inter Variable', Inter, system-ui, sans-serif;
+
+  background: var(--l-night);
+  color: var(--l-cream);
+  font-family: var(--l-font-display);
+}

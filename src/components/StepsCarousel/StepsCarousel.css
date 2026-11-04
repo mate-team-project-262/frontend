@@ -1,0 +1,180 @@
+/*
+ * Figma (1440px): cards 896x570, 24px apart, the active one starts at x=111, so the previous
+ * card peeks in on the left and the next one on the right. Sizes shrink on narrow screens.
+ */
+.steps-carousel {
+  --card-w: min(896px, calc(100vw - 72px));
+  --gap: 24px;
+  --lead: max(24px, calc(50vw - 609px));
+
+  position: relative;
+}
+
+.steps-carousel__viewport {
+  overflow: hidden;
+  height: calc(var(--card-w) * 570 / 896);
+  cursor: grab;
+  touch-action: pan-y;
+  user-select: none;
+}
+
+.steps-carousel__viewport:active {
+  cursor: grabbing;
+}
+
+.steps-carousel__viewport:focus-visible {
+  outline: 2px solid var(--l-ink);
+  outline-offset: -4px;
+}
+
+.steps-carousel__track {
+  position: relative;
+  height: 100%;
+  transform: translateX(
+    calc(var(--lead) - var(--index) * (var(--card-w) + var(--gap)) + var(--drag))
+  );
+  transition: transform 0.55s cubic-bezier(0.22, 0.8, 0.3, 1);
+}
+
+.steps-carousel__track--dragging {
+  transition: none;
+}
+
+.step-card {
+  position: absolute;
+  top: 0;
+  left: calc(var(--i) * (var(--card-w) + var(--gap)));
+  overflow: hidden;
+  width: var(--card-w);
+  height: 100%;
+  border: 2px solid var(--l-cream);
+  border-radius: min(100px, calc(var(--card-w) * 0.112));
+  background: #000;
+  color: #fff;
+  cursor: pointer;
+}
+
+.step-card--active {
+  cursor: grab;
+}
+
+.step-card__image {
+  position: absolute;
+  top: calc(var(--card-w) * var(--img-y, 0) - 2px);
+  left: calc(var(--card-w) * var(--img-x, 0) - 2px);
+  width: calc(var(--card-w) * var(--img-scale, 1));
+  height: auto;
+  max-width: none;
+  pointer-events: none;
+}
+
+/* Darkens the photo so the white text stays readable (amount differs per photo in the design) */
+.step-card::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, var(--shade, 0.15));
+  pointer-events: none;
+}
+
+.step-card__content {
+  position: absolute;
+  z-index: 1;
+  top: calc(var(--card-w) * 0.2);
+  left: calc(var(--card-w) * 0.0592);
+  right: calc(var(--card-w) * 0.067);
+}
+
+.step-card__number {
+  margin: 0;
+  font-family: var(--l-font-display);
+  font-size: clamp(40px, calc(var(--card-w) * 0.0714), 64px);
+  font-weight: 900;
+  line-height: 1;
+}
+
+.step-card__title {
+  margin: calc(var(--card-w) * 0.019) 0 0;
+  font-family: var(--l-font-display);
+  font-size: clamp(28px, calc(var(--card-w) * 0.0536), 48px);
+  font-weight: 700;
+  line-height: 1.2;
+  letter-spacing: -0.02em;
+}
+
+.step-card__text {
+  margin: calc(var(--card-w) * 0.0446) 0 0;
+  font-family: var(--l-font-display);
+  font-size: clamp(16px, calc(var(--card-w) * 0.0268), 24px);
+  font-weight: 400;
+  line-height: 1.35;
+}
+
+/* Visually hidden helpers; the buttons show up when they get keyboard focus. */
+.steps-carousel__controls {
+  position: absolute;
+  top: 0;
+  left: 0;
+  display: flex;
+  gap: 8px;
+}
+
+.steps-carousel__control {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+.steps-carousel__control:focus-visible {
+  position: static;
+  z-index: 3;
+  width: auto;
+  height: auto;
+  padding: 10px 18px;
+  overflow: visible;
+  border: 0;
+  border-radius: 999px;
+  background: var(--l-ink);
+  clip-path: none;
+  color: var(--l-cream);
+  font-family: var(--l-font-display);
+}
+
+.steps-carousel__status {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+}
+
+@media (max-width: 700px) {
+  .step-card__content {
+    top: 20px;
+    right: 20px;
+    left: 24px;
+  }
+
+  .step-card__number {
+    font-size: 28px;
+  }
+
+  .step-card__title {
+    margin-top: 2px;
+    font-size: 20px;
+  }
+
+  .step-card__text {
+    margin-top: 6px;
+    font-size: 13px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .steps-carousel__track {
+    transition: none;
+  }
+}

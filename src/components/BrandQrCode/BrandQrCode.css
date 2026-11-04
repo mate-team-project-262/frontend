@@ -1,0 +1,19 @@
+/* Figma: 155px tile, 32px radius, #2f2270 fill, cream squares */
+.brand-qr {
+  box-sizing: border-box;
+  display: grid;
+  place-items: center;
+  width: 155px;
+  height: 155px;
+  padding: 20px;
+  border: 1px solid rgba(177, 138, 255, 0.85);
+  border-radius: 32px;
+  background: #2f2270;
+}
+
+.brand-qr__svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+  fill: #fffaef;
+}

@@ -1,0 +1,49 @@
+name: Frontend CI Pipeline
+
+on:
+  pull_request:
+    branches:
+      - develop
+      - main
+  push:
+    branches:
+      - develop
+      - main
+
+permissions:
+  contents: read
+
+jobs:
+  lint-build-and-docker-verify:
+    name: Lint, Build & Smoke Test Container
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    steps:
+      - name: 1. Checkout repository code
+        uses: actions/checkout@v4
+
+      - name: 2. Setup Node.js 20 LTS with npm cache
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: 3. Install dependencies cleanly (npm ci)
+        run: npm ci
+
+      - name: 4. Run ESLint static code analysis
+        run: npm run lint
+
+      - name: 5. Verify production Vite bundle build
+        run: npm run build
+
+      - name: 6. Build Docker image & Run Smoke Test
+        run: |
+          docker build -t team262-frontend:${{ github.sha }} .
+          docker run -d --name frontend_smoke_test -p 8080:80 team262-frontend:${{ github.sha }}
+          sleep 3
+          docker ps
+          curl --fail --silent --show-error http://localhost:8080/healthz
+          curl --fail --silent --show-error http://localhost:8080/ | grep -i "<!doctype html>"
+          docker rm -f frontend_smoke_test

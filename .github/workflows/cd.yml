@@ -1,0 +1,113 @@
+name: Frontend Continuous Deployment (CD)
+
+on:
+  push:
+    branches:
+      - main
+  # Allow manual pipeline execution from the GitHub Actions UI if needed
+  workflow_dispatch:
+
+# Security by Default: Grant minimal required permissions for the ephemeral GITHUB_TOKEN
+permissions:
+  contents: read
+  packages: write
+
+env:
+  REGISTRY: ghcr.io
+  IMAGE_NAME: mate-team-project-262/frontend
+
+jobs:
+  quality-gate:
+    name: Validate & Compile Static Bundle
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repository Source Code
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js 20 LTS with NPM Cache
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Clean Install Exact Dependencies
+        run: npm ci
+
+      - name: Verify Production Bundle Compilation (TypeScript & Vite)
+        run: npm run build
+
+  build-and-push:
+    name: Build & Push Docker Image to GHCR
+    needs: quality-gate
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repository Source Code
+        uses: actions/checkout@v4
+
+      - name: Set up Docker Buildx Engine
+        uses: docker/setup-buildx-action@v3
+
+      - name: Authenticate with GitHub Container Registry (GHCR)
+        uses: docker/login-action@v3
+        with:
+          registry: ${{ env.REGISTRY }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Extract Docker Metadata for Dual-Tagging (:latest and :sha)
+        id: meta
+        uses: docker/metadata-action@v5
+        with:
+          images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
+          tags: |
+            type=raw,value=latest
+            type=sha,prefix=sha-,format=short
+
+      - name: Build Multi-Stage Image and Push to Registry
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          file: ./Dockerfile
+          push: true
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
+          # Use GitHub Actions cache API to speed up Node.js and Alpine layers
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+
+  deploy:
+    name: Deploy Frontend Container to AWS EC2
+    needs: build-and-push
+    runs-on: ubuntu-latest
+    steps:
+      - name: Execute Remote Deployment via SSH
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.SERVER_IP }}
+          username: ubuntu
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          script: |
+            set -euo pipefail
+            echo "=== Starting frontend deployment on AWS EC2 ==="
+            cd /home/ubuntu/infra/compose
+
+            # 1. Pull the latest frontend image from GHCR
+            docker compose pull frontend
+
+            # 2. Recreate only the frontend container without affecting backend or gateway
+            docker compose up -d frontend
+
+            # 3. Wait for container initialization and verify health status
+            echo "Waiting 6 seconds for Nginx container healthcheck..."
+            sleep 6
+
+            if ! docker compose ps frontend | grep -q "Up"; then
+              echo "ERROR: Frontend container failed to start! Dumping logs:"
+              docker compose logs --tail=50 frontend
+              exit 1
+            fi
+
+            # 4. Clean up dangling images to preserve the 20GB EBS disk space
+            docker image prune -f
+
+            echo "=== Frontend deployment completed and verified successfully ==="

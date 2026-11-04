@@ -1,0 +1,22 @@
+# Dependencies & build outputs
+node_modules
+dist
+build
+
+# Git & CI metadata
+.git
+.github
+.gitignore
+
+# Documentation
+README.md
+CONTRIBUTING.md
+LICENSE
+
+# Secrets & local configs (Security by Default)
+.env
+*.env
+!.env.example
+.vscode
+.idea
+*.log

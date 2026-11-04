@@ -1,0 +1,15 @@
+/* Figma: 42px tall pill, 1px #645b8d border, 14px text */
+.brand-info-chip {
+  box-sizing: border-box;
+  display: inline-flex;
+  align-items: center;
+  height: 42px;
+  padding: 0 16px;
+  border: 1px solid #645b8d;
+  border-radius: 999px;
+  background: #170e43;
+  color: #fffaef;
+  font-family: var(--l-font-text);
+  font-size: 14px;
+  line-height: 1;
+}
