@@ -1,12 +1,15 @@
 /**
- * Rooms API - talks to the backend (see docs: POST /rooms, POST /rooms/{code}/join,
- * GET /rooms/{code}). The pages only use the functions below and the `Room` shape; the backend
- * details (field names, enum values, tokens) stay in this file.
+ * Rooms API - talks to the backend (POST /rooms, POST /rooms/{code}/join, GET /rooms/{code},
+ * POST /rooms/{code}/start, GET /rooms/{code}/deck, POST /rooms/{code}/votes). The pages only use
+ * the functions below and the `Room` / `MovieCard` shapes; the backend details (field names, enum
+ * values, tokens) stay in this file.
  *
- * Not available on the backend yet (kept as stubs): starting a session, leaving a room.
+ * Not available on the backend yet (kept as a stub): leaving a room.
  */
+import { FEATURES } from '../config/features.js';
+import { getDurationRanges } from '../utils/duration.js';
 import { RoomApiError, toRoomApiError } from './errors.js';
-import { apiRequest } from './http.js';
+import { BASE_URL, apiRequest } from './http.js';
 import { clearRoomSession, getRoomSession, saveRoomSession } from './roomSession.js';
 
 export { RoomApiError };
@@ -17,10 +20,10 @@ export { RoomApiError };
  * @property {'MOVIES' | 'TV_SERIES'} contentType
  * @property {number[]} genreIds                    Backend genre ids for the content type. Empty = any
  * @property {number[]} durationsMin              Durations the host ticked (90, 120, 150). Empty = no limit.
- *                                                 The backend takes ONE number (`maxDurationMinutes`),
- *                                                 so the longest one is sent: "up to 150 min" already
- *                                                 includes "up to 90 min". Send the whole list here
- *                                                 when the backend can store it.
+ *                                                 What they mean: getDurationRanges() in utils/duration.js.
+ *                                                 The backend takes ONE number (`maxDurationMinutes`), so
+ *                                                 the longest time is sent; the exact ranges go out too once
+ *                                                 FEATURES.durationRanges is on.
  */
 
 /**
@@ -45,6 +48,34 @@ export { RoomApiError };
  * @property {Participant[]} participants     Everyone in the room, host included, ordered by id
  * @property {RoomPreferences} preferences
  * @property {number} maxParticipants
+ */
+
+/**
+ * @typedef {Object} MovieCard   One movie of the room's 20-card deck
+ * @property {number} id                 roomTitleId - what a vote is sent for
+ * @property {number} position           0-19, the same order for everyone
+ * @property {string} title
+ * @property {number | null} year
+ * @property {string | null} overview
+ * @property {string | null} posterUrl
+ * @property {number | null} runtimeMin  for TV shows: the length of an episode
+ * @property {string[]} genres           names, e.g. ['Action', 'Comedy']
+ * @property {number | null} rating      TMDB vote average, 0-10
+ * @property {string | null} director
+ * @property {string[]} creators         TV shows: "Created by"
+ * @property {string[]} cast             in billing order
+ * @property {string | null} ageRating   e.g. 'PG-13' (US)
+ * @property {number | null} budget      USD
+ * @property {number | null} revenue     USD
+ * @property {string | null} language    ISO 639-1 code, e.g. 'en'
+ * @property {boolean | null} myVote     true = liked, false = skipped, null = not voted yet
+ */
+
+/**
+ * @typedef {Object} Deck
+ * @property {'MOVIES' | 'TV_SERIES'} contentType
+ * @property {MovieCard[]} cards     in position order
+ * @property {number} votedCount     how many of them this person has voted for
  */
 
 const POLL_INTERVAL_MS = 3000; // the backend has no WebSocket, it asks to poll every ~3 seconds
@@ -91,16 +122,23 @@ function toRoom(data, session) {
  * @throws {RoomApiError}
  */
 export async function createRoom(payload) {
+  const ranges = getDurationRanges(payload.durationsMin);
+  const preferences = {
+    contentType: payload.contentType,
+    genreIds: payload.genreIds,
+    maxDurationMinutes: ranges.length ? ranges[ranges.length - 1].to : null,
+  };
+  // PROPOSAL for the backend (field name to agree on): exactly which lengths the host wants.
+  if (FEATURES.durationRanges) {
+    preferences.durationRanges = ranges.map(({ from, to }) => ({
+      fromMinutes: from,
+      toMinutes: to,
+    }));
+  }
+
   const data = await call('/rooms', {
     method: 'POST',
-    body: {
-      displayName: payload.hostName,
-      preferences: {
-        contentType: payload.contentType,
-        genreIds: payload.genreIds,
-        maxDurationMinutes: payload.durationsMin.length ? Math.max(...payload.durationsMin) : null,
-      },
-    },
+    body: { displayName: payload.hostName, preferences },
   });
   saveRoomSession(data.code, { token: data.participant.token, participantId: data.participant.id });
   return { code: data.code };
@@ -199,14 +237,87 @@ export async function leaveRoom(code) {
 }
 
 /**
- * Starts the swiping session for everyone in the room (host only).
- * STUB: the backend does not implement status changes yet. When it does, call it here
- * (e.g. POST /rooms/{code}/start) and throw a RoomApiError when it fails.
+ * Starts the swiping session for everyone in the room (host only, 2+ people). The backend picks
+ * the 20 movies (this can take several seconds) and moves the room to VOTING.
+ * POST /rooms/{code}/start
  *
  * @param {string} code
- * @returns {Promise<{ ok: boolean }>}
+ * @returns {Promise<{ status: 'VOTING' }>}
+ * @throws {RoomApiError}   NOT_ENOUGH_PARTICIPANTS, NOT_ENOUGH_TITLES, TMDB_UNAVAILABLE ...
  */
 export async function startSession(code) {
-  if (import.meta.env.DEV) console.info('[stub] startSession', code);
-  return { ok: true };
+  const session = getRoomSession(code);
+  if (!session) throw new RoomApiError(SESSION_EXPIRED_MESSAGE, { code: 'NO_SESSION' });
+  const data = await call(`/rooms/${encode(code)}/start`, { method: 'POST', token: session.token });
+  return { status: data.status };
+}
+
+/** Demo posters come from the backend itself (/demo/...), real ones are full TMDB links. */
+const toPosterUrl = (url) => (url?.startsWith('/') ? `${BASE_URL}${url}` : (url ?? null));
+
+/** Backend deck card -> MovieCard. */
+function toMovieCard(card) {
+  return {
+    id: card.roomTitleId,
+    position: card.position,
+    title: card.title,
+    year: card.year ?? null,
+    overview: card.overview ?? null,
+    posterUrl: toPosterUrl(card.posterUrl),
+    runtimeMin: card.runtimeMinutes ?? null,
+    genres: (card.genres ?? []).map((genre) => genre.name).filter(Boolean),
+    rating: card.voteAverage ?? null,
+    director: card.director ?? null,
+    creators: card.creators ?? [],
+    cast: card.cast ?? [],
+    ageRating: card.ageRating ?? null,
+    budget: card.budget ?? null,
+    revenue: card.revenue ?? null,
+    language: card.originalLanguage ?? null,
+    myVote: card.myVote ?? null,
+  };
+}
+
+/**
+ * The room's 20 movies with this person's votes (available once the session has started).
+ * GET /rooms/{code}/deck
+ *
+ * @param {string} code
+ * @returns {Promise<Deck>}
+ * @throws {RoomApiError}   ROOM_NOT_VOTING (not started yet), INVALID_TOKEN ...
+ */
+export async function getDeck(code) {
+  const session = getRoomSession(code);
+  if (!session) throw new RoomApiError(SESSION_EXPIRED_MESSAGE, { code: 'NO_SESSION' });
+  const data = await call(`/rooms/${encode(code)}/deck`, { token: session.token });
+  return {
+    contentType: data.contentType,
+    cards: data.cards.map(toMovieCard).sort((a, b) => a.position - b.position),
+    votedCount: data.votedCount,
+  };
+}
+
+/**
+ * Saves a like (true) or a skip (false). Sending the same vote again is fine; a different vote
+ * for the same movie is rejected with ALREADY_VOTED.
+ * POST /rooms/{code}/votes
+ *
+ * @param {string} code
+ * @param {{ cardId: number, liked: boolean }} vote
+ * @returns {Promise<{ votedCount: number, total: number, finished: boolean }>}
+ * @throws {RoomApiError}
+ */
+export async function voteForMovie(code, { cardId, liked }) {
+  const session = getRoomSession(code);
+  if (!session) throw new RoomApiError(SESSION_EXPIRED_MESSAGE, { code: 'NO_SESSION' });
+  const data = await call(`/rooms/${encode(code)}/votes`, {
+    method: 'POST',
+    token: session.token,
+    body: { roomTitleId: cardId, isLiked: liked },
+  });
+  return {
+    votedCount: data.votedCount,
+    total: data.totalCards,
+    finished: data.participantFinished,
+  };
 }

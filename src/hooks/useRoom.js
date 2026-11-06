@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { getRoom, subscribeToRoom } from '../api/roomsApi.js';
 
 const SESSION_ERROR_CODES = ['NO_SESSION', 'INVALID_TOKEN', 'WRONG_ROOM'];
@@ -12,9 +12,21 @@ function getFailureStatus(error) {
 /**
  * Loads a room and keeps it up to date (the API polls the backend every few seconds).
  * status: 'loading' | 'ready' | 'not-found' | 'unauthorized' (no or expired token) | 'error'
+ * `refresh()` asks the backend right away (e.g. after starting the session) instead of waiting
+ * for the next poll.
  */
 export function useRoom(code) {
   const [state, setState] = useState({ code, status: 'loading', room: null });
+
+  const refresh = useCallback(
+    () =>
+      getRoom(code)
+        .then((room) => setState({ code, status: 'ready', room }))
+        .catch(() => {
+          // The regular polling reports lasting problems; a failed extra request changes nothing.
+        }),
+    [code],
+  );
 
   useEffect(() => {
     let isActive = true;
@@ -33,5 +45,5 @@ export function useRoom(code) {
   }, [code]);
 
   // Ignore data that belongs to a previous room code.
-  return state.code === code ? state : { code, status: 'loading', room: null };
+  return state.code === code ? { ...state, refresh } : { code, status: 'loading', room: null, refresh };
 }

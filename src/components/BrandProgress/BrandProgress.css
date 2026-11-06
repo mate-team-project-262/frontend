@@ -1,0 +1,36 @@
+/* Figma: 6px bar (violet gradient on a light translucent track), counter 17px to the right */
+.brand-progress {
+  display: flex;
+  align-items: center;
+  gap: 17px;
+}
+
+.brand-progress__track {
+  flex: 1;
+  height: 6px;
+  overflow: hidden;
+  border-radius: 999px;
+  background: rgba(216, 210, 230, 0.2);
+}
+
+.brand-progress__fill {
+  height: 100%;
+  border-radius: inherit;
+  background: linear-gradient(90deg, #8d5afb, #5a1bdc);
+  transition: width 0.3s ease;
+}
+
+.brand-progress__count {
+  flex: none;
+  color: var(--l-lavender);
+  font-family: var(--l-font-text);
+  font-size: 16px;
+  line-height: 24px;
+  font-variant-numeric: tabular-nums;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .brand-progress__fill {
+    transition: none;
+  }
+}
