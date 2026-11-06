@@ -58,3 +58,8 @@
   outline-offset: 4px;
   border-radius: 4px;
 }
+
+/* "Leave room": the 16px icon sits 17px before the text (swipe session frame) */
+.brand-header--leave .brand-header__back {
+  gap: 17px;
+}

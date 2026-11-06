@@ -14,7 +14,7 @@
 
 /*
  * UI kit states (dark): every state keeps a 1px border, only the fill and the border colour change.
- * default (empty, idle) #2f2270 fill · hover / focus / filled #170e43 fill · error #930002 border ·
+ * default (empty, idle) #2f2270 fill · hover / focus / filled #170e43 fill · error #eb4b5b border ·
  * success #00924e border · disabled #645b8d. No glow ring and no icon (removed in the new kit).
  */
 .brand-field__input {
@@ -55,7 +55,7 @@
 }
 
 .brand-field--error .brand-field__input {
-  border-color: #930002;
+  border-color: #eb4b5b;
 }
 
 .brand-field--success .brand-field__input {
@@ -77,7 +77,7 @@
 }
 
 .brand-field--error .brand-field__message {
-  color: #ff7a80;
+  color: #eb4b5b;
 }
 
 /* Larger text, e.g. the invite link (Figma: 16px) */

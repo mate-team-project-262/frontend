@@ -5,7 +5,7 @@
  * POST requests are never retried automatically (the backend has no idempotency keys: a retry
  * after a lost response could create a second room or participant).
  */
-const BASE_URL = import.meta.env.VITE_API_BASE_URL ?? '/api';
+export const BASE_URL = import.meta.env.VITE_API_BASE_URL ?? '/api';
 
 /** A failed backend call: `status` 0 = the server could not be reached. */
 export class ApiError extends Error {

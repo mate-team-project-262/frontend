@@ -1,0 +1,244 @@
+/*
+ * 06 - Swipe session (Figma 1440 x 1024). The group "progress + card + vote buttons" is 502px wide
+ * (hug), 469px from both sides, 109px from the top and 52px from the bottom: progress row 24px,
+ * 8px gap, card 741px at y=141, 16px gap, 74px buttons. The background is the current poster,
+ * blurred.
+ */
+.swipe-page {
+  position: relative;
+  min-height: 100vh;
+  min-height: 100dvh;
+  overflow-x: hidden;
+  isolation: isolate;
+  background: #070125;
+}
+
+/* the header lies on a faint violet shade (20% at the top, fading out) */
+.swipe-page .brand-header {
+  background: linear-gradient(180deg, rgba(20, 8, 80, 0.2), rgba(20, 8, 80, 0));
+}
+
+.swipe-page__backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  overflow: hidden;
+  background: #070125;
+}
+
+.swipe-page__backdrop-image {
+  position: absolute;
+  inset: -10%;
+  background-position: center;
+  background-size: cover;
+  filter: blur(60px) brightness(0.72) saturate(1.1);
+  animation: swipe-backdrop-in 0.6s ease both;
+}
+
+@keyframes swipe-backdrop-in {
+  from {
+    opacity: 0;
+  }
+}
+
+.swipe {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 13px 16px 40px;
+}
+
+.swipe__stage {
+  /*
+   * 502px wide as in the 1440 x 1024 frame. On lower windows the card gets narrower so that the
+   * poster keeps its proportions and the vote buttons stay in view: the poster may be
+   * (window height - 507px) tall, the card is 34px wider than the poster (padding + border).
+   */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: min(100%, clamp(320px, calc((100dvh - 507px) * 468 / 517 + 34px), 502px));
+}
+
+.swipe__stage--hidden {
+  visibility: hidden;
+}
+
+.swipe__stage .brand-progress {
+  width: calc(100% - 17px); /* 485px next to the 502px card */
+  margin-left: 1px;
+}
+
+.swipe__card-slot {
+  width: 100%;
+  margin-top: 8px;
+}
+
+.swipe__card {
+  touch-action: pan-y;
+  cursor: grab;
+  user-select: none;
+  transition: transform 0.25s ease;
+  animation: swipe-card-in 0.25s ease;
+}
+
+@keyframes swipe-card-in {
+  from {
+    opacity: 0;
+    transform: scale(0.96);
+  }
+}
+
+.swipe__card--dragging {
+  cursor: grabbing;
+  transition: none;
+}
+
+.swipe__card--leaving-left,
+.swipe__card--leaving-right {
+  transition:
+    transform 0.32s ease-in,
+    opacity 0.32s ease-in;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.swipe__card--leaving-left {
+  transform: translateX(-130%) rotate(-18deg);
+}
+
+.swipe__card--leaving-right {
+  transform: translateX(130%) rotate(18deg);
+}
+
+.swipe__votes {
+  display: flex;
+  align-items: center;
+  gap: 13px;
+  margin-top: 16px;
+}
+
+.swipe__hint {
+  width: 86px;
+  margin: 0;
+  color: var(--l-lavender);
+  font-family: var(--l-font-text);
+  font-size: 14px;
+  line-height: 1.5;
+  text-align: center;
+}
+
+.swipe__error {
+  margin: 12px 0 0;
+  color: #eb4b5b;
+  font-family: var(--l-font-text);
+  font-size: 14px;
+  line-height: 1.5;
+  text-align: center;
+}
+
+.swipe__message {
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+  max-width: 520px;
+  margin: 108px auto 0;
+  padding: 24px 40px;
+  border: 1px solid var(--l-accent);
+  border-radius: 32px;
+  background: rgba(13, 4, 56, 0.78);
+  color: var(--l-cream);
+  font-family: var(--l-font-text);
+  font-size: 16px;
+  line-height: 1.5;
+  text-align: center;
+}
+
+.swipe__message p {
+  margin: 0;
+}
+
+/* "You're done!" on the audience photo, the same glass panel as the waiting room */
+.swipe-done {
+  box-sizing: border-box;
+  width: 100%;
+  max-width: 600px;
+  margin-top: 28px;
+  padding: 64px 48px 48px;
+  border: 1px solid var(--l-accent);
+  border-radius: 48px;
+  background: rgba(13, 4, 56, 0.78);
+  box-shadow: 0 0 32px rgba(150, 90, 255, 0.28);
+  -webkit-backdrop-filter: blur(24px);
+  backdrop-filter: blur(24px);
+  color: var(--l-cream);
+  text-align: center;
+}
+
+.swipe-done__title {
+  margin: 0;
+  font-family: var(--l-font-display);
+  font-size: 36px;
+  font-weight: 700;
+  line-height: 1.2;
+}
+
+.swipe-done__text {
+  margin: 9px 0 0;
+  color: var(--l-lavender);
+  font-family: var(--l-font-text);
+  font-size: 16px;
+  line-height: 1.5;
+}
+
+.swipe-done__hint {
+  margin: 4px 0 0;
+  color: var(--l-muted);
+  font-family: var(--l-font-text);
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+.swipe-done__status {
+  box-sizing: border-box;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: fit-content;
+  height: 42px;
+  margin: 24px auto 0;
+  padding: 0 17px 0 9px;
+  border: 1px solid var(--l-accent);
+  border-radius: 999px;
+  background: #070125;
+  font-family: var(--l-font-text);
+  font-size: 16px;
+  line-height: 1;
+}
+
+@media (max-width: 560px) {
+  .swipe {
+    padding-top: 4px;
+  }
+
+  .swipe-done {
+    padding: 40px 24px 32px;
+    border-radius: 32px;
+  }
+
+  .swipe-done__title {
+    font-size: 28px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .swipe__card,
+  .swipe__card--leaving-left,
+  .swipe__card--leaving-right,
+  .swipe-page__backdrop-image {
+    animation: none;
+    transition: none;
+  }
+}

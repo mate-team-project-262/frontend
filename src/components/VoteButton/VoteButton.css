@@ -1,0 +1,59 @@
+/* UI kit "button icon": 74px circle, #170e43 fill, 1px #b18aff border with a soft violet glow */
+.vote-button {
+  box-sizing: border-box;
+  display: grid;
+  flex: none;
+  place-items: center;
+  width: 74px;
+  height: 74px;
+  padding: 0;
+  border: 1px solid var(--l-accent);
+  border-radius: 50%;
+  background: #170e43;
+  box-shadow: 0 0 9px rgba(177, 138, 255, 0.45);
+  color: var(--l-cream);
+  cursor: pointer;
+  transition:
+    box-shadow 0.2s ease,
+    border-color 0.2s ease,
+    transform 0.12s ease;
+}
+
+.vote-button:hover {
+  border-color: #e2d4ff;
+  box-shadow: 0 0 16px rgba(177, 138, 255, 0.75);
+}
+
+.vote-button:active {
+  border-color: var(--l-accent);
+  box-shadow: 0 0 6px rgba(177, 138, 255, 0.4);
+  transform: scale(0.95);
+}
+
+/* pressed: the heart turns solid violet */
+.vote-button--like:active .vote-button__heart {
+  fill: #7835ff;
+}
+
+.vote-button:focus-visible {
+  outline: 2px solid var(--l-cream);
+  outline-offset: 4px;
+}
+
+.vote-button:disabled {
+  border-color: #645b8d;
+  box-shadow: none;
+  color: #645b8d;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.vote-button--like:disabled .vote-button__heart {
+  fill: #645b8d;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .vote-button {
+    transition: none;
+  }
+}

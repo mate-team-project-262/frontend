@@ -21,3 +21,14 @@ Figma exports for the "What to Watch" (W2W) redesign. Keep them as the source of
   Age rating, Budget, Revenue, Original language, Close details), result cards ("4 / 4 liked it" with crown, View details;
   compact "3 / 4 liked it" with Details), translucent header variant, icons (check, crown, star, heart, x, arrow right,
   mail, lock, eye / eye-off, user, chevrons, Google, Facebook).
+
+## UI kit v3 and the swipe session (November 2026)
+
+- `ui-kit/v3/*.png` - the kit as separate pages: Colors (tokens: Accent/100 #7835FF, Accent/80 #B18BFF,
+  Accent/40 #E2D4FF, Navy/100 #070125 ... Navy/20 #D8D3E6, Cream #FFFAEF, Background light #FFF9EA,
+  Error on dark #EB4B5B, Error on light #D60004, Success #00924E, Info #0E3DB3, Warning #EACF00),
+  Buttons (+ red "system error" button, round icon button states), Text Input, Tabs/dropdowns (chips,
+  tab item, user dropdown), Other (toast, progress bar, participant progress states, movie card,
+  details modal, winner / highly-rated / session cards), Icons, Typography (H4 = Geologica Bold 24/120,
+  H5 = Geologica Regular 24/135), Grid (4 columns, 120px margins, 20px gutter).
+- `swipe-session/*.png` - 06 Swipe session frames (card, details, mobile) used for the swipe page.
