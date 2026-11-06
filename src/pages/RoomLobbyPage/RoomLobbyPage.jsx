@@ -6,7 +6,6 @@ import BrandField from '../../components/BrandField/BrandField.jsx';
 import BrandHeader from '../../components/BrandHeader/BrandHeader.jsx';
 import BrandParticipant from '../../components/BrandParticipant/BrandParticipant.jsx';
 import BrandQrCode from '../../components/BrandQrCode/BrandQrCode.jsx';
-import { onSessionStarted } from '../../handlers.js';
 import { useCopyToClipboard } from '../../hooks/useCopyToClipboard.js';
 import { ROUTES } from '../../routes.js';
 import { getInviteLink, getTelegramShareUrl } from '../../utils/roomLinks.js';
@@ -30,8 +29,11 @@ function TelegramIcon() {
   );
 }
 
-/** Host view of a room in the lobby. `room` comes from RoomPage. */
-export default function RoomLobbyPage({ code, room }) {
+/**
+ * Host view of a room in the lobby. `room` comes from RoomPage; `onStarted` reloads the room
+ * after the backend started the session (RoomPage then shows the swipe page).
+ */
+export default function RoomLobbyPage({ code, room, onStarted }) {
   const navigate = useNavigate();
   const { status: copyStatus, copy } = useCopyToClipboard();
   const [isStarting, setIsStarting] = useState(false);
@@ -57,14 +59,13 @@ export default function RoomLobbyPage({ code, room }) {
     setStartError('');
     try {
       await startSession(code);
-      onSessionStarted(room);
+      await onStarted();
     } catch (error) {
       setStartError(
         error instanceof RoomApiError
           ? error.message
           : 'Could not start the session. Please try again.',
       );
-    } finally {
       setIsStarting(false);
     }
   };
@@ -137,9 +138,10 @@ export default function RoomLobbyPage({ code, room }) {
           <BrandButton
             className="room-lobby__start"
             disabled={!canStart || isStarting}
+            aria-busy={isStarting}
             onClick={handleStartSession}
           >
-            Start session
+            {isStarting ? 'Picking 20 movies…' : 'Start session'}
           </BrandButton>
           {startError && (
             <p className="room-lobby__error" role="alert">

@@ -1,0 +1,125 @@
+/*
+ * UI kit "movie-card" (Figma 1440: 502 x 741 at x=469, y=141). 1px #b18aff border, 16px padding,
+ * translucent dark gradient (about 80% opaque) over the blurred poster background.
+ */
+.movie-card {
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  padding: 16px 16px 26px;
+  border: 1px solid var(--l-accent);
+  border-radius: 28px;
+  background: linear-gradient(180deg, rgba(20, 8, 76, 0.8), rgba(7, 1, 37, 0.8));
+  -webkit-backdrop-filter: blur(24px);
+  backdrop-filter: blur(24px);
+  color: var(--l-cream);
+}
+
+.movie-card__poster {
+  /* 468 x 517 in the frame: the poster keeps this shape, the card width follows it */
+  aspect-ratio: 468 / 517;
+  overflow: hidden;
+  border-radius: 20px;
+  background: #170e43;
+}
+
+.movie-card__poster img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  -webkit-user-drag: none;
+  user-select: none;
+}
+
+/* H4: Geologica Bold 24 / 120% */
+.movie-card__title {
+  margin: 17px 0 0;
+  font-family: var(--l-font-display);
+  font-size: 24px;
+  font-weight: 700;
+  line-height: 1.2;
+}
+
+.movie-card__meta {
+  display: flex;
+  align-items: center;
+  margin: 11px 0 0;
+  font-family: var(--l-font-text);
+  font-size: 16px;
+  line-height: 24px;
+  white-space: nowrap;
+}
+
+.movie-card__meta-item {
+  flex: none;
+}
+
+.movie-card__meta-item + .movie-card__meta-item::before {
+  content: '•';
+  margin: 0 9px;
+}
+
+/* long genre lists end with "…" so the rating stays on the line */
+.movie-card__meta-item--genres {
+  flex: 0 1 auto;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.movie-card__meta-item--rating {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.movie-card__meta-item--rating::before {
+  margin-right: 13px !important;
+}
+
+/* Secondary text, two lines */
+.movie-card__overview {
+  display: -webkit-box;
+  margin: 15px 0 0;
+  overflow: hidden;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
+  color: var(--l-muted);
+  font-family: var(--l-font-text);
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+.movie-card__more {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  align-self: flex-end;
+  margin: 14px 13px 0 0;
+  padding: 4px 0;
+  border: 0;
+  background: none;
+  color: #6f62a8;
+  font-family: var(--l-font-display);
+  font-size: 16px;
+  line-height: 1;
+  cursor: pointer;
+  transition: color 0.15s ease;
+}
+
+.movie-card__more:hover {
+  color: var(--l-accent);
+}
+
+.movie-card__more:active {
+  color: var(--l-lavender);
+}
+
+.movie-card__more:focus-visible {
+  outline: 2px solid var(--l-cream);
+  outline-offset: 4px;
+  border-radius: 4px;
+}

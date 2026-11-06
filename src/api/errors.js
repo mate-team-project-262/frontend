@@ -21,6 +21,18 @@ const KNOWN_ERRORS = {
   ROOM_FULL: ['room', 'This room is full (up to 5 people).'],
   ROOM_NOT_JOINABLE: ['room', 'This session has already started, so joining is closed.'],
   ROOM_NOT_FOUND: ['room', 'We could not find this room. Check the link and try again.'],
+  NOT_ENOUGH_PARTICIPANTS: [null, 'Invite at least one friend to start the session.'],
+  NOT_ENOUGH_TITLES: [
+    null,
+    'We could not find 20 movies for these preferences. Try a new room with fewer genres or a longer duration.',
+  ],
+  DECK_SELECTION_LIMIT: [null, 'Picking the movies took too long. Please try again.'],
+  TMDB_UNAVAILABLE: [null, 'The movie catalogue is not responding right now. Please try again.'],
+  ROOM_ALREADY_STARTED: [null, 'The session has already started.'],
+  NOT_HOST: [null, 'Only the host can start the session.'],
+  ROOM_NOT_VOTING: [null, 'Voting is not open in this room.'],
+  ALREADY_VOTED: [null, 'You have already voted for this movie.'],
+  TITLE_NOT_IN_DECK: [null, 'This movie is not part of the session.'],
   INVALID_TOKEN: [null, SESSION_EXPIRED],
   WRONG_ROOM: [null, SESSION_EXPIRED],
 };
