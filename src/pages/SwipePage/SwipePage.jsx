@@ -67,7 +67,7 @@ function DoneView({ code }) {
         <>
           <p className="swipe-done__text">Results will unlock when everyone finishes</p>
           <p className="swipe-done__hint">
-            No need to do anything else — we’ll show the winner automatically
+            No need to do anything else - we’ll show winner automatically
           </p>
         </>
       )}
