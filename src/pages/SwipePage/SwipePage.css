@@ -164,9 +164,9 @@
 .swipe-done {
   box-sizing: border-box;
   width: 100%;
-  max-width: 600px;
+  max-width: 680px;
   margin-top: 28px;
-  padding: 64px 48px 48px;
+  padding: 64px 80px 40px;
   border: 1px solid var(--l-accent);
   border-radius: 48px;
   background: rgba(13, 4, 56, 0.78);
@@ -208,7 +208,7 @@
   gap: 10px;
   width: fit-content;
   height: 42px;
-  margin: 24px auto 0;
+  margin: 32px auto 0;
   padding: 0 17px 0 9px;
   border: 1px solid var(--l-accent);
   border-radius: 999px;
@@ -218,13 +218,71 @@
   line-height: 1;
 }
 
+/* Group progress: title + "3 / 4 completed", a bar and the people with Done / Swiping… */
+.swipe-done__group {
+  margin-top: 32px;
+  text-align: left;
+}
+
+.swipe-done__group-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 16px;
+}
+
+.swipe-done__group-title {
+  margin: 0;
+  font-family: var(--l-font-display);
+  font-size: 20px;
+  font-weight: 700;
+  line-height: 1.2;
+}
+
+.swipe-done__count {
+  color: var(--l-lavender);
+  font-family: var(--l-font-text);
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+.swipe-done__bar {
+  height: 6px;
+  margin-top: 12px;
+  overflow: hidden;
+  border-radius: 999px;
+  background: rgba(216, 210, 230, 0.2);
+}
+
+.swipe-done__bar-fill {
+  height: 100%;
+  border-radius: inherit;
+  background: linear-gradient(90deg, #8d5afb, #5a1bdc);
+  transition: width 0.3s ease;
+}
+
+.swipe-done__list {
+  display: grid;
+  gap: 8px;
+  margin: 24px 0 0;
+  padding: 0;
+}
+
+.swipe-done__footnote {
+  margin: 16px 0 0;
+  color: var(--l-muted);
+  font-family: var(--l-font-text);
+  font-size: 14px;
+  line-height: 1.5;
+}
+
 @media (max-width: 560px) {
   .swipe {
     padding-top: 4px;
   }
 
   .swipe-done {
-    padding: 40px 24px 32px;
+    padding: 40px 16px 32px;
     border-radius: 32px;
   }
 

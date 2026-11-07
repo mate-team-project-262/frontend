@@ -4,7 +4,7 @@
  * the functions below and the `Room` / `MovieCard` shapes; the backend details (field names, enum
  * values, tokens) stay in this file.
  *
- * Not available on the backend yet (kept as a stub): leaving a room.
+ * Also POST /rooms/{code}/leave and GET /rooms/{code}/progress.
  */
 import { FEATURES } from '../config/features.js';
 import { getDurationRanges } from '../utils/duration.js';
@@ -224,16 +224,61 @@ export function subscribeToRoom(code, onChange, onError) {
 }
 
 /**
- * Leaves the room ("Leave room" on the waiting room page).
- * STUB: the backend has no "leave" endpoint yet, so this only forgets the token on this device -
- * the person stays in the room's participant list until the backend supports leaving.
+ * Leaves the room: the backend removes the person and their votes and revokes the token.
+ * When the host leaves, the participant with the smallest id becomes host; a host who is alone
+ * deletes the room. The saved pass is forgotten afterwards.
+ * POST /rooms/{code}/leave  (204)
  *
  * @param {string} code
  * @returns {Promise<{ ok: boolean }>}
+ * @throws {RoomApiError}   only for network / server problems (the person is still in the room)
  */
 export async function leaveRoom(code) {
+  const session = getRoomSession(code);
+  if (session) {
+    try {
+      await call(`/rooms/${encode(code)}/leave`, { method: 'POST', token: session.token });
+    } catch (error) {
+      // Token already revoked / room gone: the person is not in the room any more anyway.
+      if (!SESSION_ERROR_CODES.includes(error.code)) throw error;
+    }
+  }
   clearRoomSession(code);
   return { ok: true };
+}
+
+/**
+ * @typedef {Object} GameProgress
+ * @property {number} finished        people who voted for every movie
+ * @property {number} total           people in the room
+ * @property {boolean} allFinished
+ * @property {{ id: number, name: string, isHost: boolean, isMe: boolean, finished: boolean }[]} participants
+ */
+
+/**
+ * Who has finished voting (the "You're done!" screen). Available once the session has started.
+ * GET /rooms/{code}/progress
+ *
+ * @param {string} code
+ * @returns {Promise<GameProgress>}
+ * @throws {RoomApiError}
+ */
+export async function getProgress(code) {
+  const session = getRoomSession(code);
+  if (!session) throw new RoomApiError(SESSION_EXPIRED_MESSAGE, { code: 'NO_SESSION' });
+  const data = await call(`/rooms/${encode(code)}/progress`, { token: session.token });
+  return {
+    finished: data.finishedParticipants,
+    total: data.totalParticipants,
+    allFinished: data.allFinished,
+    participants: data.participants.map((person) => ({
+      id: person.id,
+      name: person.displayName,
+      isHost: person.host,
+      isMe: person.id === session.participantId,
+      finished: person.finished,
+    })),
+  };
 }
 
 /**

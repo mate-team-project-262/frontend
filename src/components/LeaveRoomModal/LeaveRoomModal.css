@@ -1,0 +1,176 @@
+/*
+ * "Leave room?" (Figma 1440 x 1024, centred): participant 472 x 416, host 488 x 480; 40px padding,
+ * 104px lilac circle with the icon, H2 title, Inter 16 text, buttons 16px apart.
+ * The whole page behind it (header too) is blurred.
+ */
+.leave-modal {
+  position: fixed;
+  inset: 0;
+  z-index: 30;
+  display: flex;
+  justify-content: center;
+  align-items: safe center;
+  overflow-y: auto;
+  padding: 16px;
+  background: rgba(7, 1, 37, 0.25);
+  -webkit-backdrop-filter: blur(14px);
+  backdrop-filter: blur(14px);
+  animation: leave-modal-fade 0.2s ease;
+}
+
+@keyframes leave-modal-fade {
+  from {
+    opacity: 0;
+  }
+}
+
+.leave-modal__panel {
+  position: relative;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 472px;
+  max-width: 100%;
+  padding: 40px;
+  border: 1px solid var(--l-accent);
+  border-radius: 40px;
+  background: linear-gradient(200deg, rgba(23, 18, 88, 0.86), rgba(9, 2, 36, 0.9));
+  box-shadow: 0 0 24px rgba(177, 138, 255, 0.35);
+  color: var(--l-cream);
+  text-align: center;
+}
+
+.leave-modal__panel--host {
+  width: 488px;
+}
+
+.leave-modal__close {
+  position: absolute;
+  top: 25px;
+  right: 24px;
+  display: grid;
+  place-items: center;
+  width: 24px;
+  height: 24px;
+  padding: 0;
+  border: 0;
+  background: none;
+  color: var(--l-cream);
+  cursor: pointer;
+  transition: opacity 0.15s ease;
+}
+
+.leave-modal__close:hover {
+  opacity: 0.75;
+}
+
+.leave-modal__close:focus-visible {
+  outline: 2px solid var(--l-cream);
+  outline-offset: 4px;
+  border-radius: 4px;
+}
+
+.leave-modal__icon {
+  display: grid;
+  place-items: center;
+  width: 104px;
+  height: 104px;
+  border-radius: 50%;
+  background: var(--l-accent);
+  color: #170e43;
+}
+
+/* H2: Geologica Bold 48 / 120% */
+.leave-modal__title {
+  margin: 25px 0 0;
+  font-family: var(--l-font-display);
+  font-size: 48px;
+  font-weight: 700;
+  line-height: 1.2;
+  letter-spacing: -0.02em;
+}
+
+.leave-modal__text {
+  margin: 8px 0 0;
+  color: var(--l-lavender);
+  font-family: var(--l-font-text);
+  font-size: 16px;
+  line-height: 1.5;
+}
+
+/* the host variant has more air under the title */
+.leave-modal__panel--host .leave-modal__text {
+  margin-top: 16px;
+}
+
+.leave-modal__note {
+  box-sizing: border-box;
+  width: 100%;
+  margin: 16px 0 0;
+  padding: 8px 24px;
+  border-radius: 16px;
+  background: #645b8d;
+  font-family: var(--l-font-text);
+  font-size: 16px;
+  line-height: 1.5;
+}
+
+.leave-modal__error {
+  margin: 16px 0 0;
+  color: #eb4b5b;
+  font-family: var(--l-font-text);
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+.leave-modal__actions {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  width: 100%;
+  margin-top: 40px;
+}
+
+/* In the frame the outlined button is 52px tall and the filled one 48px */
+.leave-modal__button {
+  flex: 1;
+  padding: 0 16px;
+}
+
+.leave-modal__button--stay {
+  height: 52px;
+}
+
+.leave-modal__button--leave {
+  height: 48px;
+}
+
+@media (max-width: 520px) {
+  .leave-modal__panel {
+    padding: 32px 20px 24px;
+    border-radius: 28px;
+  }
+
+  .leave-modal__title {
+    font-size: 36px;
+  }
+
+  .leave-modal__actions {
+    flex-direction: column-reverse;
+    align-items: stretch;
+    gap: 12px;
+  }
+
+  .leave-modal__button--stay,
+  .leave-modal__button--leave {
+    flex: none;
+    height: 52px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .leave-modal {
+    animation: none;
+  }
+}

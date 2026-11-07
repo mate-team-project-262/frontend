@@ -43,7 +43,7 @@ export default function RoomPage() {
   if (status === 'unauthorized') return <Navigate to={invitePath(code)} replace />;
   if (status !== 'ready') return <RoomMessage status={status} />;
 
-  if (room.status !== 'LOBBY') return <SwipePage code={code} />;
+  if (room.status !== 'LOBBY') return <SwipePage code={code} room={room} />;
 
   const me = room.participants.find((person) => person.isMe);
   return me?.isHost ? (
