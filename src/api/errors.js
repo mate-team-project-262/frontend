@@ -24,7 +24,7 @@ const KNOWN_ERRORS = {
   NOT_ENOUGH_PARTICIPANTS: [null, 'Invite at least one friend to start the session.'],
   NOT_ENOUGH_TITLES: [
     null,
-    'We could not find 20 movies for these preferences. Try a new room with fewer genres or a longer duration.',
+    'We could not find 20 movies for these preferences. Try a new room with more genres or a longer duration.',
   ],
   DECK_SELECTION_LIMIT: [null, 'Picking the movies took too long. Please try again.'],
   TMDB_UNAVAILABLE: [null, 'The movie catalogue is not responding right now. Please try again.'],
