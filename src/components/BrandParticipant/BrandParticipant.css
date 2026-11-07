@@ -49,10 +49,10 @@
   align-items: center;
   gap: 8px;
   box-sizing: border-box;
-  height: 34px;
-  margin-left: 8px;
-  padding: 0 14px 0 12px;
-  border: 1px solid transparent;
+  height: 36px;
+  margin-left: 10px;
+  padding: 0 16px 0 19px;
+  border: 1px solid #352e59;
   border-radius: 999px;
   background: #070125;
   font-size: 14px;
@@ -60,7 +60,12 @@
 }
 
 .brand-participant__badge + .brand-participant__status {
-  margin-left: 8px;
+  margin-left: 10px;
+}
+
+/* On the progress list the Host badge is as tall as the status chip */
+.brand-participant__badge:has(+ .brand-participant__status) {
+  line-height: 36px;
 }
 
 .brand-participant__name + .brand-participant__status {
@@ -75,8 +80,6 @@
   color: #00924e;
 }
 
-.brand-participant__status .brand-spinner {
-  width: 16px;
-  height: 16px;
-  border-width: 2px;
+.brand-participant__status:not(.brand-participant__status--done) {
+  padding-left: 17px;
 }
