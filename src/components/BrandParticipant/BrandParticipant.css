@@ -41,3 +41,42 @@
   background: #070125;
   line-height: 32px;
 }
+
+/* Done / Swiping… chip (UI kit): 32px pill on #070125, Done with a green border */
+.brand-participant__status {
+  flex: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  box-sizing: border-box;
+  height: 34px;
+  margin-left: 8px;
+  padding: 0 14px 0 12px;
+  border: 1px solid transparent;
+  border-radius: 999px;
+  background: #070125;
+  font-size: 14px;
+  line-height: 1;
+}
+
+.brand-participant__badge + .brand-participant__status {
+  margin-left: 8px;
+}
+
+.brand-participant__name + .brand-participant__status {
+  margin-left: auto;
+}
+
+.brand-participant__status--done {
+  border-color: #00924e;
+}
+
+.brand-participant__status--done svg {
+  color: #00924e;
+}
+
+.brand-participant__status .brand-spinner {
+  width: 16px;
+  height: 16px;
+  border-width: 2px;
+}

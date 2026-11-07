@@ -1,0 +1,102 @@
+/* UI kit "info toast" (Figma: 400 x 83 at x=1000, y=136; 40px #645b8d avatar, cream fill) */
+.brand-toast {
+  position: fixed;
+  top: 136px;
+  right: 40px;
+  z-index: 25;
+  box-sizing: border-box;
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  width: 400px;
+  max-width: calc(100% - 32px);
+  padding: 16px 20px 16px 16px;
+  border: 1px solid var(--l-accent);
+  border-radius: 24px;
+  background: #fffaef;
+  box-shadow: 0 0 14px rgba(177, 138, 255, 0.4);
+  animation: brand-toast-in 0.25s ease;
+}
+
+@keyframes brand-toast-in {
+  from {
+    opacity: 0;
+    transform: translateY(-8px);
+  }
+}
+
+.brand-toast__icon {
+  flex: none;
+  margin-top: 5px;
+  display: grid;
+  place-items: center;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: #645b8d;
+  color: #fffaef;
+}
+
+.brand-toast__body {
+  flex: 1;
+  min-width: 0;
+}
+
+.brand-toast__title,
+.brand-toast__text {
+  margin: 0;
+  font-family: var(--l-font-text);
+}
+
+.brand-toast__title {
+  color: #170e43;
+  font-size: 16px;
+  line-height: 1.5;
+}
+
+.brand-toast__text {
+  margin-top: 4px;
+  color: #645b8d;
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+.brand-toast__close {
+  flex: none;
+  display: grid;
+  place-items: center;
+  width: 20px;
+  height: 20px;
+  margin: 2px -2px 0 0;
+  padding: 0;
+  border: 0;
+  background: none;
+  color: #645b8d;
+  cursor: pointer;
+}
+
+.brand-toast__close:hover {
+  color: #170e43;
+}
+
+.brand-toast__close:focus-visible {
+  outline: 2px solid #7835ff;
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
+/* Phones and narrow windows: under the header, centred */
+@media (max-width: 1100px) {
+  .brand-toast {
+    top: 88px;
+    right: 50%;
+    transform: translateX(50%);
+    animation: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .brand-toast {
+    animation: none;
+  }
+}
