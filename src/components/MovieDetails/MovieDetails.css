@@ -1,0 +1,193 @@
+/*
+ * UI kit "More-details-modal" (Figma 1440: 761 x 849, centred; 40px padding, 266 x 400 poster,
+ * text column 24px to its right, facts table under a divider, "Close details" 531 x 54).
+ */
+.movie-details {
+  position: fixed;
+  inset: 0;
+  z-index: 20;
+  display: flex;
+  justify-content: center;
+  align-items: safe center;
+  overflow-y: auto;
+  padding: 16px;
+}
+
+.movie-details__panel {
+  box-sizing: border-box;
+  width: 761px;
+  max-width: 100%;
+  padding: 40px 40px 40px;
+  border: 1px solid var(--l-accent);
+  border-radius: 40px;
+  background: linear-gradient(180deg, rgba(20, 8, 76, 0.82), rgba(7, 1, 37, 0.84));
+  box-shadow: 0 0 24px rgba(177, 138, 255, 0.35);
+  -webkit-backdrop-filter: blur(24px);
+  backdrop-filter: blur(24px);
+  color: var(--l-cream);
+  animation: movie-details-in 0.2s ease;
+}
+
+@keyframes movie-details-in {
+  from {
+    opacity: 0;
+    transform: translateY(12px) scale(0.98);
+  }
+}
+
+.movie-details__top {
+  display: flex;
+  gap: 24px;
+  padding-bottom: 24px;
+  border-bottom: 1px solid rgba(216, 210, 230, 0.2);
+}
+
+.movie-details__poster {
+  flex: none;
+  width: 266px;
+  height: 400px;
+  overflow: hidden;
+  border-radius: 20px;
+  background: #170e43;
+}
+
+.movie-details__poster img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.movie-details__about {
+  min-width: 0;
+}
+
+.movie-details__title {
+  margin: 0;
+  font-family: var(--l-font-display);
+  font-size: 24px;
+  font-weight: 700;
+  line-height: 1.2;
+}
+
+.movie-details__meta {
+  margin: 16px 0 0;
+  font-family: var(--l-font-text);
+  font-size: 16px;
+  line-height: 24px;
+}
+
+/* H5: Geologica Regular 24 / 135% */
+.movie-details__rating {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin: 16px 0 0 4px;
+  font-family: var(--l-font-display);
+  font-size: 24px;
+  line-height: 1.35;
+}
+
+.movie-details__overview {
+  margin: 16px 0 0;
+  font-family: var(--l-font-text);
+  font-size: 16px;
+  line-height: 1.5;
+}
+
+.movie-details__facts {
+  display: grid;
+  gap: 16px;
+  margin: 24px 0 0;
+  font-family: var(--l-font-text);
+  font-size: 16px;
+  line-height: 1.5;
+}
+
+.movie-details__fact {
+  display: grid;
+  grid-template-columns: 290px 1fr;
+}
+
+.movie-details__fact dt {
+  color: var(--l-muted);
+}
+
+.movie-details__fact dd {
+  margin: 0;
+}
+
+.movie-details__close {
+  box-sizing: border-box;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 11px;
+  width: 531px;
+  max-width: 100%;
+  height: 54px;
+  margin: 40px auto 0;
+  border: 1px solid var(--l-accent);
+  border-radius: 999px;
+  background: transparent;
+  color: var(--l-cream);
+  font-family: var(--l-font-display);
+  font-size: 16px;
+  font-weight: 700;
+  line-height: 1;
+  cursor: pointer;
+  transition:
+    border-color 0.2s ease,
+    background-color 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+/* hover / pressed as the outlined button of the UI kit */
+.movie-details__close:hover {
+  border-color: #7835ff;
+  box-shadow: 0 4px 10px rgba(0, 0, 30, 0.22);
+}
+
+.movie-details__close:active {
+  border-color: #7835ff;
+  background: #2f2270;
+  box-shadow: none;
+}
+
+.movie-details__close:focus-visible {
+  outline: 2px solid var(--l-cream);
+  outline-offset: 3px;
+}
+
+@media (max-width: 720px) {
+  .movie-details__panel {
+    padding: 24px 20px;
+    border-radius: 28px;
+  }
+
+  .movie-details__top {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .movie-details__poster {
+    width: min(266px, 70%);
+    height: auto;
+    aspect-ratio: 266 / 400;
+  }
+
+  .movie-details__about {
+    width: 100%;
+  }
+
+  .movie-details__fact {
+    grid-template-columns: 140px 1fr;
+    gap: 12px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .movie-details__panel {
+    animation: none;
+  }
+}
