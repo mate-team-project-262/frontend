@@ -41,3 +41,45 @@
   background: #070125;
   line-height: 32px;
 }
+
+/* Done / Swiping… chip (UI kit): 32px pill on #070125, Done with a green border */
+.brand-participant__status {
+  flex: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  box-sizing: border-box;
+  height: 36px;
+  margin-left: 10px;
+  padding: 0 16px 0 19px;
+  border: 1px solid #352e59;
+  border-radius: 999px;
+  background: #070125;
+  font-size: 14px;
+  line-height: 1;
+}
+
+.brand-participant__badge + .brand-participant__status {
+  margin-left: 10px;
+}
+
+/* On the progress list the Host badge is as tall as the status chip */
+.brand-participant__badge:has(+ .brand-participant__status) {
+  line-height: 36px;
+}
+
+.brand-participant__name + .brand-participant__status {
+  margin-left: auto;
+}
+
+.brand-participant__status--done {
+  border-color: #00924e;
+}
+
+.brand-participant__status--done svg {
+  color: #00924e;
+}
+
+.brand-participant__status:not(.brand-participant__status--done) {
+  padding-left: 17px;
+}

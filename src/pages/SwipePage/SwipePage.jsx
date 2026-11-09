@@ -3,11 +3,16 @@ import { useNavigate } from 'react-router';
 import { RoomApiError, getDeck, leaveRoom, voteForMovie } from '../../api/roomsApi.js';
 import BrandButton from '../../components/BrandButton/BrandButton.jsx';
 import BrandHeader from '../../components/BrandHeader/BrandHeader.jsx';
+import BrandParticipant from '../../components/BrandParticipant/BrandParticipant.jsx';
 import BrandProgress from '../../components/BrandProgress/BrandProgress.jsx';
 import BrandSpinner from '../../components/BrandSpinner/BrandSpinner.jsx';
+import BrandToast from '../../components/BrandToast/BrandToast.jsx';
+import LeaveRoomModal from '../../components/LeaveRoomModal/LeaveRoomModal.jsx';
 import MovieCard from '../../components/MovieCard/MovieCard.jsx';
 import MovieDetails from '../../components/MovieDetails/MovieDetails.jsx';
 import VoteButton from '../../components/VoteButton/VoteButton.jsx';
+import { useGameProgress } from '../../hooks/useGameProgress.js';
+import { useHostChange } from '../../hooks/useHostChange.js';
 import { ROUTES } from '../../routes.js';
 import { cx } from '../../utils/classNames.js';
 import '../../styles/cinema.css';
@@ -32,19 +37,77 @@ function PosterBackdrop({ url }) {
   );
 }
 
-/** "You're done!" - shown after the 20th vote. */
-function DoneView() {
+/** "Waiting for Alex", "Waiting for Alex and Peter", "Waiting for 3 people". */
+function waitingFor(people) {
+  if (people.length === 0) return 'Waiting for others';
+  if (people.length === 1) return `Waiting for ${people[0].name}`;
+  if (people.length === 2) return `Waiting for ${people[0].name} and ${people[1].name}`;
+  return `Waiting for ${people.length} people`;
+}
+
+/**
+ * 07 - "You're done!" after the 20th vote: who has finished (polled every 3 seconds). When everybody
+ * is done it turns into "Getting results ready".
+ */
+function DoneView({ code }) {
+  const progress = useGameProgress(code, true);
+  const allDone = Boolean(progress?.allFinished);
+  const stillSwiping = progress?.participants.filter((person) => !person.finished) ?? [];
+
   return (
     <section className="swipe-done" aria-labelledby="swipe-done-title">
       <h1 className="swipe-done__title" id="swipe-done-title">
-        You’re done!
+        {allDone ? 'Getting results ready' : 'You’re done!'}
       </h1>
-      <p className="swipe-done__text">Results will unlock when everyone finishes</p>
-      <p className="swipe-done__hint">No need to do anything else — we’ll move on automatically</p>
+      {allDone ? (
+        <p className="swipe-done__text">
+          Everyone has finished! We’re now calculating the results of your movie session
+        </p>
+      ) : (
+        <>
+          <p className="swipe-done__text">Results will unlock when everyone finishes</p>
+          <p className="swipe-done__hint">
+            No need to do anything else - we’ll show winner automatically
+          </p>
+        </>
+      )}
+
+      {progress && (
+        <div className="swipe-done__group">
+          <div className="swipe-done__group-head">
+            <h2 className="swipe-done__group-title">Group progress</h2>
+            <span className="swipe-done__count">
+              {progress.finished} / {progress.total} completed
+            </span>
+          </div>
+          <div className="swipe-done__bar" aria-hidden="true">
+            <div
+              className="swipe-done__bar-fill"
+              style={{ width: `${progress.total ? (progress.finished / progress.total) * 100 : 0}%` }}
+            />
+          </div>
+          <ul className="swipe-done__list" aria-live="polite">
+            {progress.participants.map((person, index) => (
+              <BrandParticipant
+                key={person.id}
+                name={person.name}
+                index={index}
+                isMe={person.isMe}
+                isHost={person.isHost}
+                status={person.finished ? 'done' : 'swiping'}
+              />
+            ))}
+          </ul>
+        </div>
+      )}
+
       <div className="swipe-done__status" role="status">
         <BrandSpinner />
-        Waiting for others
+        {allDone ? 'Waiting for results' : waitingFor(stillSwiping)}
       </div>
+      {allDone && (
+        <p className="swipe-done__footnote">This usually takes a few seconds. Thanks for your patience!</p>
+      )}
     </section>
   );
 }
@@ -53,8 +116,10 @@ function DoneView() {
  * 06 - Swipe session: the room's 20 movies one by one. Like / skip with the buttons, by dragging
  * the card or with the arrow keys; "More details" opens the whole card. Votes are saved on the
  * backend, so after a reload the person continues where they stopped.
+ * "Leave room" asks first (host / participant texts); when the host changes, a toast tells everyone.
+ * `room` is the live room from RoomPage (polled every 3 seconds).
  */
-export default function SwipePage({ code }) {
+export default function SwipePage({ code, room }) {
   const navigate = useNavigate();
   const [state, setState] = useState({ status: 'loading', cards: [], error: '' });
   const [index, setIndex] = useState(0);
@@ -63,6 +128,8 @@ export default function SwipePage({ code }) {
   const [isSaving, setIsSaving] = useState(false);
   const [voteError, setVoteError] = useState('');
   const [detailsOpen, setDetailsOpen] = useState(false);
+  const [leaveState, setLeaveState] = useState(null); // null | { isLeaving, error }
+  const [hostNotice, dismissHostNotice] = useHostChange(room);
   const dragStart = useRef(null);
   const cardSlot = useRef(null);
 
@@ -124,7 +191,7 @@ export default function SwipePage({ code }) {
 
   // ← skip, → like (not while the details are open or a field has focus)
   useEffect(() => {
-    if (!card || detailsOpen) return undefined;
+    if (!card || detailsOpen || leaveState) return undefined;
     const onKeyDown = (event) => {
       if (event.target.closest?.('input, textarea, select')) return;
       if (event.key === 'ArrowLeft') vote(false);
@@ -132,7 +199,7 @@ export default function SwipePage({ code }) {
     };
     window.addEventListener('keydown', onKeyDown);
     return () => window.removeEventListener('keydown', onKeyDown);
-  }, [card, detailsOpen, vote]);
+  }, [card, detailsOpen, leaveState, vote]);
 
   // Load the next poster early so it is ready when the card changes.
   useEffect(() => {
@@ -165,13 +232,25 @@ export default function SwipePage({ code }) {
     requestAnimationFrame(() => cardSlot.current?.querySelector('.movie-card__more')?.focus());
   }, []);
 
-  const handleLeave = async () => {
+  const me = room?.participants.find((person) => person.isMe);
+  const openLeave = () => setLeaveState({ isLeaving: false, error: '' });
+
+  const stayInRoom = useCallback(() => {
+    setLeaveState(null);
+    requestAnimationFrame(() => document.querySelector('.brand-header__back')?.focus());
+  }, []);
+
+  const confirmLeave = async () => {
+    setLeaveState({ isLeaving: true, error: '' });
     try {
       await leaveRoom(code);
-    } catch {
-      // Even if the request fails the person wants to leave this page.
+      navigate(ROUTES.home);
+    } catch (error) {
+      setLeaveState({
+        isLeaving: false,
+        error: error instanceof RoomApiError ? error.message : 'Could not leave the room. Please try again.',
+      });
     }
-    navigate(ROUTES.home);
   };
 
   const cardStyle = leaving
@@ -181,9 +260,9 @@ export default function SwipePage({ code }) {
   return (
     <div className={cx('swipe-page landing', isDone && 'cinema-page cinema-page--audience')}>
       {!isDone && <PosterBackdrop url={card?.posterUrl} />}
-      <BrandHeader action="leave" onBack={handleLeave} />
+      <BrandHeader action="leave" onBack={openLeave} />
 
-      <main className="swipe" aria-hidden={detailsOpen || undefined}>
+      <main className="swipe" aria-hidden={detailsOpen || Boolean(leaveState) || undefined}>
         {state.status === 'loading' && (
           <p className="swipe__message" role="status">
             Loading movies…
@@ -199,7 +278,7 @@ export default function SwipePage({ code }) {
           </div>
         )}
 
-        {isDone && <DoneView />}
+        {isDone && <DoneView code={code} />}
 
         {card && (
           <div className={cx('swipe__stage', detailsOpen && 'swipe__stage--hidden')}>
@@ -236,6 +315,21 @@ export default function SwipePage({ code }) {
       </main>
 
       {detailsOpen && card && <MovieDetails card={card} onClose={closeDetails} />}
+
+      {hostNotice && !leaveState && (
+        <BrandToast title={hostNotice.title} text={hostNotice.text} onClose={dismissHostNotice} />
+      )}
+
+      {leaveState && (
+        <LeaveRoomModal
+          isHost={Boolean(me?.isHost)}
+          isAlone={(room?.participants.length ?? 0) <= 1}
+          isLeaving={leaveState.isLeaving}
+          error={leaveState.error}
+          onStay={stayInRoom}
+          onLeave={confirmLeave}
+        />
+      )}
     </div>
   );
 }

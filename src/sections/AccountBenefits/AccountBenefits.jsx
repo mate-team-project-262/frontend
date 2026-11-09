@@ -15,24 +15,37 @@ function StarIcon() {
   );
 }
 
-export default function AccountBenefits() {
+const LANDING_TITLE = (
+  <>
+    Your picks get <span className="account__title-accent">more</span> personal over time
+  </>
+);
+
+/**
+ * "Create an account" section of the landing page. The results page reuses it with its own texts
+ * (`title`, `lead`, `buttonLabel`, `signInText`) and variant="stacked" (wide button, "Sign In" under
+ * it); without props it shows the landing texts.
+ */
+export default function AccountBenefits({
+  id = 'account-benefits',
+  title = LANDING_TITLE,
+  lead = 'Create an account to save your sessions, avoid repeats, and build a movie identity from the choices you make.',
+  buttonLabel = 'Create free account',
+  signInText = 'Already have one?',
+  variant,
+}) {
   return (
-    <section className="account" id="account-benefits">
+    <section className={variant === 'stacked' ? 'account account--stacked' : 'account'} id={id}>
       <div className="container account__inner">
         <div className="account__content">
-          <h2 className="account__title">
-            Your picks get <span className="account__title-accent">more</span> personal over time
-          </h2>
-          <p className="account__lead">
-            Create an account to save your sessions, avoid repeats, and build a movie identity from
-            the choices you make.
-          </p>
+          <h2 className="account__title">{title}</h2>
+          <p className="account__lead">{lead}</p>
           <div className="account__actions">
             <BrandButton className="account__button" onClick={onCreateAccount}>
-              Create free account
+              {buttonLabel}
             </BrandButton>
             <p className="account__sign-in">
-              Already have one?{' '}
+              {signInText}{' '}
               <button type="button" className="account__sign-in-link" onClick={onSignIn}>
                 Sign In
               </button>

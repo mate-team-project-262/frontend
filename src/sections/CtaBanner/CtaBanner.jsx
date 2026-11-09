@@ -25,7 +25,16 @@ const POSTERS = [
 const DESIGN_WIDTH = 1440;
 const toPercent = (px) => `${(px / DESIGN_WIDTH) * 100}%`;
 
-export default function CtaBanner() {
+/**
+ * "Ready for movie night?" with the curved poster strip. The results page reuses it as
+ * "Not the one?" with its own texts and button.
+ */
+export default function CtaBanner({
+  title = 'Ready for movie night?',
+  text = 'Start as a guest now. You can create an account later if the extra features are useful to you.',
+  buttonLabel = 'Start',
+  onAction,
+}) {
   const navigate = useNavigate();
 
   return (
@@ -45,13 +54,13 @@ export default function CtaBanner() {
       <div className="cta-banner__bowl" />
 
       <div className="container cta-banner__inner">
-        <h2 className="cta-banner__title">Ready for movie night?</h2>
-        <p className="cta-banner__text">
-          Start as a guest now. You can create an account later if the extra features are useful to
-          you.
-        </p>
-        <BrandButton className="cta-banner__button" onClick={() => navigate(ROUTES.createRoom)}>
-          Start
+        <h2 className="cta-banner__title">{title}</h2>
+        <p className="cta-banner__text">{text}</p>
+        <BrandButton
+          className="cta-banner__button"
+          onClick={onAction ?? (() => navigate(ROUTES.createRoom))}
+        >
+          {buttonLabel}
         </BrandButton>
       </div>
     </section>
