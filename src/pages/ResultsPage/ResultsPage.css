@@ -1,0 +1,327 @@
+/*
+ * 08 - Results (Figma 1440). Hero 830px tall with the winner's picture behind it: title (H2) at
+ * y=136, cards at y=270, the roulette row 56px under them. "Also highly rated" on cream (502px),
+ * then the account section and "Not the one?" (both shared with the landing page).
+ */
+.results-page {
+  min-height: 100vh;
+  background: var(--l-night);
+}
+
+.results-hero {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  padding-bottom: 53px;
+  background: #0d0620;
+}
+
+/* The winner's poster, blurred, as the picture behind the hero (the design uses a still of the movie) */
+.results-hero__backdrop {
+  position: absolute;
+  inset: -40px;
+  z-index: -1;
+  background-position: center 30%;
+  background-size: cover;
+  filter: blur(28px) brightness(0.3) saturate(0.9);
+  animation: results-fade-in 0.6s ease both;
+}
+
+.results-hero--no-match .results-hero__backdrop {
+  inset: 0;
+  background-position: center 20%;
+  filter: brightness(0.5);
+}
+
+@keyframes results-fade-in {
+  from {
+    opacity: 0;
+  }
+}
+
+.results-hero__inner {
+  padding-top: 40px;
+}
+
+/* H2: Geologica Bold 48 / 120% */
+.results-hero__title {
+  margin: 0;
+  color: var(--l-cream);
+  font-family: var(--l-font-display);
+  font-size: 48px;
+  font-weight: 700;
+  line-height: 1.2;
+  letter-spacing: -0.02em;
+}
+
+.results-hero__accent {
+  color: var(--l-accent);
+}
+
+.results-hero__subtitle {
+  margin: 12px 0 0;
+  color: var(--l-cream);
+  font-family: var(--l-font-text);
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+.results-hero__message {
+  margin: 120px auto 0;
+  color: var(--l-cream);
+  font-family: var(--l-font-text);
+  font-size: 16px;
+  text-align: center;
+}
+
+.results-hero__center {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+/* Winners: 580px cards 40px apart; from three on a carousel with round arrows at the sides */
+.results-winners {
+  position: relative;
+  margin-top: 42px;
+}
+
+.results-winners__track {
+  display: flex;
+  gap: 40px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.results-winners--carousel .results-winners__track {
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  scrollbar-width: none;
+}
+
+.results-winners--carousel .results-winners__track::-webkit-scrollbar {
+  display: none;
+}
+
+.results-winners__item {
+  flex: none;
+  scroll-snap-align: start;
+}
+
+.results-winners__track:focus-visible {
+  outline: 2px solid var(--l-cream);
+  outline-offset: 6px;
+  border-radius: 8px;
+}
+
+.results-winners__arrow {
+  position: absolute;
+  top: 180px;
+  z-index: 1;
+  display: grid;
+  place-items: center;
+  width: 40px;
+  height: 40px;
+  padding: 0;
+  border: 0;
+  border-radius: 50%;
+  background: var(--l-cream);
+  color: #170e43;
+  cursor: pointer;
+  transition: transform 0.12s ease;
+}
+
+.results-winners__arrow:hover {
+  transform: scale(1.08);
+}
+
+.results-winners__arrow:focus-visible {
+  outline: 2px solid var(--l-cream);
+  outline-offset: 3px;
+}
+
+.results-winners__arrow--prev {
+  left: -80px;
+}
+
+.results-winners__arrow--next {
+  right: -80px;
+}
+
+.results-hero__pick {
+  margin-top: 40px;
+  text-align: left;
+}
+
+/* "You can randomly choose one" + "Spin the roulette" */
+.results-hero__roulette {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 16px 24px;
+  margin-top: 56px;
+}
+
+.results-hero__roulette-text {
+  margin: 0;
+  color: var(--l-cream);
+  font-family: var(--l-font-display);
+  font-size: 24px;
+  font-weight: 700;
+  line-height: 1.2;
+}
+
+.results-hero__spin {
+  gap: 10px;
+  height: 52px;
+  padding: 0 48px;
+}
+
+/* One winner: the hero keeps the height of the two-winner frame */
+.results-hero--single {
+  min-height: 830px;
+}
+
+/* No match */
+.results-hero--no-match {
+  min-height: 624px;
+  padding-bottom: 80px;
+}
+
+.results-hero__clapper {
+  margin-top: 56px;
+}
+
+.results-hero__buttons {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 16px;
+  margin-top: 48px;
+}
+
+.results-hero__button {
+  gap: 12px;
+  width: 290px;
+  height: 52px;
+}
+
+/* "Also highly rated" / "Movies from this session" on cream */
+.results-list {
+  padding: 40px 0 49px;
+  background:
+    radial-gradient(60% 80% at 90% 100%, rgba(177, 138, 255, 0.12), transparent 70%), var(--l-cream);
+  color: var(--l-ink);
+}
+
+.results-list__head {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 24px;
+}
+
+/* H3: Geologica Bold 36 / 120% */
+.results-list__title {
+  margin: 0;
+  font-family: var(--l-font-display);
+  font-size: 36px;
+  font-weight: 700;
+  line-height: 1.2;
+}
+
+.results-list__subtitle {
+  margin: 8px 0 0;
+  color: #2f2270;
+  font-family: var(--l-font-text);
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+.results-list__all {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: 12px;
+  padding: 4px 0;
+  border: 0;
+  background: none;
+  color: #7835ff;
+  font-family: var(--l-font-display);
+  font-size: 16px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.results-list__all:hover {
+  text-decoration: underline;
+  text-underline-offset: 5px;
+}
+
+.results-list__cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, 373px);
+  gap: 32px;
+  margin: 30px 0 0;
+  padding: 0 0 0 16px;
+}
+
+@media (max-width: 1360px) {
+  .results-winners__arrow--prev {
+    left: -8px;
+  }
+
+  .results-winners__arrow--next {
+    right: -8px;
+  }
+}
+
+@media (max-width: 1280px) {
+  .results-winners__track {
+    flex-wrap: wrap;
+  }
+
+  .results-winners--carousel .results-winners__track {
+    flex-wrap: nowrap;
+  }
+
+  .results-list__cards {
+    justify-content: center;
+    padding-left: 0;
+  }
+}
+
+@media (max-width: 720px) {
+  .results-hero__title {
+    font-size: 36px;
+  }
+
+  .results-winners__item {
+    width: 100%;
+  }
+
+  .results-winners__arrow {
+    top: 150px;
+  }
+
+  .results-hero__roulette-text {
+    font-size: 20px;
+  }
+
+  .results-list__title {
+    font-size: 28px;
+  }
+
+  .results-list__cards {
+    grid-template-columns: minmax(0, 373px);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .results-hero__backdrop {
+    animation: none;
+  }
+}

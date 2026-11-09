@@ -1,0 +1,127 @@
+/*
+ * UI kit "highly-rated-movie-card" (Figma 1440): 373 x 302 in all. The 163 x 245 poster is at the
+ * top-left, the dark card (353 x 290, 60px radius) starts 20px right and 12px lower, its text
+ * 180px from the left edge.
+ */
+.result-card {
+  position: relative;
+  box-sizing: border-box;
+  width: 373px;
+  max-width: 100%;
+  min-height: 302px;
+  padding: 12px 0 0 20px;
+  list-style: none;
+}
+
+.result-card__poster {
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 1;
+  box-sizing: border-box;
+  width: 163px;
+  height: 245px;
+  overflow: hidden;
+  border: 1px solid rgba(177, 138, 255, 0.6);
+  border-radius: 16px;
+  background: #170e43;
+}
+
+.result-card__poster img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.result-card__body {
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  min-height: 290px;
+  padding: 27px 20px 30px 160px;
+  border-radius: 60px;
+  background: #070125;
+  box-shadow: 0 8px 24px rgba(23, 14, 67, 0.12);
+  color: var(--l-cream);
+}
+
+.result-card__likes {
+  margin: 0;
+  font-family: var(--l-font-text);
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+/* H4: Geologica Bold 24 / 120%, one line */
+.result-card__title {
+  margin: 10px 0 0;
+  overflow: hidden;
+  font-family: var(--l-font-display);
+  font-size: 24px;
+  font-weight: 700;
+  line-height: 1.2;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.result-card__meta,
+.result-card__genres {
+  margin: 10px 0 0;
+  overflow: hidden;
+  font-family: var(--l-font-text);
+  font-size: 14px;
+  line-height: 1.5;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.result-card__genres {
+  color: var(--l-lavender);
+}
+
+.result-card__rating {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 12px 0 0 2px;
+  font-family: var(--l-font-display);
+  font-size: 20px;
+  line-height: 1.2;
+}
+
+.result-card__details {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  box-sizing: border-box;
+  width: 154px;
+  height: 50px;
+  margin-top: 16px;
+  border: 1px solid var(--l-accent);
+  border-radius: 999px;
+  background: transparent;
+  color: var(--l-cream);
+  font-family: var(--l-font-display);
+  font-size: 16px;
+  line-height: 1;
+  cursor: pointer;
+  transition:
+    border-color 0.2s ease,
+    background-color 0.2s ease;
+}
+
+.result-card__details:hover {
+  border-color: #7835ff;
+}
+
+.result-card__details:active {
+  border-color: #7835ff;
+  background: #2f2270;
+}
+
+.result-card__details:focus-visible {
+  outline: 2px solid var(--l-cream);
+  outline-offset: 3px;
+}

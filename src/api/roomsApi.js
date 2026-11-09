@@ -343,6 +343,35 @@ export async function getDeck(code) {
 }
 
 /**
+ * @typedef {MovieCard & { likes: number, isWinner: boolean }} ResultCard
+ * @typedef {Object} RoundResults
+ * @property {number} total          people in the room at the end of the round
+ * @property {ResultCard[]} cards    all 20, most liked first
+ * @property {ResultCard[]} winners  the cards tied for the most likes (empty = no match)
+ */
+
+/**
+ * Results of a finished round (room status FINISHED). The backend counts the likes when the last
+ * person votes; `winner` = tied for the most likes, and only when at least one like was cast.
+ * GET /rooms/{code}/results
+ *
+ * @param {string} code
+ * @returns {Promise<RoundResults>}
+ * @throws {RoomApiError}   RESULT_NOT_READY while someone is still voting
+ */
+export async function getResults(code) {
+  const session = getRoomSession(code);
+  if (!session) throw new RoomApiError(SESSION_EXPIRED_MESSAGE, { code: 'NO_SESSION' });
+  const data = await call(`/rooms/${encode(code)}/results`, { token: session.token });
+  const cards = data.cards.map((card) => ({
+    ...toMovieCard(card),
+    likes: card.likesCount ?? 0,
+    isWinner: Boolean(card.winner),
+  }));
+  return { total: data.totalParticipants, cards, winners: cards.filter((card) => card.isWinner) };
+}
+
+/**
  * Saves a like (true) or a skip (false). Sending the same vote again is fine; a different vote
  * for the same movie is rejected with ALREADY_VOTED.
  * POST /rooms/{code}/votes

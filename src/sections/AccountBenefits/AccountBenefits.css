@@ -1,4 +1,6 @@
+/* Figma: 1261px tall section; headline ink at y=294, illustration at x=730 / y=94, benefits row at y=981 */
 .account {
+  /* Nav click: scroll a little past the section top so the headline, the button and the whole illustration are in view */
   scroll-margin-top: -75px;
   position: relative;
   overflow: hidden;
@@ -195,4 +197,34 @@
   .account__button {
     width: 100%;
   }
+}
+
+/* Results page: shorter section, 20px lead, a 474px button with "Sign In" centred under it */
+.account--stacked {
+  min-height: 1173px;
+}
+
+.account--stacked .account__lead {
+  max-width: 474px;
+  margin-top: 32px;
+  font-size: 20px;
+  line-height: 1.4;
+}
+
+.account--stacked .account__actions {
+  flex-direction: column;
+  align-items: stretch;
+  gap: 30px;
+  width: 474px;
+  max-width: 100%;
+  margin-top: 64px;
+}
+
+.account--stacked .account__button {
+  width: 100%;
+}
+
+.account--stacked .account__sign-in {
+  margin: 0;
+  text-align: center;
 }
