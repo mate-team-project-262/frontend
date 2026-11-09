@@ -1,0 +1,162 @@
+/*
+ * UI kit "winner-movie-card" (Figma 1440): 266 x 400 poster, text column 24px to its right.
+ * Two winners: 580px per card (290px text). One winner / roulette pick: 678px (388px text).
+ */
+.winner-card {
+  display: flex;
+  gap: 24px;
+  width: 580px;
+  max-width: 100%;
+  color: var(--l-cream);
+  transition:
+    transform 0.15s ease,
+    filter 0.15s ease;
+}
+
+.winner-card--single,
+.winner-card--chosen {
+  width: 678px;
+}
+
+.winner-card__poster {
+  flex: none;
+  width: 266px;
+  height: 400px;
+  overflow: hidden;
+  border: 1px solid rgba(177, 138, 255, 0.6);
+  border-radius: 20px;
+  background: #170e43;
+  box-sizing: border-box;
+  transition: box-shadow 0.15s ease;
+}
+
+.winner-card__poster img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.winner-card--chosen .winner-card__poster {
+  border-color: var(--l-accent);
+  box-shadow: 0 0 28px rgba(177, 138, 255, 0.75);
+}
+
+/* roulette: the card that is "under the arrow" right now */
+.winner-card--highlighted .winner-card__poster {
+  border-color: var(--l-accent);
+  box-shadow: 0 0 32px rgba(177, 138, 255, 0.9);
+}
+
+.winner-card--highlighted {
+  transform: scale(1.02);
+}
+
+.winner-card__info {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  min-width: 0;
+  padding-top: 2px;
+}
+
+.winner-card__likes {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 0;
+  font-family: var(--l-font-text);
+  font-size: 20px;
+  line-height: 1.2;
+}
+
+/* H3: Geologica Bold 36 / 120% */
+.winner-card__title {
+  margin: 21px 0 0;
+  font-family: var(--l-font-display);
+  font-size: 36px;
+  font-weight: 700;
+  line-height: 1.2;
+}
+
+.winner-card__meta {
+  margin: 15px 0 0;
+  color: var(--l-lavender);
+  font-family: var(--l-font-text);
+  font-size: 16px;
+  line-height: 2;
+}
+
+.winner-card__rating {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: 12px 0 0 4px;
+  font-family: var(--l-font-display);
+  font-size: 20px;
+  line-height: 1.2;
+}
+
+.winner-card__overview {
+  display: -webkit-box;
+  margin: 24px 0 0;
+  overflow: hidden;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 4;
+  line-clamp: 4;
+  color: var(--l-lavender);
+  font-family: var(--l-font-text);
+  font-size: 16px;
+  line-height: 1.5;
+}
+
+.winner-card__button {
+  gap: 12px;
+  width: 100%;
+  height: 52px;
+  margin-top: auto;
+}
+
+/* the button keeps 16px of air under the text when the column is full */
+.winner-card__overview {
+  margin-bottom: 16px;
+}
+
+@media (max-width: 720px) {
+  .winner-card,
+  .winner-card--single,
+  .winner-card--chosen {
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+  }
+
+  .winner-card__poster {
+    width: min(266px, 70vw);
+    height: auto;
+    aspect-ratio: 266 / 400;
+  }
+
+  .winner-card__info {
+    width: 100%;
+  }
+
+  .winner-card__title {
+    font-size: 28px;
+  }
+
+  .winner-card__button {
+    margin-top: 24px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .winner-card,
+  .winner-card__poster {
+    transition: none;
+  }
+
+  .winner-card--highlighted {
+    transform: none;
+  }
+}

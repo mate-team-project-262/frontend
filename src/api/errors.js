@@ -32,6 +32,7 @@ const KNOWN_ERRORS = {
   NOT_HOST: [null, 'Only the host can start the session.'],
   ROOM_NOT_VOTING: [null, 'Voting is not open in this room.'],
   ALREADY_VOTED: [null, 'You have already voted for this movie.'],
+  RESULT_NOT_READY: [null, 'The results are not ready yet.'],
   TITLE_NOT_IN_DECK: [null, 'This movie is not part of the session.'],
   INVALID_TOKEN: [null, SESSION_EXPIRED],
   WRONG_ROOM: [null, SESSION_EXPIRED],
