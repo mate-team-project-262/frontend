@@ -6,17 +6,19 @@ Welcome to the project! To maintain code quality and avoid merge conflicts, plea
 
 ## 🌿 Git Branching Strategy (Git Flow)
 
-* **`main`** — Production-ready branch for stable releases and demos. Direct pushes are blocked.
-* **`develop`** — Default working branch. All features and fixes are merged here via Pull Requests. Direct pushes are blocked.
-* **`feature/T2-XX-short-name`** — Working branches for Jira tasks (e.g., `feature/T2-12-create-room`).
-* **`fix/T2-XX-short-name`** — Working branches for bug fixes.
+- **`main`** — Production-ready branch for stable releases and demos. Direct pushes are blocked.
+- **`develop`** — Default working branch. All features and fixes are merged here via Pull Requests. Direct pushes are blocked.
+- **`feature/T2-XX-short-name`** — Working branches for Jira tasks (e.g., `feature/T2-12-create-room`).
+- **`fix/T2-XX-short-name`** — Working branches for bug fixes.
 
 ---
 
 ## 🚀 Step-by-Step Git Workflow
 
 ### 1. Start a New Task
+
 Always pull the latest changes from `develop` before creating your branch:
+
 ```bash
 git checkout develop
 git pull origin develop
@@ -24,15 +26,18 @@ git checkout -b feature/T2-XX-task-title
 ```
 
 ### 2. Commit Your Changes
-* Write clear commit messages with your Jira ticket number:
+
+- Write clear commit messages with your Jira ticket number:
   ```bash
   git add .
   git commit -m "feat(room): create room endpoint (T2-12)"
   ```
-* 🔐 **Security Rule:** NEVER commit real passwords, API keys, or `.env` files! Always use environment variables.
+- 🔐 **Security Rule:** NEVER commit real passwords, API keys, or `.env` files! Always use environment variables.
 
 ### 3. Update & Open a Pull Request (PR)
+
 Before pushing, sync your branch with `develop` to avoid merge conflicts:
+
 ```bash
 git checkout develop
 git pull origin develop
@@ -40,5 +45,19 @@ git checkout feature/T2-XX-task-title
 git merge develop
 git push -u origin feature/T2-XX-task-title
 ```
-* Go to GitHub and open a **Pull Request into `develop`**.
-* Use **Squash and merge** when merging your PR.
+
+- Go to GitHub and open a **Pull Request into `develop`**.
+- Use **Squash and merge** when merging your PR.
+
+---
+
+## ✅ Before You Open a PR
+
+```bash
+npm run check   # format check + lint + typecheck + tests + build
+```
+
+- Formatting is automatic: a pre-commit hook (Husky + lint-staged) runs Prettier and ESLint on the
+  files you commit. To format everything by hand: `npm run format`.
+
+- Project conventions and the folder map are in [AGENTS.md](AGENTS.md).

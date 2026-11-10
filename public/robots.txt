@@ -1,0 +1,8 @@
+User-agent: *
+Allow: /
+# Rooms and invite links are private and temporary
+Disallow: /room/
+Disallow: /join/
+Disallow: /api/
+
+Sitemap: https://what2watch.duckdns.org/sitemap.xml
