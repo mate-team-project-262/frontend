@@ -1,87 +1,54 @@
-# 🎨 Team 262 — Frontend Client
+# W2W — What to Watch
 
-User interface for the **Team 262** web application. Built as a Single Page Application (SPA) with React and Vite, packaged into an ultra-lightweight Nginx Alpine container for cloud deployment.
+**Stop arguing about what to watch.** Create a room, invite friends with a link or QR code, swipe
+through the same 20 movies and get the film your whole group agrees on — no account needed.
 
----
+**Live demo:** https://what2watch.duckdns.org
 
-## 💻 Tech Stack
+> The demo runs on a small AWS server that is switched off at night (22:00–08:00 EET, Kyiv time). If it is offline, see the screenshots below.
 
-* **Library:** React (JSX)
-* **Build Tool & Bundler:** Vite (with HMR)
-* **Language:** JavaScript (ESModules)
-* **Code Quality:** ESLint (`eslint.config.js`)
-* **Package Manager:** npm
-* **Production Web Server:** Nginx 1.27 (Alpine Linux)
+![Landing page](docs/screenshots/landing.jpg)
 
----
+| Swipe session                                | Results                                  |
+| -------------------------------------------- | ---------------------------------------- |
+| ![Swipe session](docs/screenshots/swipe.jpg) | ![Results](docs/screenshots/results.jpg) |
 
-## 🚀 Local Development Setup
+## Try it
 
-### Prerequisites
-* **Node.js:** v20 LTS or higher
-* **npm:** v10 or higher
+1. Open the demo and press **Create a room**, pick a content type, genres and duration.
+2. Open the invite link in a second browser or a private window and join with another name.
+3. The host presses **Start session**; everyone swipes the same 20 movies (like / skip, arrows or drag).
+4. When everybody is done, the results appear: the winner, or several winners and a roulette for the host.
 
-### Quick Start
+The frontend talks to the Team 262 Spring Boot backend (movies from TMDB) through the same domain (`/api`).
 
-1. **Install project dependencies:**
-    ```bash
-    npm install
-    ```
+## Features
 
-2.  **Start the local development server:**
-    ```Bash
-    npm run dev
-    ```
+- Guest rooms for up to 5 people, invite by link, QR code or Telegram
+- Swipe voting with live group progress, resumes after a reload
+- Results with ties, a fair roulette and "no match" handling
+- Leaving the room passes the host role on; movie details for every card
+- Pixel-matched to the Figma design (`design/`), keyboard and screen-reader friendly
 
-3. **Run ESLint code quality checks:**
+## Tech stack
 
-    ```Bash
-    npm run lint
-    ```
+React 19 · React Router 7 · TypeScript (strict) · TanStack Query · Vite 8 · plain CSS (BEM) ·
+Vitest + Testing Library · ESLint (hooks, jsx-a11y, typescript-eslint) · Prettier + Husky pre-commit ·
+Docker + Nginx · GitHub Actions → GHCR → AWS EC2
 
-4. **Build the production bundle (outputs to dist/):**
+## Quick start
 
-    ```Bash
-    npm run build
-    ```
+```bash
+npm install
+npm run dev        # http://localhost:5173, /api is proxied to http://localhost:8080
+```
 
-5. **Preview the production bundle locally:**
+Backend elsewhere? Copy `.env.example` to `.env.local` and set `BACKEND_URL`.
+Before a PR run `npm run check` (format, lint, typecheck, tests, build).
 
-    ```Bash
-    npm run preview
-    ```
+## More
 
----
-
-## 🐳 Docker Containerization (Production Mode)
-The project uses a **Multi-Stage** Dockerfile:
-
-* **Stage 1 `(build)`**: Compiles React/Vite source code into static assets using node:20-alpine.
-
-* **Stage 2 `(runtime)`**: Serves compiled static files from `/usr/share/nginx/html` using `nginx:1.27-alpine` (~25 MB image size).
-
-### Build and Run Locally via Docker
-1. **Build the production image:**
-
-    ```Bash
-    docker build -t team262-frontend:local .
-    ```
-
-2. **Start the container on port `8080`:**
-
-    ```Bash
-    docker run -d --name team262_frontend -p 8080:80 team262-frontend:local
-    ```
-
-3. **Verify container health and logs:**
-
-    ```Bash
-    docker ps
-    docker logs team262_frontend
-    ```
-Open `http://localhost:8080` in your browser.
-
-## 📖 Contribution & Git Flow Guidelines
-Direct pushes to `main` and `develop` branches are restricted by Branch Protection Rules.
-
-Please read our [CONTRIBUTING.md](CONTRIBUTING.md) guide for branch naming conventions (`feature/T2-XX-...`), Pull Request rules, and local setup instructions.
+- [AGENTS.md](AGENTS.md) — commands, folder map and conventions (for teammates and AI agents)
+- [CONTRIBUTING.md](CONTRIBUTING.md) — Git flow and pull requests
+- [docs/architecture.md](docs/architecture.md) — how browser, gateway and backend fit together
+- [docs/docker-and-deployment.md](docs/docker-and-deployment.md) — Docker image, CI/CD, infra repo
