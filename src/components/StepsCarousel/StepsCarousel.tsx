@@ -3,6 +3,7 @@ import {
   type KeyboardEvent,
   type PointerEvent,
   type WheelEvent,
+  useId,
   useRef,
   useState,
 } from 'react';
@@ -35,9 +36,31 @@ interface Press {
   slideIndex: number | null;
 }
 
+/** Round arrow button of the design: a lavender disc with the arrow cut out of it. */
+function ArrowDisc({ direction }: { direction: 'left' | 'right' }) {
+  const maskId = useId();
+  return (
+    <svg width="48" height="48" viewBox="0 0 48 48" aria-hidden="true">
+      <mask id={maskId}>
+        <rect width="48" height="48" fill="#fff" />
+        <path
+          d={direction === 'left' ? 'M32 24H17.5M23.5 17l-7 7 7 7' : 'M16 24h14.5M24.5 17l7 7-7 7'}
+          fill="none"
+          stroke="#000"
+          strokeWidth="2.8"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+        />
+      </mask>
+      <circle cx="24" cy="24" r="24" fill="currentColor" mask={`url(#${maskId})`} />
+    </svg>
+  );
+}
+
 /**
  * Looping carousel: the active step is shown large, the neighbours peek in from the sides.
- * Controls: swipe / mouse drag, arrow keys, horizontal wheel or trackpad, click on a neighbour.
+ * Controls: the round arrows, swipe / mouse drag, arrow keys, horizontal wheel or trackpad,
+ * click on a neighbour.
  * `steps`: [{ number, title, text, image, scale, x, y, shade }] (photo framing, see HowItWorks). No autoplay.
  */
 export default function StepsCarousel({ steps, label }: { steps: Step[]; label: string }) {
@@ -164,15 +187,22 @@ export default function StepsCarousel({ steps, label }: { steps: Step[]; label: 
         </div>
       </div>
 
-      {/* Controls for keyboard and screen-reader users; they appear on focus. */}
-      <div className="steps-carousel__controls">
-        <button type="button" className="steps-carousel__control" onClick={() => go(-1)}>
-          Previous step
-        </button>
-        <button type="button" className="steps-carousel__control" onClick={() => go(1)}>
-          Next step
-        </button>
-      </div>
+      <button
+        type="button"
+        className="steps-carousel__arrow steps-carousel__arrow--prev"
+        aria-label="Previous step"
+        onClick={() => go(-1)}
+      >
+        <ArrowDisc direction="left" />
+      </button>
+      <button
+        type="button"
+        className="steps-carousel__arrow steps-carousel__arrow--next"
+        aria-label="Next step"
+        onClick={() => go(1)}
+      >
+        <ArrowDisc direction="right" />
+      </button>
       <p className="steps-carousel__status" aria-live="polite">
         Step {steps[activeStep].number} of {steps.length}: {steps[activeStep].title}
       </p>

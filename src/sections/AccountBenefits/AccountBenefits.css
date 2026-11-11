@@ -35,18 +35,18 @@
 }
 
 .account__lead {
-  max-width: 480px;
+  max-width: 510px;
   margin: 41px 0 0;
   color: var(--l-muted);
-  font-size: 24px;
+  font-size: 20px;
   font-weight: 400;
-  line-height: 1.31;
+  line-height: 1.35;
 }
 
 .account__actions {
   display: flex;
   align-items: center;
-  margin-top: 79px;
+  margin-top: 78px;
 }
 
 .account__button {
@@ -113,26 +113,26 @@
 
 .benefit {
   height: 120px;
-  padding-left: 11px;
+  padding-left: 10px;
   border-left: 1px solid #645b8d;
 }
 
 .benefit__star {
   display: block;
-  margin: 5px 0 0 4px;
+  margin: 5px 0 0 2px;
   color: #7835ff;
 }
 
 .benefit__title {
-  margin: 28px 0 0;
+  margin: 27px 0 0;
   color: #fffaef;
-  font-size: 24px;
+  font-size: 20px;
   font-weight: 400;
   line-height: 1.35;
 }
 
 .benefit__text {
-  margin: 17px 0 0;
+  margin: 14px 0 0;
   color: var(--l-muted);
   font-family: var(--l-font-text);
   font-size: 16px;

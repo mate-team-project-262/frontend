@@ -7,7 +7,7 @@ import './AccountBenefits.css';
 
 function StarIcon() {
   return (
-    <svg className="benefit__star" width="14" height="14" viewBox="0 0 14 14" aria-hidden="true">
+    <svg className="benefit__star" width="20" height="20" viewBox="0 0 14 14" aria-hidden="true">
       <path
         d="M7 0c.5 3.6 2.4 5.9 7 7-4.6 1.1-6.5 3.4-7 7-.5-3.6-2.4-5.9-7-7 4.6-1.1 6.5-3.4 7-7Z"
         fill="currentColor"
