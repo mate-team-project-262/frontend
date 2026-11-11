@@ -9,7 +9,7 @@ import './HowItWorks.css';
 // How the designer cropped each photo: width as a share of the card, offset (x, y) as a share of the
 // card width, and how much black is laid over it so the white text stays readable.
 const STEP_PHOTOS = [
-  { image: step1, scale: 1.036, x: -0.0022, y: -0.0211, shade: 0.126 },
+  { image: step1, scale: 1, x: 0, y: 0, shade: 0.126 },
   { image: step2, scale: 1, x: 0, y: 0, shade: 0.174 },
   { image: step3, scale: 1, x: 0, y: 0, shade: 0.002 },
   { image: step4, scale: 1, x: 0, y: 0, shade: 0.156 },

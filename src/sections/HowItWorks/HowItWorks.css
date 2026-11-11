@@ -18,15 +18,15 @@
 }
 
 .how-it-works__lead {
-  margin: 24px 0 0 -6px;
+  margin: 25px 0 0 -6px;
   color: var(--l-muted);
-  font-size: 24px;
+  font-size: 20px;
   font-weight: 400;
   line-height: 1.35;
 }
 
 .how-it-works__carousel {
-  margin-top: 40px;
+  margin-top: 44px;
 }
 
 @media (max-width: 700px) {
