@@ -14,7 +14,9 @@ import {
   MAX_GENRES,
   STREAMING_SERVICES,
 } from '../../data/content.ts';
-import { roomPath } from '../../routes.ts';
+import { SEO } from '../../data/seo.ts';
+import { usePageMeta } from '../../hooks/usePageMeta.ts';
+import { ROUTES, roomPath } from '../../routes.ts';
 import { getNameFeedback, validateDisplayName } from '../../utils/validation.ts';
 import '../../styles/cinema.css';
 import '../../styles/landing.css';
@@ -38,6 +40,7 @@ const INITIAL_FORM: Form = {
 
 export default function CreateRoomPage() {
   const navigate = useNavigate();
+  usePageMeta(SEO.createRoom, ROUTES.createRoom);
   const [form, setForm] = useState(INITIAL_FORM);
   const [serverNameError, setServerNameError] = useState('');
   const [formError, setFormError] = useState('');
