@@ -1,5 +1,6 @@
 import { Navigate, useParams } from 'react-router';
 import BrandHeader from '../../components/BrandHeader/BrandHeader.tsx';
+import { usePageMeta } from '../../hooks/usePageMeta.ts';
 import { useRoom } from '../../hooks/useRoom.ts';
 import { invitePath } from '../../routes.ts';
 import '../../styles/cinema.css';
@@ -40,6 +41,7 @@ function RoomMessage({ status }: { status: keyof typeof STATUS_MESSAGES }) {
 export default function RoomPage() {
   const { code = '' } = useParams();
   const { status, room, refresh } = useRoom(code);
+  usePageMeta(); // rooms are private: not for search engines
 
   if (status === 'unauthorized') return <Navigate to={invitePath(code)} replace />;
   if (status !== 'ready' || !room) {

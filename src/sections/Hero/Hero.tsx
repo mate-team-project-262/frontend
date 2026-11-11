@@ -14,7 +14,7 @@ export default function Hero() {
       <div className="container hero__inner">
         <div className="hero__content">
           <h1 className="hero__title">
-            <span className="hero__title-line">Stop arguing about</span>
+            <span className="hero__title-line">Stop arguing about</span>{' '}
             <span className="hero__title-accent">What to Watch</span>
           </h1>
           <p className="hero__lead">
