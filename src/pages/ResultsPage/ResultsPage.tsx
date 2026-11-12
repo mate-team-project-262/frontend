@@ -1,3 +1,4 @@
+import { oncePerRoom, secondsSinceSwipeStarted, track } from '../../analytics/analytics.ts';
 import type { ResultCard as ResultCardData, Room } from '../../api/roomsApi.ts';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useNavigate } from 'react-router';
@@ -67,6 +68,24 @@ export default function ResultsPage({ code, room }: { code: string; room: Room }
   useEffect(() => {
     if (picked) window.scrollTo({ top: 0, behavior: prefersReducedMotion() ? 'auto' : 'smooth' });
   }, [picked]);
+
+  // analytics: the round is over; with at least one winner the group has its movie
+  const participantCount = room.participants.length;
+  useEffect(() => {
+    if (winners.length === 0) return;
+    oncePerRoom(code, 'selection', () => {
+      track('movie_matched', {
+        participant_count: participantCount,
+        match_count: winners.length,
+        movie_title: winners[0].title,
+      });
+      track('selection_completed', {
+        participant_count: participantCount,
+        match_count: winners.length,
+        selection_duration_sec: secondsSinceSwipeStarted(code),
+      });
+    });
+  }, [code, participantCount, winners]);
 
   const closeDetails = useCallback(() => setDetails(null), []);
   const startAnotherRound = () => navigate(ROUTES.createRoom);

@@ -3,13 +3,27 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <!-- Home page texts (from the marketer). Other pages replace them: src/hooks/usePageMeta.ts -->
+    <!--
+      Texts of the home page (from the marketer, src/data/seo.ts). The build writes the same block
+      with their own texts for /create-room and /join (vite.config.js); in the browser
+      src/hooks/usePageMeta.ts keeps it up to date.
+    -->
     <title>What To Watch – Choose Movies with Friends</title>
     <meta
       name="description"
       content="Find a movie everyone wants to watch! Create a room, invite your friends and discover the perfect movie for your next movie night. No account required."
     />
     <link rel="canonical" href="https://what2watch.duckdns.org/" />
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="What To Watch" />
+    <meta property="og:title" content="What To Watch – Choose Movies with Friends" />
+    <meta
+      property="og:description"
+      content="Find a movie everyone wants to watch! Create a room, invite your friends and discover the perfect movie for your next movie night. No account required."
+    />
+    <meta property="og:url" content="https://what2watch.duckdns.org/" />
+    <meta property="og:image" content="https://what2watch.duckdns.org/og/home.jpg" />
+    <meta name="twitter:card" content="summary_large_image" />
     <meta name="google-site-verification" content="qPPsPcwXqbFpLRQnx1NGmQvDCONWUHR73xXuA0sPERc" />
   </head>
   <body>

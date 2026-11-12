@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router';
+import { track } from '../../analytics/analytics.ts';
 import { type Room, RoomApiError, leaveRoom, startSession } from '../../api/roomsApi.ts';
 import BrandButton from '../../components/BrandButton/BrandButton.tsx';
 import BrandField from '../../components/BrandField/BrandField.tsx';
@@ -50,6 +51,8 @@ export default function RoomLobbyPage({ code, room, onStarted }: Props) {
   const participants = room.participants;
   const isFull = participants.length >= (room.maxParticipants ?? Infinity);
   const canStart = participants.length >= MIN_PARTICIPANTS_TO_START;
+  const trackInvite = (method: 'link' | 'telegram') =>
+    track('friend_invited', { invite_method: method, participant_count: participants.length });
 
   /** "Back" really leaves the room (for now only on this device, the backend has no endpoint). */
   const handleLeave = async () => {
@@ -101,7 +104,10 @@ export default function RoomLobbyPage({ code, room, onStarted }: Props) {
                   variant="ghost"
                   className="room-lobby__action room-lobby__action--copy"
                   aria-live="polite"
-                  onClick={() => copy(inviteLink)}
+                  onClick={() => {
+                    copy(inviteLink);
+                    trackInvite('link');
+                  }}
                 >
                   {COPY_BUTTON_LABELS[copyStatus]}
                 </BrandButton>
@@ -111,6 +117,7 @@ export default function RoomLobbyPage({ code, room, onStarted }: Props) {
                   href={getTelegramShareUrl(inviteLink)}
                   target="_blank"
                   rel="noopener noreferrer"
+                  onClick={() => trackInvite('telegram')}
                 >
                   <TelegramIcon />
                   Share on Telegram

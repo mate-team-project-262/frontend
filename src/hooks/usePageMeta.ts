@@ -1,54 +1,47 @@
 import { useEffect } from 'react';
-import { type PageSeo, SITE_NAME } from '../data/seo.ts';
+import { type PageSeo, SITE_NAME, SITE_URL } from '../data/seo.ts';
 
-/** Finds the tag in <head> or creates it, so there is always exactly one of each. */
-function headTag<T extends HTMLElement>(selector: string, create: () => T): T {
-  const found = document.head.querySelector<T>(selector);
-  if (found) return found;
-  const tag = create();
-  document.head.appendChild(tag);
-  return tag;
-}
-
-function setMeta(name: string, content: string | null) {
+/** Sets a <meta> of <head> (creating it when missing) or removes it when `content` is null. */
+function setMeta(attribute: 'name' | 'property', key: string, content: string | null) {
+  const found = document.head.querySelector<HTMLMetaElement>(`meta[${attribute}="${key}"]`);
   if (content === null) {
-    document.head.querySelector(`meta[name="${name}"]`)?.remove();
+    found?.remove();
     return;
   }
-  headTag(`meta[name="${name}"]`, () => {
-    const meta = document.createElement('meta');
-    meta.name = name;
-    return meta;
-  }).content = content;
+  const meta = found ?? document.createElement('meta');
+  meta.setAttribute(attribute, key);
+  meta.content = content;
+  if (!found) document.head.appendChild(meta);
 }
 
 function setCanonical(href: string | null) {
+  const found = document.head.querySelector<HTMLLinkElement>('link[rel="canonical"]');
   if (href === null) {
-    document.head.querySelector('link[rel="canonical"]')?.remove();
+    found?.remove();
     return;
   }
-  headTag('link[rel="canonical"]', () => {
-    const link = document.createElement('link');
-    link.rel = 'canonical';
-    return link;
-  }).href = href;
+  const link = found ?? document.createElement('link');
+  link.rel = 'canonical';
+  link.href = href;
+  if (!found) document.head.appendChild(link);
 }
 
 /**
- * Sets the page's <title>, meta description and canonical link (the app is a single index.html,
- * so each page writes its own). Public pages pass their texts from data/seo.ts and their path.
- * Without arguments the page is private (a room, an invite link): only the site name is shown
- * and search engines are told not to index it.
+ * Sets the page's <title>, meta description, canonical link and Open Graph tags when the person
+ * moves between pages (the built HTML of each public page has them too, see vite.config.js).
+ * Public pages pass their entry of data/seo.ts. Without it the page is private (a room, an
+ * invite link): only the site name is shown and search engines are told not to index it.
  */
-export function usePageMeta(seo?: PageSeo, path?: string) {
-  const title = seo?.title ?? SITE_NAME;
-  const description = seo?.description ?? null;
-  const isPublic = Boolean(seo && path);
-
+export function usePageMeta(seo?: PageSeo) {
   useEffect(() => {
-    document.title = title;
-    setMeta('description', description);
-    setMeta('robots', isPublic ? null : 'noindex');
-    setCanonical(isPublic ? `${window.location.origin}${path}` : null);
-  }, [title, description, isPublic, path]);
+    const url = seo ? `${SITE_URL}${seo.path}` : null;
+    document.title = seo?.title ?? SITE_NAME;
+    setMeta('name', 'description', seo?.description ?? null);
+    setMeta('name', 'robots', seo ? null : 'noindex');
+    setCanonical(url);
+    setMeta('property', 'og:title', seo?.title ?? null);
+    setMeta('property', 'og:description', seo?.description ?? null);
+    setMeta('property', 'og:url', url);
+    setMeta('property', 'og:image', seo ? `${SITE_URL}${seo.image}` : null);
+  }, [seo]);
 }

@@ -1,0 +1,68 @@
+/* Figma: divider text Inter 16 #9b95b8 between two 1px lines; two 48px pills, 17px apart */
+.social-buttons {
+  margin-top: 40px;
+  font-family: var(--l-font-text);
+}
+
+.social-buttons__divider {
+  display: flex;
+  align-items: center;
+  gap: 21px;
+  margin: 0;
+  color: #9b95b8;
+  font-size: 16px;
+  line-height: 1.5;
+}
+
+.social-buttons__divider::before,
+.social-buttons__divider::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: #d8d2d6;
+}
+
+.social-buttons__row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 17px;
+  margin-top: 34px;
+}
+
+.social-buttons__button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  height: 48px;
+  border: 1px solid #d8d2e6;
+  border-radius: 24px;
+  background: #fffdf7;
+  color: #170e43;
+  font-family: var(--l-font-display);
+  font-size: 16px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: border-color 0.2s ease;
+}
+
+.social-buttons__button:hover:not(:disabled) {
+  border-color: #7835ff;
+}
+
+.social-buttons__button:focus-visible {
+  outline: 2px solid #7835ff;
+  outline-offset: 2px;
+}
+
+.social-buttons__button:disabled {
+  color: #9b95b8;
+  cursor: not-allowed;
+}
+
+@media (max-width: 420px) {
+  .social-buttons__row {
+    grid-template-columns: 1fr;
+    gap: 12px;
+  }
+}

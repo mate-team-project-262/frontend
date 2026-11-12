@@ -228,3 +228,89 @@
   margin: 0;
   text-align: center;
 }
+
+/*
+ * Mobile mockup (390px): title 32px, Inter 14px lead, a full-width button with "Sign In" centred
+ * under it, the illustration, then the benefits in two columns without the dividers.
+ */
+@media (max-width: 600px) {
+  .account__content {
+    padding-top: 40px;
+  }
+
+  .account__title,
+  .account--stacked .account__title {
+    max-width: 280px;
+    font-size: 32px;
+    font-weight: 700;
+    line-height: 1.19;
+    letter-spacing: -0.01em;
+  }
+
+  .account__lead,
+  .account--stacked .account__lead {
+    max-width: none;
+    margin-top: 25px;
+    font-family: var(--l-font-text);
+    font-size: 14px;
+    line-height: 1.5;
+  }
+
+  .account__actions,
+  .account--stacked .account__actions {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 15px;
+    width: auto;
+    margin-top: 17px;
+  }
+
+  .account__button {
+    width: 100%;
+    height: 48px;
+  }
+
+  .account__sign-in {
+    margin: 0;
+    font-family: var(--l-font-text);
+    font-size: 12px;
+    text-align: center;
+  }
+
+  .account__sign-in-link {
+    margin-left: 10px;
+    font-family: var(--l-font-display);
+  }
+
+  .account__illustration {
+    width: min(100%, 338px);
+    margin-top: 32px;
+  }
+
+  .account__benefits {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 13px 0;
+    margin: 33px 0 35px;
+  }
+
+  .benefit {
+    height: auto;
+    padding-left: 0;
+    border-left: 0;
+  }
+
+  .benefit__star {
+    margin: 0 0 0 2px;
+  }
+
+  .benefit__title {
+    margin-top: 12px;
+    font-size: 16px;
+    letter-spacing: -0.015em;
+  }
+
+  .benefit__text {
+    margin-top: 4px;
+    font-size: 13px;
+  }
+}
