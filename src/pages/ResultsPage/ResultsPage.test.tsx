@@ -1,6 +1,7 @@
 import { screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { MemoryRouter } from 'react-router';
+import { initAnalytics, resetAnalytics } from '../../analytics/analytics.ts';
 import { backendCard, mockBackend, signIn, testRoom } from '../../test/fixtures.ts';
 import { renderWithQuery } from '../../test/render.tsx';
 import ResultsPage from './ResultsPage.tsx';
@@ -19,7 +20,7 @@ function setup(likes: number[], { host = true } = {}) {
       })),
     },
   });
-  renderWithQuery(
+  return renderWithQuery(
     <MemoryRouter>
       <ResultsPage code="ABC123" room={testRoom(host ? 1 : 2, { status: 'FINISHED' })} />
     </MemoryRouter>,
@@ -55,6 +56,25 @@ describe('ResultsPage', () => {
     setup([2, 1, 1, 0]);
     await screen.findByRole('heading', { name: 'Also highly rated' });
     expect(screen.getAllByText('1 / 2 liked it')).toHaveLength(2);
+  });
+
+  it('reports the finished selection to analytics once, and never a "no match" round', async () => {
+    initAnalytics({ enabled: true });
+    const events = () =>
+      (window.dataLayer ?? [])
+        .map((entry) => Array.from(entry as ArrayLike<unknown>))
+        .filter(([kind]) => kind === 'event')
+        .map(([, name]) => name);
+
+    const first = setup([2, 2, 1]);
+    await screen.findByRole('heading', { name: 'Tonight’s winners' });
+    expect(events()).toEqual(['movie_matched', 'selection_completed']);
+
+    first.unmount(); // the same person reloads the page
+    setup([2, 2, 1]);
+    await screen.findByRole('heading', { name: 'Tonight’s winners' });
+    expect(events()).toEqual(['movie_matched', 'selection_completed']);
+    resetAnalytics();
   });
 
   it('shows "No match" when nobody liked anything', async () => {

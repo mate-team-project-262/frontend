@@ -34,7 +34,7 @@ The frontend talks to the Team 262 Spring Boot backend (movies from TMDB) throug
 
 React 19 · React Router 7 · TypeScript (strict) · TanStack Query · Vite 8 · plain CSS (BEM) ·
 Vitest + Testing Library · ESLint (hooks, jsx-a11y, typescript-eslint) · Prettier + Husky pre-commit ·
-Docker + Nginx · GitHub Actions → GHCR → AWS EC2
+Google Analytics 4 · Docker + Nginx · GitHub Actions → GHCR → AWS EC2
 
 ## Quick start
 

@@ -18,7 +18,13 @@ export default function LandingHeader() {
   return (
     <header className="landing-header">
       <div className="container landing-header__inner">
-        <img className="landing-header__logo" src={logo} width="106" height="48" alt="W2W" />
+        <img
+          className="landing-header__logo"
+          src={logo}
+          width="106"
+          height="48"
+          alt="W2W – What To Watch"
+        />
         <nav className="landing-header__nav" aria-label="Main">
           <NavButton onClick={onNavHowItWorks}>How it works</NavButton>
           <NavButton onClick={onNavAccountBenefits}>Account benefits</NavButton>

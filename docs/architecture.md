@@ -85,3 +85,29 @@ logic in `.ts` (`api/`, `hooks/`, `utils/`, `config/`, `data/`), components and 
 - Every component declares its props; wrappers of HTML elements extend the element's own props
   (`ComponentPropsWithoutRef<'button'>`), so `disabled`, `onClick`, `aria-*` are checked too.
 - No `any` in the app code (ESLint: `typescript-eslint` recommended rules).
+
+## SEO and link previews
+
+The app is a single `index.html`, so page metadata is handled in two places that share
+`src/data/seo.ts` (texts from the marketer):
+
+- in the browser `usePageMeta()` sets the title, description, canonical link and Open Graph tags of
+  the current page; rooms and invite links get `noindex` instead;
+- at build time `vite.config.js` writes `dist/create-room.html` and `dist/join.html`: copies of
+  `index.html` with that page's tags, for crawlers and messengers that do not run JavaScript.
+  Nginx serves them when its fallback is `try_files $uri $uri.html $uri/ /index.html;`.
+
+`public/sitemap.xml` lists the three public pages, `public/robots.txt` closes `/room/`, `/join/CODE`
+and `/api/`.
+
+## Analytics
+
+Google Analytics 4, loaded by `src/analytics/analytics.ts` only on the real site (not in
+development, tests or on localhost; `?ga_debug=1` turns on DebugView). Pages call
+`track(name, params)` with a typed list of events: `page_view`, `room_created`, `room_joined`,
+`friend_invited`, `movie_swiped`, `movie_matched`, `selection_completed`.
+
+Privacy rules built into the module: names are never sent, room codes are cut out of page
+addresses (`/room/:code`), and the once-per-room events are not repeated after a reload.
+The production CSP (gateway in the infra repo) must allow `googletagmanager.com` and
+`google-analytics.com`.

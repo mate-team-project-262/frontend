@@ -30,6 +30,7 @@ src/
     http.ts       fetch wrapper (base /api, X-Participant-Token header)
     queryClient.ts  TanStack Query settings, query keys, POLL_INTERVAL_MS (3 s)
     roomSession.ts  the participant token per room (sessionStorage)
+  analytics/    Google Analytics 4: track('event', params) is the only thing pages call
   hooks/        state logic of pages: useRoom, useDeck, useRoundResults ... load
                 data with TanStack Query (useQuery / useMutation)
   pages/        one folder per route; RoomPage picks Lobby / Waiting / Swipe / Results by room status
@@ -37,7 +38,8 @@ src/
   sections/     big landing blocks, also reused on the results page
   utils/        pure functions (formatting, validation, links) — easy to unit-test
   config/       feature flags (FEATURES)
-  data/         static content (genres with backend ids, texts)
+  data/         static content (genres with backend ids, texts); seo.ts = titles, descriptions
+                and share images of the public pages
   styles/       base.css, landing.css (theme tokens --l-*), cinema.css (photo backgrounds)
   test/         Vitest setup, fixtures (mockBackend, backendCard, signIn), renderWithQuery
 design/         Figma exports — the source of truth for sizes and colours
@@ -62,6 +64,10 @@ docs/           architecture, Docker and deployment notes, screenshots
 - Polling = `refetchInterval: POLL_INTERVAL_MS` on the query (see `useRoom`); TanStack Query stops
   it when the component unmounts.
 - Respect `prefers-reduced-motion` in animations.
+- Analytics: send events only through `track()` from `analytics/analytics.ts` (typed list of
+  events). Never send names or room codes; it runs only on the real site, not on localhost.
+- A new public page needs an entry in `data/seo.ts` (+ `usePageMeta(SEO.x)` in the page, a line in
+  `public/sitemap.xml`, a picture in `public/og/`); private pages call `usePageMeta()`.
 - UI text is English. Comments explain _why_.
 - Tests sit next to the code (`*.test.ts` / `*.test.tsx`); mock the backend with `mockBackend()`
   from `src/test/fixtures.ts` (`testRoom()`, `backendCard()`), not by mocking React components. Render anything that loads data

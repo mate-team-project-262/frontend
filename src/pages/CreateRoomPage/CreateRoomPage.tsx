@@ -1,5 +1,6 @@
 import { type ChangeEvent, type FormEvent, useState } from 'react';
 import { useNavigate } from 'react-router';
+import { track } from '../../analytics/analytics.ts';
 import { type ContentType, RoomApiError, createRoom } from '../../api/roomsApi.ts';
 import BrandButton from '../../components/BrandButton/BrandButton.tsx';
 import BrandChip from '../../components/BrandChip/BrandChip.tsx';
@@ -16,7 +17,7 @@ import {
 } from '../../data/content.ts';
 import { SEO } from '../../data/seo.ts';
 import { usePageMeta } from '../../hooks/usePageMeta.ts';
-import { ROUTES, roomPath } from '../../routes.ts';
+import { roomPath } from '../../routes.ts';
 import { getNameFeedback, validateDisplayName } from '../../utils/validation.ts';
 import '../../styles/cinema.css';
 import '../../styles/landing.css';
@@ -40,7 +41,7 @@ const INITIAL_FORM: Form = {
 
 export default function CreateRoomPage() {
   const navigate = useNavigate();
-  usePageMeta(SEO.createRoom, ROUTES.createRoom);
+  usePageMeta(SEO.createRoom);
   const [form, setForm] = useState(INITIAL_FORM);
   const [serverNameError, setServerNameError] = useState('');
   const [formError, setFormError] = useState('');
@@ -99,6 +100,11 @@ export default function CreateRoomPage() {
         contentType: form.contentType,
         genreIds: form.genreIds,
         durationsMin: form.durationsMin,
+      });
+      track('room_created', {
+        content_type: form.contentType,
+        genre_count: form.genreIds.length,
+        duration_count: form.durationsMin.length,
       });
       navigate(roomPath(room.code));
     } catch (error) {

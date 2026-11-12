@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router';
+import { markSwipeStarted, track } from '../../analytics/analytics.ts';
 import { type Room, RoomApiError, leaveRoom } from '../../api/roomsApi.ts';
 import BrandButton from '../../components/BrandButton/BrandButton.tsx';
 import BrandHeader from '../../components/BrandHeader/BrandHeader.tsx';
@@ -44,12 +45,31 @@ function PosterBackdrop({ url }: { url?: string | null }) {
 export default function SwipePage({ code, room }: { code: string; room: Room }) {
   const navigate = useNavigate();
   const deck = useDeck(code);
-  const { card, cards, isDone, votedCount, leaving, vote } = deck;
+  const { card, cards, isDone, votedCount, leaving, vote: saveVote, isSaving } = deck;
   const [detailsOpen, setDetailsOpen] = useState(false);
   const [leaveState, setLeaveState] = useState<{ isLeaving: boolean; error: string } | null>(null);
   const [hostNotice, dismissHostNotice] = useHostChange(room);
   const cardSlot = useRef<HTMLDivElement>(null);
-  const swipe = useSwipeDrag({ disabled: deck.isSaving, onSwipe: (liked) => vote(liked) });
+
+  /** Saves the vote; `method` (how the person voted) is only for analytics. */
+  const vote = useCallback(
+    (liked: boolean, method: 'drag' | 'button' | 'keyboard') => {
+      if (card && !isSaving) {
+        track('movie_swiped', {
+          swipe_direction: liked ? 'right' : 'left',
+          swipe_method: method,
+          movie_id: card.id,
+          movie_title: card.title,
+        });
+      }
+      saveVote(liked);
+    },
+    [card, isSaving, saveVote],
+  );
+  const swipe = useSwipeDrag({ disabled: isSaving, onSwipe: (liked) => vote(liked, 'drag') });
+
+  // analytics: the clock for "how long did the selection take" starts with the first card
+  useEffect(() => markSwipeStarted(code), [code]);
 
   // the card comes back to the middle after each vote
   const resetSwipe = swipe.reset;
@@ -63,8 +83,8 @@ export default function SwipePage({ code, room }: { code: string; room: Room }) 
     if (!card || detailsOpen || leaveState) return undefined;
     const onKeyDown = (event: KeyboardEvent) => {
       if ((event.target as Element | null)?.closest?.('input, textarea, select')) return;
-      if (event.key === 'ArrowLeft') vote(false);
-      if (event.key === 'ArrowRight') vote(true);
+      if (event.key === 'ArrowLeft') vote(false, 'keyboard');
+      if (event.key === 'ArrowRight') vote(true, 'keyboard');
     };
     window.addEventListener('keydown', onKeyDown);
     return () => window.removeEventListener('keydown', onKeyDown);
@@ -153,9 +173,9 @@ export default function SwipePage({ code, room }: { code: string; room: Room }) 
               />
             </div>
             <div className="swipe__votes">
-              <VoteButton kind="skip" onClick={() => vote(false)} />
+              <VoteButton kind="skip" onClick={() => vote(false, 'button')} />
               <p className="swipe__hint">Swipe or tap to vote</p>
-              <VoteButton kind="like" onClick={() => vote(true)} />
+              <VoteButton kind="like" onClick={() => vote(true, 'button')} />
             </div>
             {deck.voteError && (
               <p className="swipe__error" role="alert">

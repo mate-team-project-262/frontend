@@ -23,7 +23,7 @@
   height: 100%;
   max-width: none;
   object-fit: cover;
-  transition-property: opacity;
+  transition-property: opacity, filter;
   transition-timing-function: ease;
   user-select: none;
 }
