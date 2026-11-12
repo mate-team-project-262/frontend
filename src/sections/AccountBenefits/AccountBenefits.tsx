@@ -66,7 +66,7 @@ export default function AccountBenefits({
           src={illustration}
           width="710"
           height="722"
-          alt=""
+          alt="Taste profile illustration: a 92% match ring with Drama, Romance, Comedy, Thriller and Adventure tags"
           loading="lazy"
         />
 

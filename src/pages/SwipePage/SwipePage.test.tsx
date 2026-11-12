@@ -1,6 +1,7 @@
 import { screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { MemoryRouter } from 'react-router';
+import { initAnalytics, resetAnalytics } from '../../analytics/analytics.ts';
 import type { CardDto } from '../../api/types.ts';
 import { backendCard, mockBackend, signIn, testRoom } from '../../test/fixtures.ts';
 import { renderWithQuery } from '../../test/render.tsx';
@@ -52,6 +53,7 @@ describe('SwipePage', () => {
 
   it('saves a like and a skip and moves to the next movie', async () => {
     const user = userEvent.setup();
+    initAnalytics({ enabled: true });
     const { votes } = setup([backendCard(0), backendCard(1), backendCard(2)]);
     await screen.findByRole('heading', { name: 'Movie 1' });
 
@@ -64,6 +66,17 @@ describe('SwipePage', () => {
       { roomTitleId: 1, isLiked: true },
       { roomTitleId: 2, isLiked: false },
     ]);
+
+    // analytics gets the direction and how the person voted
+    const swipes = (window.dataLayer ?? [])
+      .map((entry) => Array.from(entry as ArrayLike<unknown>))
+      .filter(([, name]) => name === 'movie_swiped')
+      .map(([, , params]) => params);
+    expect(swipes).toMatchObject([
+      { swipe_direction: 'right', swipe_method: 'button', movie_title: 'Movie 1' },
+      { swipe_direction: 'left', swipe_method: 'keyboard', movie_title: 'Movie 2' },
+    ]);
+    resetAnalytics();
   });
 
   it('shows the group progress after the last movie', async () => {

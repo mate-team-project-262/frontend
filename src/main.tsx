@@ -7,11 +7,13 @@ import { QueryClientProvider } from '@tanstack/react-query';
 import { StrictMode } from 'react';
 import { createRoot } from 'react-dom/client';
 import { BrowserRouter } from 'react-router';
+import { initAnalytics } from './analytics/analytics.ts';
 import { createQueryClient } from './api/queryClient.ts';
 import App from './App.tsx';
 import ErrorBoundary from './components/ErrorBoundary/ErrorBoundary.tsx';
 
 const queryClient = createQueryClient();
+initAnalytics();
 
 createRoot(document.querySelector('#root')!).render(
   <StrictMode>

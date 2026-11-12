@@ -1,4 +1,5 @@
 import { type FormEvent, useState } from 'react';
+import { track } from '../../analytics/analytics.ts';
 import { RoomApiError, joinRoom } from '../../api/roomsApi.ts';
 import { cx } from '../../utils/classNames.ts';
 import { extractRoomCode } from '../../utils/roomLinks.ts';
@@ -52,6 +53,7 @@ export default function JoinRoom({ title, code, onJoined }: Props) {
     setIsSubmitting(true);
     try {
       const joined = await joinRoom(roomCode, { name: name.trim() });
+      track('room_joined', {});
       onJoined({ code: joined.code, name: name.trim() });
     } catch (error) {
       const message = error instanceof RoomApiError ? error.message : JOIN_FAILED_MESSAGE;
