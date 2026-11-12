@@ -153,19 +153,84 @@
     top: 0;
     left: 0;
     height: 480px;
-    margin-top: 80px;
+    margin-top: 210px; /* the cards behind rise 184px above the front one at this scale */
     transform: scale(0.72);
     transform-origin: top left;
   }
 }
 
+/*
+ * Mobile mockup (390px): 24px side padding, title 32 / 40px, Inter 16px lead, two full-width
+ * 48px buttons 8px apart, then the poster stack (three cards) in the middle.
+ */
 @media (max-width: 600px) {
+  .hero {
+    padding-bottom: 41px;
+    background:
+      radial-gradient(90% 34% at 50% 68%, rgba(128, 94, 226, 0.55), transparent 72%),
+      linear-gradient(180deg, #160850 0%, #100540 45%, #0d0339 100%);
+  }
+
+  .hero__content {
+    padding-top: 24px;
+  }
+
+  .hero__title {
+    font-size: min(32px, 8.6vw); /* "Stop arguing about" stays on one line down to 320px */
+    font-weight: 700;
+    line-height: 1.2;
+    letter-spacing: -0.01em;
+  }
+
+  .hero__title-line {
+    white-space: nowrap;
+  }
+
+  .hero__title-accent {
+    margin-top: 2px;
+    margin-left: 0;
+    font-size: 1.25em;
+    line-height: 1.1;
+    letter-spacing: -0.03em;
+  }
+
+  .hero__lead {
+    max-width: 300px;
+    margin-top: 12px;
+    font-family: var(--l-font-text);
+    font-size: 16px;
+    font-weight: 400;
+    line-height: 1.5;
+  }
+
+  .hero__lead-accent {
+    font-weight: 400;
+  }
+
+  .hero__actions {
+    flex-direction: column;
+    gap: 8px;
+    margin-top: 22px;
+  }
+
   .hero__button,
   .hero__button--wide {
     width: 100%;
+    height: 48px;
+  }
+
+  .hero__note {
+    margin-top: 12px;
+    font-size: min(12px, 3.1vw); /* one line, also on a 360px phone */
+    text-align: center;
+    white-space: nowrap;
   }
 
   .hero__stack {
-    display: none;
+    display: flex;
+    justify-content: center;
+    height: auto;
+    margin-top: 94px; /* room for the two cards that peek out above the front one */
+    transform: none;
   }
 }

@@ -84,3 +84,64 @@
     font-size: 18px;
   }
 }
+
+/*
+ * Mobile mockup (390px): 342px tall, title 32px in two lines, Inter 14px text, a 220px button,
+ * and five posters (20% each) under the cream curve.
+ */
+@media (max-width: 600px) {
+  .cta-banner {
+    min-height: 342px;
+  }
+
+  .cta-banner__posters {
+    left: 0;
+    width: 100%;
+    transform: none;
+  }
+
+  /* inline widths come from the desktop frame, so they are overridden here */
+  .cta-banner__poster {
+    width: 20% !important;
+    margin-bottom: 0 !important;
+    aspect-ratio: 2 / 3;
+    object-fit: cover;
+  }
+
+  .cta-banner__poster:nth-child(2),
+  .cta-banner__poster:nth-child(6) {
+    display: none;
+  }
+
+  .cta-banner__bowl {
+    width: 150vw;
+    height: 254px;
+    border-radius: 0 0 50% 50% / 0 0 156px 156px;
+  }
+
+  .cta-banner__inner {
+    padding-top: 24px;
+  }
+
+  .cta-banner__title {
+    max-width: 240px;
+    margin: 0 auto;
+    font-size: 32px;
+    line-height: 1.19;
+    letter-spacing: -0.01em;
+  }
+
+  .cta-banner__text {
+    max-width: 340px;
+    margin-top: 8px;
+    font-family: var(--l-font-text);
+    font-size: 14px;
+    line-height: 1.5;
+  }
+
+  .cta-banner__button {
+    width: 220px;
+    height: 48px;
+    margin-top: 16px;
+  }
+}

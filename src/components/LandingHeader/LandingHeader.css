@@ -70,3 +70,14 @@
     display: none;
   }
 }
+
+/* Mobile mockup (390px): 64px header, logo and "Sign In" only */
+@media (max-width: 600px) {
+  .landing-header__inner {
+    height: 64px;
+  }
+
+  .landing-header__nav {
+    margin-right: 12px;
+  }
+}

@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
+import { useMediaQuery } from '../../hooks/useMediaQuery.ts';
 import housemaid from '../../assets/landing/hero-housemaid.webp';
 import hungerGames from '../../assets/landing/hero-hunger-games.webp';
 import odyssey from '../../assets/landing/hero-odyssey.webp';
@@ -49,6 +50,16 @@ const SLOTS = [
   { x: 263, y: -198, w: 313, h: 470, radius: 28, opacity: 0.8, dim: 0.62, border: '#9b95b8' },
   { x: 316, y: -255, w: 260, h: 414, radius: 24, opacity: 0.78, dim: 0.55, border: '#7e75a2' },
 ];
+/**
+ * Mobile mockup (390px): a 260 x 354 front card and two cards peeking out above it, centred.
+ * The other posters wait behind the last one.
+ */
+const MOBILE_SLOTS: typeof SLOTS = [
+  { x: 0, y: 0, w: 260, h: 354, radius: 28, opacity: 1, dim: 1, border: '#fff9ea' },
+  { x: 14, y: -28, w: 232, h: 316, radius: 24, opacity: 0.96, dim: 0.78, border: '#9688a5' },
+  { x: 28, y: -55, w: 204, h: 278, radius: 22, opacity: 0.9, dim: 0.62, border: '#9b95b8' },
+];
+const MOBILE_QUERY = '(max-width: 600px)';
 const FRONT_SHADOW = '0 24px 48px rgba(0, 0, 0, 0.45)';
 
 const SHUFFLE_EVERY_MS = 5200;
@@ -66,6 +77,8 @@ export default function PosterStack() {
   const [movingId, setMovingId] = useState<number | null>(null);
   const [isBehind, setIsBehind] = useState(false);
   const orderRef = useRef(order);
+  const isMobile = useMediaQuery(MOBILE_QUERY);
+  const slots = isMobile ? MOBILE_SLOTS : SLOTS;
 
   useEffect(() => {
     if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return undefined;
@@ -90,12 +103,16 @@ export default function PosterStack() {
   }, []);
 
   return (
-    <div className="poster-stack" aria-hidden="true">
+    <div
+      className="poster-stack"
+      aria-hidden="true"
+      style={{ width: slots[0].w, height: slots[0].h }}
+    >
       {POSTERS.map((poster, posterId) => {
         const position = order.indexOf(posterId);
         // posters beyond the last place wait behind it, invisible
-        const isWaiting = position >= SLOTS.length;
-        const slot = SLOTS[Math.min(position, SLOTS.length - 1)];
+        const isWaiting = position >= slots.length;
+        const slot = slots[Math.min(position, slots.length - 1)];
         const isMoving = posterId === movingId;
         // The travelling card stays on top until it has flown over the others, then goes behind.
         const zIndex = isMoving && !isBehind ? POSTERS.length + 1 : POSTERS.length - position;

@@ -197,3 +197,57 @@
     transition: none;
   }
 }
+
+/* Mobile mockup (390px): 284 x 212 cards, 8px apart, starting at the page padding; no arrows (swipe) */
+@media (max-width: 600px) {
+  .steps-carousel {
+    --card-w: min(284px, calc(100vw - 72px));
+    --gap: 8px;
+    --lead: 24px;
+  }
+
+  .steps-carousel__viewport {
+    height: calc(var(--card-w) * 212 / 284);
+  }
+
+  .step-card {
+    border-radius: 40px;
+  }
+
+  /* the photo keeps its own proportions and is cropped by the taller card */
+  .step-card__image {
+    width: auto;
+    height: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+  }
+
+  .steps-carousel__arrow {
+    display: none;
+  }
+
+  .step-card__content {
+    top: calc(var(--card-w) * 56 / 284);
+    right: 20px;
+    left: 24px;
+  }
+
+  .step-card__number {
+    font-size: 24px;
+    font-weight: 700;
+  }
+
+  .step-card__title {
+    margin-top: 12px;
+    font-size: 20px;
+    font-weight: 500;
+    letter-spacing: 0;
+  }
+
+  .step-card__text {
+    margin-top: 10px;
+    font-family: var(--l-font-text);
+    font-size: 13px;
+    line-height: 1.4;
+  }
+}
