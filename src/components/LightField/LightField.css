@@ -1,0 +1,153 @@
+/*
+ * UI kit "light input" (Figma, Sign In / Sign Up cards): 52px tall pill with a 1px #9b95b8 border
+ * on the cream card, Inter 16px. Error: #d60004 border, icon and message.
+ */
+.light-field {
+  font-family: var(--l-font-text);
+}
+
+.light-field__head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.light-field__action {
+  margin-right: 12px;
+  color: #7835ff;
+  font-family: var(--l-font-display);
+  font-size: 16px;
+  font-weight: 500;
+  line-height: 1.5;
+  text-decoration: none;
+}
+
+.light-field__action:hover {
+  text-decoration: underline;
+  text-underline-offset: 4px;
+}
+
+.light-field__action:focus-visible {
+  outline: 2px solid #7835ff;
+  outline-offset: 3px;
+  border-radius: 4px;
+}
+
+.light-field__label {
+  color: #2f2270;
+  font-size: 16px;
+  line-height: 1.5;
+}
+
+.light-field__control {
+  position: relative;
+  margin-top: 8px;
+}
+
+.light-field__input {
+  box-sizing: border-box;
+  display: block;
+  width: 100%;
+  height: 52px;
+  padding: 0 16px;
+  border: 1px solid #9b95b8;
+  border-radius: 26px;
+  background: transparent;
+  color: #170e43;
+  font-family: inherit;
+  font-size: 16px;
+  line-height: 1.5;
+  transition:
+    border-color 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+.light-field__input--with-icon {
+  padding-left: 50px;
+}
+
+.light-field__input--with-toggle {
+  padding-right: 52px;
+}
+
+.light-field__input::placeholder {
+  color: #9b95b8;
+  font-size: 14px;
+}
+
+.light-field__input:hover {
+  border-color: #645b8d;
+}
+
+.light-field__input:focus-visible {
+  border-color: #7835ff;
+  box-shadow: 0 0 0 1px #7835ff;
+  outline: none;
+}
+
+.light-field__input:disabled {
+  border-color: #d8d2e6;
+  color: #9b95b8;
+}
+
+.light-field__icon {
+  position: absolute;
+  top: 50%;
+  left: 20px;
+  display: grid;
+  color: #9b95b8;
+  transform: translateY(-50%);
+  pointer-events: none;
+}
+
+.light-field__toggle {
+  position: absolute;
+  top: 50%;
+  right: 12px;
+  display: grid;
+  place-items: center;
+  width: 36px;
+  height: 36px;
+  padding: 0;
+  border: 0;
+  border-radius: 50%;
+  background: none;
+  color: #645b8d;
+  transform: translateY(-50%);
+  cursor: pointer;
+}
+
+.light-field__toggle:hover {
+  color: #2f2270;
+}
+
+.light-field__toggle:focus-visible {
+  outline: 2px solid #7835ff;
+  outline-offset: -2px;
+}
+
+.light-field__message {
+  margin: 8px 0 0;
+  color: #645b8d;
+  font-size: 13px;
+  line-height: 1.5;
+}
+
+.light-field--error .light-field__input,
+.light-field--error .light-field__input:hover {
+  border-color: #d60004;
+}
+
+.light-field--error .light-field__input:focus-visible {
+  box-shadow: 0 0 0 1px #d60004;
+}
+
+.light-field--error .light-field__icon,
+.light-field--error .light-field__message {
+  color: #d60004;
+}
+
+.light-field--error .light-field__message {
+  font-size: 14px;
+}
