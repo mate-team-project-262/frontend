@@ -45,7 +45,7 @@ export async function getProgress(code: string): Promise<GameProgress> {
 }
 
 /** Demo posters come from the backend itself (/demo/...), real ones are full TMDB links. */
-const toPosterUrl = (url: string | null | undefined): string | null =>
+export const toPosterUrl = (url: string | null | undefined): string | null =>
   url?.startsWith('/') ? `${BASE_URL}${url}` : (url ?? null);
 
 /** Backend deck card -> MovieCard. */

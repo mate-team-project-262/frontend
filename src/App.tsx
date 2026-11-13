@@ -1,8 +1,11 @@
 import { useEffect } from 'react';
 import { Navigate, Route, Routes, useLocation } from 'react-router';
 import { toReportedPath, track } from './analytics/analytics.ts';
+import RequireAccount from './components/RequireAccount/RequireAccount.tsx';
 import CreateRoomPage from './pages/CreateRoomPage/CreateRoomPage.tsx';
 import LandingPage from './pages/LandingPage/LandingPage.tsx';
+import HomePage from './pages/HomePage/HomePage.tsx';
+import SectionSoon from './pages/HomePage/SectionSoon.tsx';
 import InvitePage from './pages/InvitePage/InvitePage.tsx';
 import JoinRoomPage from './pages/JoinRoomPage/JoinRoomPage.tsx';
 import RoomPage from './pages/RoomPage/RoomPage.tsx';
@@ -32,6 +35,30 @@ export default function App() {
       <Route path={ROUTES.invite} element={<InvitePage />} />
       <Route path={ROUTES.signIn} element={<SignInPage />} />
       <Route path={ROUTES.signUp} element={<SignUpPage />} />
+      <Route
+        path={ROUTES.dashboard}
+        element={
+          <RequireAccount>
+            <HomePage />
+          </RequireAccount>
+        }
+      />
+      <Route
+        path={ROUTES.sessions}
+        element={
+          <RequireAccount>
+            <SectionSoon title="Your movie history" />
+          </RequireAccount>
+        }
+      />
+      <Route
+        path={ROUTES.movieIdentity}
+        element={
+          <RequireAccount>
+            <SectionSoon title="Your movie identity" />
+          </RequireAccount>
+        }
+      />
       <Route path={ROUTES.room} element={<RoomPage />} />
       <Route path="*" element={<Navigate to={ROUTES.home} replace />} />
     </Routes>

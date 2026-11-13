@@ -11,6 +11,9 @@ export const queryKeys = {
   results: (code: string) => ['room', code, 'results'] as const,
   /** the signed-in account (or null for a guest) */
   me: ['me'] as const,
+  /** the account's finished sessions, newest first */
+  history: (page: number, size: number) => ['account', 'history', page, size] as const,
+  movieIdentity: ['account', 'movie-identity'] as const,
 };
 
 /**

@@ -6,6 +6,10 @@ export const ROUTES = {
   invite: '/join/:code', // the link the host shares (the backend asks for /join/{code})
   signIn: '/sign-in',
   signUp: '/sign-up',
+  // pages of a signed-in person
+  dashboard: '/home',
+  sessions: '/home/sessions',
+  movieIdentity: '/home/movie-identity',
   room: '/room/:code', // inside a room: host lobby or guest waiting room (needs a token)
 } as const;
 
