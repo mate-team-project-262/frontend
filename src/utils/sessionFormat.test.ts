@@ -1,5 +1,5 @@
 import { toSlices } from '../components/GenreDonut/slices.ts';
-import { formatFriends, formatSessionDate, getWinnerLabel } from './sessionFormat.ts';
+import { formatFriends, formatSessionDate, getInitial, getWinnerLabel } from './sessionFormat.ts';
 
 const title = (name: string) => ({
   id: 1,
@@ -26,6 +26,11 @@ describe('session texts', () => {
     expect(formatFriends(4)).toBe('3 friends');
     expect(formatFriends(2)).toBe('1 friend');
     expect(formatFriends(1)).toBe('0 friends');
+  });
+
+  it('takes the first letter of a name for the avatar', () => {
+    expect(getInitial(' sofiia')).toBe('S');
+    expect(getInitial('')).toBe('');
   });
 });
 

@@ -143,3 +143,26 @@
     border-radius: 28px 28px 0 0;
   }
 }
+
+/* A short message inside the cream panel: loading, an error with "Try again", not found. */
+.account-message {
+  margin: 24px 0 0;
+  color: #2d1c7c;
+  font-family: var(--l-font-text);
+  font-size: 16px;
+  line-height: 1.5;
+}
+
+.account-message[role='alert'] {
+  color: #b3261e;
+}
+
+.account-message button {
+  padding: 0;
+  border: 0;
+  background: none;
+  color: #5b21d6;
+  font: inherit;
+  text-decoration: underline;
+  cursor: pointer;
+}

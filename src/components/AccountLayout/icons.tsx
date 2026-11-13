@@ -58,11 +58,11 @@ export function HeadIcon({ size = 40 }: { size?: number }) {
   );
 }
 
-export function CalendarIcon() {
+export function CalendarIcon({ size = 18 }: { size?: number }) {
   return (
     <svg
-      width="18"
-      height="18"
+      width={size}
+      height={size}
       viewBox="0 0 18 18"
       {...stroke}
       strokeWidth="1.2"
@@ -119,6 +119,53 @@ export function PlusIcon() {
       aria-hidden="true"
     >
       <path d="M8 1.5v13M1.5 8h13" />
+    </svg>
+  );
+}
+
+/** A heart: filled = the person liked the movie, outlined = did not. */
+export function HeartIcon({ filled = false, size = 20 }: { filled?: boolean; size?: number }) {
+  return (
+    <svg width={size} height={size} viewBox="0 0 20 20" aria-hidden="true">
+      <path
+        d="M10 17.2 3.4 10.6a4.1 4.1 0 0 1 5.8-5.8l.8.8.8-.8a4.1 4.1 0 0 1 5.8 5.8Z"
+        fill={filled ? 'currentColor' : 'none'}
+        stroke="currentColor"
+        strokeWidth="1.4"
+        strokeLinejoin="round"
+      />
+    </svg>
+  );
+}
+
+export function BackIcon() {
+  return (
+    <svg
+      width="20"
+      height="20"
+      viewBox="0 0 20 20"
+      {...stroke}
+      strokeWidth="1.5"
+      aria-hidden="true"
+    >
+      <path d="M17.5 10H3M8.5 4.5 3 10l5.5 5.5" />
+    </svg>
+  );
+}
+
+/** An arrow entering a box: open the details. */
+export function OpenIcon() {
+  return (
+    <svg
+      width="20"
+      height="20"
+      viewBox="0 0 20 20"
+      {...stroke}
+      strokeWidth="1.3"
+      aria-hidden="true"
+    >
+      <path d="M7 3.5h8.5a1 1 0 0 1 1 1v11a1 1 0 0 1-1 1H7" />
+      <path d="M3 10h9M9 7l3 3-3 3" />
     </svg>
   );
 }

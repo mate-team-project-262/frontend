@@ -16,7 +16,7 @@ import { GENRE_COLORS, toSlices } from '../../components/GenreDonut/slices.ts';
 import { StarIcon } from '../../components/MovieCard/MovieCard.tsx';
 import { useMovieIdentity, useSessionHistory } from '../../hooks/useAccountData.ts';
 import { usePageMeta } from '../../hooks/usePageMeta.ts';
-import { ROUTES } from '../../routes.ts';
+import { ROUTES, sessionDetailsPath } from '../../routes.ts';
 import { formatFriends, formatSessionDate, getWinnerLabel } from '../../utils/sessionFormat.ts';
 import './HomePage.css';
 
@@ -45,6 +45,13 @@ function RecentSession({ session }: { session: SessionSummary }) {
           </span>
         </p>
       </div>
+      <Link
+        className="recent-session__link"
+        to={sessionDetailsPath(session.id)}
+        aria-label={`Open the session of ${formatSessionDate(session.finishedAt)}`}
+      >
+        <ArrowIcon size={24} />
+      </Link>
     </li>
   );
 }

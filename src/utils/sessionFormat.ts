@@ -24,3 +24,10 @@ export function formatFriends(participantCount: number): string {
   const friends = Math.max(participantCount - 1, 0);
   return `${friends} ${friends === 1 ? 'friend' : 'friends'}`;
 }
+
+/** The person's own reaction in a session: "You liked 8 of 20". */
+export const formatMyLikes = (liked: number, rated: number): string =>
+  `You liked ${liked} of ${rated}`;
+
+/** "S" for "Sofiia": the letter inside a participant's round avatar. */
+export const getInitial = (name: string): string => name.trim().charAt(0).toUpperCase();
