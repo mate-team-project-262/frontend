@@ -169,3 +169,40 @@ export function OpenIcon() {
     </svg>
   );
 }
+
+/** A thumb pointing down: the least liked genre. */
+export function ThumbDownIcon() {
+  return (
+    <svg
+      width="42"
+      height="40"
+      viewBox="0 0 42 40"
+      fill="none"
+      stroke="#eacf00"
+      strokeWidth="3"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      aria-hidden="true"
+    >
+      <path d="M3 5.5h6.5v17H3z" fill="#eacf00" />
+      <path d="M15.5 21.5V7.5c0-1.7 1.3-3 3-3h13.3c1.5 0 2.7 1 3 2.5l2.5 11c.4 1.9-1 3.6-3 3.6H26l1.5 7c.4 2-1 3.9-3 3.9-1.2 0-2.2-.6-2.7-1.7Z" />
+    </svg>
+  );
+}
+
+/** A head and shoulders: the place of an actor who is not known yet. */
+export function PersonIcon() {
+  return (
+    <svg
+      width="28"
+      height="28"
+      viewBox="0 0 28 28"
+      {...stroke}
+      strokeWidth="1.5"
+      aria-hidden="true"
+    >
+      <circle cx="14" cy="9" r="4" />
+      <path d="M4 23c1-4.5 4.5-7 10-7s9 2.5 10 7Z" />
+    </svg>
+  );
+}
