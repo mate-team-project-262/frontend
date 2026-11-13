@@ -40,7 +40,7 @@ export default function SignUpPage() {
   const [formError, setFormError] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  if (status === 'signed-in' && !isSubmitting) return <Navigate to={ROUTES.home} replace />;
+  if (status === 'signed-in' && !isSubmitting) return <Navigate to={ROUTES.dashboard} replace />;
 
   const handleSubmit = async (event: FormEvent) => {
     event.preventDefault();
@@ -57,7 +57,7 @@ export default function SignUpPage() {
       });
       track('sign_up', { method: 'password' });
       setUser(user);
-      navigate(ROUTES.home);
+      navigate(ROUTES.dashboard);
     } catch (error) {
       const message = error instanceof RoomApiError ? error.message : FAILED;
       const field = error instanceof RoomApiError ? error.field : null;

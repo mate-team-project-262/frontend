@@ -14,7 +14,7 @@ function setup(routes: Record<string, unknown>) {
     <MemoryRouter initialEntries={['/sign-up']}>
       <Routes>
         <Route path="/sign-up" element={<SignUpPage />} />
-        <Route path="/" element={<h1>Home page</h1>} />
+        <Route path="/home" element={<h1>Home page</h1>} />
       </Routes>
     </MemoryRouter>,
   );

@@ -29,6 +29,7 @@ src/
     rooms.ts      create / join / read / leave a room, start the session
     game.ts       deck, votes, voting progress, results
     auth.ts       accounts: register, sign in, sign out, current user (cookie session + CSRF)
+    account.ts    the account's session history and movie identity (GET /me/...)
     types.ts      Room, MovieCard, RoundResults ... and the backend JSON shapes (*Dto)
     client.ts     call() + requireSession(); errors.ts maps backend codes to user messages
     http.ts       fetch wrapper (base /api, X-Participant-Token header)
@@ -41,7 +42,8 @@ src/
   components/   reusable UI; Brand* = the W2W UI kit (buttons, fields, chips ...);
                 AuthLayout + LightField + SocialButtons = the account screens (cream card);
                 ConfirmModal = "Leave room?" / "Log out?"; UserMenu = the name pill in the header;
-                RequireAccount = wrapper for pages that need a signed-in person
+                RequireAccount = wrapper for pages that need a signed-in person;
+                AccountLayout = greeting + tabs + cream panel of the signed-in pages (/home...)
   sections/     big landing blocks, also reused on the results page
   utils/        pure functions (formatting, validation, links) — easy to unit-test
   config/       feature flags (FEATURES)

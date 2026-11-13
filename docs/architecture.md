@@ -56,6 +56,10 @@ errors (`EMAIL_TAKEN`, `USERNAME_TAKEN`, `INVALID_CREDENTIALS`) are shown in the
 
 Rooms did not change: a signed-in person still plays with a participant token, like a guest.
 
+Signed-in pages live under `/home` (dashboard, `/home/sessions`, `/home/movie-identity`) inside
+`AccountLayout` and are wrapped in `RequireAccount`; `/` redirects a signed-in person to `/home`.
+Their data comes from `GET /me/history` and `GET /me/movie-identity` (`api/account.ts`).
+
 ## Server data: TanStack Query, live updates by polling
 
 Everything that comes from the backend is read through TanStack Query (`@tanstack/react-query`); the
