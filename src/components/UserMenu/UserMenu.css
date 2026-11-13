@@ -1,0 +1,110 @@
+/*
+ * UI kit "user menu" (Figma, signed-in header): a 106 x 40 outlined pill with the name and a
+ * chevron; the menu is a 187px cream card 8px under it, right edges aligned.
+ */
+.user-menu {
+  position: relative;
+  font-family: var(--l-font-text);
+}
+
+.user-menu__toggle {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  box-sizing: border-box;
+  min-width: 106px;
+  max-width: 220px;
+  height: 40px;
+  padding: 0 20px;
+  border: 1px solid #9b95b8;
+  border-radius: 20px;
+  background: rgba(13, 4, 55, 0.6);
+  color: var(--l-cream);
+  font-family: var(--l-font-text);
+  font-size: 14px;
+  line-height: 1;
+  cursor: pointer;
+  transition:
+    border-color 0.2s ease,
+    background-color 0.2s ease;
+}
+
+.user-menu__toggle:hover,
+.user-menu__toggle--open {
+  border-color: var(--l-accent);
+}
+
+.user-menu__toggle:focus-visible {
+  outline: 2px solid var(--l-cream);
+  outline-offset: 3px;
+}
+
+.user-menu__toggle svg {
+  flex: none;
+  transition: transform 0.2s ease;
+}
+
+.user-menu__toggle--open svg {
+  transform: rotate(180deg);
+}
+
+.user-menu__name {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.user-menu__list {
+  position: absolute;
+  top: calc(100% + 8px);
+  right: 0;
+  z-index: 10;
+  box-sizing: border-box;
+  width: 187px;
+  margin: 0;
+  padding: 10px 16px;
+  border-radius: 16px;
+  background: #fffaef;
+  box-shadow: 0 12px 32px rgba(4, 0, 30, 0.35);
+  list-style: none;
+}
+
+.user-menu__list li + li {
+  border-top: 1px solid #d8d2e6;
+}
+
+.user-menu__item {
+  display: block;
+  width: 100%;
+  padding: 11px 1px;
+  border: 0;
+  background: none;
+  color: #170e43;
+  font-family: inherit;
+  font-size: 16px;
+  line-height: 1.5;
+  text-align: left;
+  cursor: pointer;
+}
+
+.user-menu__item:hover:not(:disabled) {
+  color: #7835ff;
+}
+
+.user-menu__item:disabled {
+  color: #9b95b8;
+  cursor: default;
+}
+
+.user-menu__item:focus-visible {
+  outline: 2px solid #7835ff;
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .user-menu__toggle svg {
+    transition: none;
+  }
+}
