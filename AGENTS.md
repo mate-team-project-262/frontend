@@ -39,7 +39,9 @@ src/
                 data with TanStack Query (useQuery / useMutation)
   pages/        one folder per route; RoomPage picks Lobby / Waiting / Swipe / Results by room status
   components/   reusable UI; Brand* = the W2W UI kit (buttons, fields, chips ...);
-                AuthLayout + LightField + SocialButtons = the account screens (cream card)
+                AuthLayout + LightField + SocialButtons = the account screens (cream card);
+                ConfirmModal = "Leave room?" / "Log out?"; UserMenu = the name pill in the header;
+                RequireAccount = wrapper for pages that need a signed-in person
   sections/     big landing blocks, also reused on the results page
   utils/        pure functions (formatting, validation, links) — easy to unit-test
   config/       feature flags (FEATURES)

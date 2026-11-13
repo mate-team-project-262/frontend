@@ -1,7 +1,7 @@
 /* Figma: 96px header, logo at x=120, nav links 35px apart, "Sign In" text ends at x=1306 */
 .landing-header {
   position: relative;
-  z-index: 2;
+  z-index: 20; /* the user menu opens over the hero's poster stack */
 }
 
 .landing-header__inner {
@@ -89,5 +89,40 @@
 
   .landing-header__nav {
     margin-right: 12px;
+  }
+}
+
+/* Signed-in header (Figma): "Create a room" 174 x 40, then the user menu 40px to the right */
+.landing-header__account {
+  display: flex;
+  align-items: center;
+  gap: 40px;
+}
+
+.landing-header__create {
+  gap: 12px;
+  height: 40px;
+  padding: 0 20px;
+  font-size: 16px;
+}
+
+@media (max-width: 600px) {
+  .landing-header__account {
+    gap: 12px;
+  }
+
+  /* no room for the words next to the logo and the name: a round "+" button */
+  .landing-header__create {
+    width: 40px;
+    padding: 0;
+  }
+
+  .landing-header__create-label {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
   }
 }
