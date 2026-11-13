@@ -143,6 +143,7 @@
 }
 
 .recent-session {
+  position: relative;
   display: flex;
   align-items: center;
   gap: 16px;
@@ -171,7 +172,32 @@
 }
 
 .recent-session__body {
+  flex: 1;
   min-width: 0;
+}
+
+.recent-session__link {
+  display: flex;
+  flex: none;
+  margin-right: 4px;
+  color: var(--l-cream);
+}
+
+/* the whole row opens the session */
+.recent-session__link::after {
+  position: absolute;
+  inset: 0;
+  content: '';
+}
+
+.recent-session__link:focus-visible {
+  outline: none;
+}
+
+.recent-session__link:focus-visible::after {
+  outline: 2px solid var(--l-accent);
+  outline-offset: -2px;
+  border-radius: 8px;
 }
 
 .recent-session__title {

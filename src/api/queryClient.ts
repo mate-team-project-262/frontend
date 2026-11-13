@@ -13,6 +13,9 @@ export const queryKeys = {
   me: ['me'] as const,
   /** the account's finished sessions, newest first */
   history: (page: number, size: number) => ['account', 'history', page, size] as const,
+  /** the whole list of sessions, loaded page by page */
+  historyList: (size: number) => ['account', 'history', 'list', size] as const,
+  sessionDetails: (sessionId: number) => ['account', 'session', sessionId] as const,
   movieIdentity: ['account', 'movie-identity'] as const,
 };
 

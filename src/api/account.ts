@@ -1,7 +1,8 @@
 /**
  * What the account keeps between sessions: the history of finished sessions and the taste
- * statistics ("Movie identity"). GET /me/history, GET /me/movie-identity. Both need the account
- * session (cookie); a guest gets AUTHENTICATION_REQUIRED.
+ * statistics ("Movie identity"). GET /me/history, GET /me/history/{sessionId},
+ * GET /me/movie-identity. All need the account session (cookie); a guest gets
+ * AUTHENTICATION_REQUIRED.
  */
 import { call } from './client.ts';
 import { toPosterUrl } from './game.ts';
@@ -12,6 +13,8 @@ import type {
   HistoryTitleDto,
   MovieIdentity,
   MovieIdentityDto,
+  SessionDetails,
+  SessionDetailsDto,
   SessionHistoryPage,
   SessionSummaryDto,
   SessionSummary,
@@ -52,6 +55,32 @@ export async function getSessionHistory(page = 0, size = 10): Promise<SessionHis
     size: data.size,
     total: data.totalElements,
     totalPages: data.totalPages,
+  };
+}
+
+/**
+ * One finished session: who played and how the group reacted to every movie.
+ * GET /me/history/{sessionId}
+ *
+ * @throws {RoomApiError} HISTORY_NOT_FOUND when the account did not play in this session
+ */
+export async function getSessionDetails(sessionId: number): Promise<SessionDetails> {
+  const data = await call<SessionDetailsDto>(`/me/history/${sessionId}`);
+  return {
+    session: toSessionSummary(data.session),
+    participants: (data.participants ?? []).map((person) => ({
+      name: person.displayName,
+      isHost: person.host,
+      isMe: person.me,
+    })),
+    cards: [...(data.cards ?? [])]
+      .sort((a, b) => a.position - b.position)
+      .map((card) => ({
+        title: toHistoryTitle(card.title),
+        likes: card.likesCount,
+        isWinner: card.winner,
+        myVote: card.myVote ?? null,
+      })),
   };
 }
 

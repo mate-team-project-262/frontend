@@ -39,6 +39,7 @@ function setup(routes: Record<string, unknown>) {
         <Route path="/home" element={<HomePage />} />
         <Route path="/create-room" element={<h1>Create room page</h1>} />
         <Route path="/home/sessions" element={<h1>Sessions page</h1>} />
+        <Route path="/home/sessions/:sessionId" element={<h1>Details page</h1>} />
       </Routes>
     </MemoryRouter>,
   );
@@ -91,6 +92,15 @@ describe('HomePage', () => {
     });
     await user.click(await screen.findByRole('link', { name: /View all/ }));
     expect(screen.getByRole('heading', { name: 'Sessions page' })).toBeInTheDocument();
+  });
+
+  it('opens a recent session', async () => {
+    setup({
+      'GET /me/history?page=0&size=2': page([session(3, 'Spider Man', 3)]),
+      'GET /me/movie-identity': emptyIdentity,
+    });
+    await userEvent.click(await screen.findByRole('link', { name: /Open the session of/ }));
+    expect(screen.getByRole('heading', { name: 'Details page' })).toBeInTheDocument();
   });
 
   it('says so when the sessions could not be loaded, without calling it a first visit', async () => {

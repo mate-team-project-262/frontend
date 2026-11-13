@@ -6,6 +6,8 @@ import CreateRoomPage from './pages/CreateRoomPage/CreateRoomPage.tsx';
 import LandingPage from './pages/LandingPage/LandingPage.tsx';
 import HomePage from './pages/HomePage/HomePage.tsx';
 import SectionSoon from './pages/HomePage/SectionSoon.tsx';
+import SessionDetailsPage from './pages/SessionDetailsPage/SessionDetailsPage.tsx';
+import SessionsPage from './pages/SessionsPage/SessionsPage.tsx';
 import InvitePage from './pages/InvitePage/InvitePage.tsx';
 import JoinRoomPage from './pages/JoinRoomPage/JoinRoomPage.tsx';
 import RoomPage from './pages/RoomPage/RoomPage.tsx';
@@ -47,7 +49,15 @@ export default function App() {
         path={ROUTES.sessions}
         element={
           <RequireAccount>
-            <SectionSoon title="Your movie history" />
+            <SessionsPage />
+          </RequireAccount>
+        }
+      />
+      <Route
+        path={ROUTES.sessionDetails}
+        element={
+          <RequireAccount>
+            <SessionDetailsPage />
           </RequireAccount>
         }
       />

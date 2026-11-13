@@ -150,6 +150,32 @@ export interface SessionSummary {
   likedCount: number;
 }
 
+/** Someone who played in a finished session. */
+export interface SessionParticipant {
+  name: string;
+  isHost: boolean;
+  /** the account's owner */
+  isMe: boolean;
+}
+
+/** One movie of a finished session with the group's reaction. */
+export interface SessionCard {
+  title: HistoryTitle;
+  /** how many participants liked it */
+  likes: number;
+  isWinner: boolean;
+  /** this person's vote: true = liked, false = skipped, null = did not vote */
+  myVote: boolean | null;
+}
+
+/** Everything the history keeps about one session. */
+export interface SessionDetails {
+  session: SessionSummary;
+  participants: SessionParticipant[];
+  /** in the order the deck showed them */
+  cards: SessionCard[];
+}
+
 export interface SessionHistoryPage {
   items: SessionSummary[];
   page: number;
@@ -291,6 +317,18 @@ export interface HistoryPageDto {
   size: number;
   totalElements: number;
   totalPages: number;
+}
+
+export interface SessionDetailsDto {
+  session: SessionSummaryDto;
+  participants?: { displayName: string; host: boolean; me: boolean }[];
+  cards?: {
+    position: number;
+    title: HistoryTitleDto;
+    likesCount: number;
+    winner: boolean;
+    myVote?: boolean | null;
+  }[];
 }
 
 export interface MovieIdentityDto {

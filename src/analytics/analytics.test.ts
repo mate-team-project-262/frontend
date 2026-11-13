@@ -63,6 +63,8 @@ describe('analytics', () => {
     expect(toReportedPath('/join/K7M2QX')).toBe('/join/:code');
     expect(toReportedPath('/join')).toBe('/join');
     expect(toReportedPath('/create-room')).toBe('/create-room');
+    expect(toReportedPath('/home/sessions/42')).toBe('/home/sessions/:sessionId');
+    expect(toReportedPath('/home/sessions')).toBe('/home/sessions');
   });
 
   it('sends a once-per-room event a single time', () => {

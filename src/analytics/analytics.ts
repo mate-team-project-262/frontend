@@ -53,7 +53,9 @@ function gtag(..._args: unknown[]) {
 
 /** `/room/K7M2QX` -> `/room/:code`: a room code lets people into the room, so it stays private. */
 export const toReportedPath = (pathname: string): string =>
-  pathname.replace(/^\/(room|join)\/[^/]+/, '/$1/:code');
+  pathname
+    .replace(/^\/(room|join)\/[^/]+/, '/$1/:code')
+    .replace(/^\/home\/sessions\/[^/]+/, '/home/sessions/:sessionId');
 
 export function isAnalyticsAllowed(
   isProduction: boolean = import.meta.env.PROD,
