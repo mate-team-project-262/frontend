@@ -6,6 +6,8 @@ import LandingPage from './pages/LandingPage/LandingPage.tsx';
 import InvitePage from './pages/InvitePage/InvitePage.tsx';
 import JoinRoomPage from './pages/JoinRoomPage/JoinRoomPage.tsx';
 import RoomPage from './pages/RoomPage/RoomPage.tsx';
+import SignInPage from './pages/SignInPage/SignInPage.tsx';
+import SignUpPage from './pages/SignUpPage/SignUpPage.tsx';
 import { ROUTES } from './routes.ts';
 
 export default function App() {
@@ -28,6 +30,8 @@ export default function App() {
       <Route path={ROUTES.createRoom} element={<CreateRoomPage />} />
       <Route path={ROUTES.join} element={<JoinRoomPage />} />
       <Route path={ROUTES.invite} element={<InvitePage />} />
+      <Route path={ROUTES.signIn} element={<SignInPage />} />
+      <Route path={ROUTES.signUp} element={<SignUpPage />} />
       <Route path={ROUTES.room} element={<RoomPage />} />
       <Route path="*" element={<Navigate to={ROUTES.home} replace />} />
     </Routes>

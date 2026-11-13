@@ -7,8 +7,7 @@
  *    in GA4 DebugView.
  *  - No personal data: names are never sent, and room codes are cut out of page addresses
  *    (`/room/K7M2QX` is reported as `/room/:code`).
- *  - There are no accounts yet, so every event carries `user_type: 'guest'`; `sign_up` and
- *    `login` will be added with the sign-in pages.
+ *  - Every event carries `user_type`: 'guest' or 'registered' (set by the account session).
  */
 const MEASUREMENT_ID: string = import.meta.env.VITE_GA_MEASUREMENT_ID ?? 'G-CHKH5SVJ2K';
 const LOCAL_HOSTS = ['localhost', '127.0.0.1', '[::1]'];
@@ -26,6 +25,9 @@ export interface AnalyticsEvents {
     movie_title: string;
   };
   movie_matched: { participant_count: number; match_count: number; movie_title: string };
+  /** GA4's recommended names for a new account and a sign-in */
+  sign_up: { method: 'password' };
+  login: { method: 'password' };
   selection_completed: {
     participant_count: number;
     match_count: number;
@@ -40,6 +42,7 @@ declare global {
 }
 
 let isActive = false;
+let userType: 'guest' | 'registered' = 'guest';
 
 /** GA's own queue function: it must push the `arguments` object itself, not an array. */
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -84,7 +87,7 @@ export function track<Name extends keyof AnalyticsEvents>(
   params: AnalyticsEvents[Name],
 ): void {
   if (!isActive) return;
-  gtag('event', name, { user_type: 'guest', ...params });
+  gtag('event', name, { user_type: userType, ...params });
 }
 
 /** Runs `send` once per room and browser tab (a reload of the results page must not repeat it). */
@@ -122,8 +125,15 @@ export function secondsSinceSwipeStarted(code: string): number | null {
   }
 }
 
+/** Called when the person signs in or out: later events and the GA user property carry it. */
+export function setAnalyticsUserType(type: 'guest' | 'registered'): void {
+  userType = type;
+  if (isActive) gtag('set', 'user_properties', { user_type: type });
+}
+
 /** For tests: forget that GA was started. */
 export function resetAnalytics(): void {
   isActive = false;
+  userType = 'guest';
   delete window.dataLayer;
 }

@@ -4,6 +4,9 @@ Guide for AI coding agents and new teammates. Read it before changing code.
 
 ## Commands
 
+Node.js 20.19+ is required (20 is what CI and the Dockerfile use). Before upgrading Vitest, jsdom,
+lint-staged or jest-dom to a new major version, check its `engines.node`: the newest majors need Node 22.
+
 | Command             | What it does                                                            |
 | ------------------- | ----------------------------------------------------------------------- |
 | `npm install`       | install dependencies                                                    |
@@ -25,6 +28,7 @@ src/
   api/          backend calls only; pages import from api/roomsApi.ts
     rooms.ts      create / join / read / leave a room, start the session
     game.ts       deck, votes, voting progress, results
+    auth.ts       accounts: register, sign in, sign out, current user (cookie session + CSRF)
     types.ts      Room, MovieCard, RoundResults ... and the backend JSON shapes (*Dto)
     client.ts     call() + requireSession(); errors.ts maps backend codes to user messages
     http.ts       fetch wrapper (base /api, X-Participant-Token header)
@@ -62,6 +66,9 @@ docs/           architecture, Docker and deployment notes, screenshots
   no `useEffect` + `fetch` + `useState` for loading data.
 - Show users `RoomApiError.message` (already user-safe); decide by `error.code`, never by text.
 - Do not retry POST requests automatically (no idempotency keys on the backend).
+- Accounts: the session is an HttpOnly cookie, nothing is stored in the browser. Read the user with
+  `useAccount()`; every POST under `/auth` and `/me` goes through `accountPost()` (it adds the CSRF
+  token). Room pages still use the participant token.
 - Polling = `refetchInterval: POLL_INTERVAL_MS` on the query (see `useRoom`); TanStack Query stops
   it when the component unmounts.
 - Respect `prefers-reduced-motion` in animations.

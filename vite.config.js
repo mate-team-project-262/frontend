@@ -78,7 +78,9 @@ export default defineConfig(({ mode }) => {
       globals: true,
       setupFiles: ['./src/test/setup.ts'],
       css: false,
+      // every test starts with clean mocks: spies are restored, vi.fn() mocks forget calls and answers
       restoreMocks: true,
+      mockReset: true,
     },
   };
 });
