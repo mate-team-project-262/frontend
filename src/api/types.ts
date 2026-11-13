@@ -116,6 +116,14 @@ export interface VoteResult {
   finished: boolean;
 }
 
+/** A registered account. */
+export interface User {
+  id: number;
+  email: string;
+  /** unique name, 3-20 characters; the person signs in with it */
+  name: string;
+}
+
 /* ---- Backend JSON (docs/frontend-api.md of the backend repository) ---- */
 
 export interface ParticipantDto {
@@ -124,6 +132,12 @@ export interface ParticipantDto {
   host: boolean;
   token?: string;
   finished?: boolean;
+}
+
+export interface UserDto {
+  id: number;
+  email: string;
+  displayName: string;
 }
 
 export interface RoomDto {

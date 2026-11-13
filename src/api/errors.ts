@@ -1,7 +1,7 @@
 import { ApiError } from './http.ts';
 
 /** Where to show the message: the name field, the room link/code, or nowhere special. */
-export type ErrorField = 'name' | 'room' | null;
+export type ErrorField = 'name' | 'room' | 'email' | 'password' | null;
 
 /**
  * An error whose message is safe to show to the user.
@@ -45,6 +45,12 @@ const KNOWN_ERRORS: Record<string, [ErrorField, string]> = {
   RESULT_NOT_READY: [null, 'The results are not ready yet.'],
   TITLE_NOT_IN_DECK: [null, 'This movie is not part of the session.'],
   INVALID_TOKEN: [null, SESSION_EXPIRED],
+  // Account API
+  EMAIL_TAKEN: ['email', 'This email is already registered. Sign in instead.'],
+  USERNAME_TAKEN: ['name', 'This name is already taken. Please choose another one.'],
+  INVALID_CREDENTIALS: [null, 'Wrong name or password. Please try again.'],
+  AUTHENTICATION_REQUIRED: [null, 'Please sign in to continue.'],
+  ACCESS_DENIED: [null, 'The page is out of date. Reload it and try again.'],
   WRONG_ROOM: [null, SESSION_EXPIRED],
 };
 
@@ -56,7 +62,17 @@ export function toRoomApiError(error: unknown): unknown {
   if (known) return new RoomApiError(known[1], { code: error.code, field: known[0] });
 
   if (error.code === 'VALIDATION_ERROR') {
-    const isNameError = error.fieldErrors.some(({ field }) => field.endsWith('displayName'));
+    const has = (name: string) => error.fieldErrors.some(({ field }) => field.endsWith(name));
+    if (has('email')) {
+      return new RoomApiError('Enter a valid email address', { code: error.code, field: 'email' });
+    }
+    if (has('password')) {
+      return new RoomApiError('Use 8+ characters, including a letter and a number', {
+        code: error.code,
+        field: 'password',
+      });
+    }
+    const isNameError = has('displayName');
     return new RoomApiError(
       isNameError
         ? 'Please enter a name of 3-20 characters.'

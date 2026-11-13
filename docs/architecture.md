@@ -43,6 +43,19 @@ There are no accounts. Creating or joining a room returns a participant token, k
 `sessionStorage` (`api/roomSession.ts`) and sent as `X-Participant-Token`. The participant id tells
 the app which person in the list is "me".
 
+## Accounts
+
+Signing up is optional. An account is a session cookie set by the backend (HttpOnly, 24 hours of
+inactivity), so the frontend stores nothing: after a reload `useAccount()` asks `GET /me` who is
+signed in (401 = guest). Every POST under `/auth` and `/me` carries a CSRF token that
+`accountPost()` requests right before the call (`GET /auth/csrf`).
+
+Sign-in is by the unique account name and password (`POST /auth/login`); registration takes name,
+email and password (`POST /auth/register`). The forms use the same rules as the backend, and its
+errors (`EMAIL_TAKEN`, `USERNAME_TAKEN`, `INVALID_CREDENTIALS`) are shown in the form.
+
+Rooms did not change: a signed-in person still plays with a participant token, like a guest.
+
 ## Server data: TanStack Query, live updates by polling
 
 Everything that comes from the backend is read through TanStack Query (`@tanstack/react-query`); the

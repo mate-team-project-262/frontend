@@ -4,6 +4,8 @@ export const ROUTES = {
   createRoom: '/create-room',
   join: '/join', // "Join a movie room": paste a link and a name
   invite: '/join/:code', // the link the host shares (the backend asks for /join/{code})
+  signIn: '/sign-in',
+  signUp: '/sign-up',
   room: '/room/:code', // inside a room: host lobby or guest waiting room (needs a token)
 } as const;
 

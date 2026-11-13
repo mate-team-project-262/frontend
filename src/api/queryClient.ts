@@ -9,6 +9,8 @@ export const queryKeys = {
   deck: (code: string) => ['room', code, 'deck'] as const,
   progress: (code: string) => ['room', code, 'progress'] as const,
   results: (code: string) => ['room', code, 'results'] as const,
+  /** the signed-in account (or null for a guest) */
+  me: ['me'] as const,
 };
 
 /**

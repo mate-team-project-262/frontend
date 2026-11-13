@@ -38,6 +38,8 @@ Google Analytics 4 · Docker + Nginx · GitHub Actions → GHCR → AWS EC2
 
 ## Quick start
 
+Needs Node.js 20.19 or newer (`node -v`; the version is also in `.nvmrc`).
+
 ```bash
 npm install
 npm run dev        # http://localhost:5173, /api is proxied to http://localhost:8080
