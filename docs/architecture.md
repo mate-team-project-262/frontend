@@ -54,7 +54,11 @@ Sign-in is by the unique account name and password (`POST /auth/login`); registr
 email and password (`POST /auth/register`). The forms use the same rules as the backend, and its
 errors (`EMAIL_TAKEN`, `USERNAME_TAKEN`, `INVALID_CREDENTIALS`) are shown in the form.
 
-Rooms did not change: a signed-in person still plays with a participant token, like a guest.
+Rooms still work on the participant token for everyone. For a signed-in person: "Create room" has
+no name field (the account's name is used), "Join room" offers that name in the field, the room
+headers show the user menu, and `RoomPage` ties the person's place in the room to the account
+(`useLinkRoomToAccount` -> `POST /me/participants/link`) so the finished session gets into the
+history. Linking is silent and never blocks the game.
 
 Signed-in pages live under `/home` (dashboard, `/home/sessions`, `/home/sessions/:sessionId`, `/home/movie-identity`) inside
 `AccountLayout` and are wrapped in `RequireAccount`; `/` redirects a signed-in person to `/home`.
