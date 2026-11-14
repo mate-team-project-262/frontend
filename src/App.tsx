@@ -3,9 +3,9 @@ import { Navigate, Route, Routes, useLocation } from 'react-router';
 import { toReportedPath, track } from './analytics/analytics.ts';
 import RequireAccount from './components/RequireAccount/RequireAccount.tsx';
 import CreateRoomPage from './pages/CreateRoomPage/CreateRoomPage.tsx';
+import MovieIdentityPage from './pages/MovieIdentityPage/MovieIdentityPage.tsx';
 import LandingPage from './pages/LandingPage/LandingPage.tsx';
 import HomePage from './pages/HomePage/HomePage.tsx';
-import SectionSoon from './pages/HomePage/SectionSoon.tsx';
 import SessionDetailsPage from './pages/SessionDetailsPage/SessionDetailsPage.tsx';
 import SessionsPage from './pages/SessionsPage/SessionsPage.tsx';
 import InvitePage from './pages/InvitePage/InvitePage.tsx';
@@ -65,7 +65,7 @@ export default function App() {
         path={ROUTES.movieIdentity}
         element={
           <RequireAccount>
-            <SectionSoon title="Your movie identity" />
+            <MovieIdentityPage />
           </RequireAccount>
         }
       />

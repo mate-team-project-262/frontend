@@ -13,14 +13,29 @@ interface Props {
   totalLabel: string;
   /** px */
   size?: number;
+  /** grey-lilac ring without numbers, for "No data yet" (then `genres` is not used) */
+  isPlaceholder?: boolean;
 }
+
+/** The shape of the "No data yet" ring: eight pieces of one colour. */
+const PLACEHOLDER = [21, 9, 9, 11, 13, 14, 10, 13].map((percent, index) => ({
+  name: `placeholder-${index}`,
+  percent,
+}));
+const PLACEHOLDER_COLOR = '#e0d4ff';
 
 /**
  * Ring chart of the liked genres with a number in the middle. Decorative for assistive
  * technology: the same numbers are in the legend next to it.
  */
-export default function GenreDonut({ genres, total, totalLabel, size = 218 }: Props) {
-  const slices = toSlices(genres);
+export default function GenreDonut({
+  genres,
+  total,
+  totalLabel,
+  size = 218,
+  isPlaceholder = false,
+}: Props) {
+  const slices = isPlaceholder ? PLACEHOLDER : toSlices(genres);
   const sum = slices.reduce((acc, slice) => acc + slice.percent, 0) || 1;
   // every slice with the arc it takes and where it starts on the circle
   const arcs = slices.map((slice, index) => ({
@@ -41,7 +56,7 @@ export default function GenreDonut({ genres, total, totalLabel, size = 218 }: Pr
               cy="50"
               r={RADIUS}
               fill="none"
-              stroke={GENRE_COLORS[index]}
+              stroke={isPlaceholder ? PLACEHOLDER_COLOR : GENRE_COLORS[index]}
               strokeWidth="20.5"
               strokeDasharray={`${Math.max(arc.length - GAP, 0.5)} ${LENGTH}`}
               strokeDashoffset={-arc.start}
@@ -50,7 +65,7 @@ export default function GenreDonut({ genres, total, totalLabel, size = 218 }: Pr
         </g>
       </svg>
       <p className="genre-donut__total">
-        <strong>{total}</strong>
+        {!isPlaceholder && <strong>{total}</strong>}
         {totalLabel}
       </p>
     </div>
