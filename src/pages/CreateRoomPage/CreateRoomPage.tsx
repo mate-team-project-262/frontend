@@ -16,6 +16,7 @@ import {
   STREAMING_SERVICES,
 } from '../../data/content.ts';
 import { SEO } from '../../data/seo.ts';
+import { useAccount } from '../../hooks/useAccount.ts';
 import { usePageMeta } from '../../hooks/usePageMeta.ts';
 import { roomPath } from '../../routes.ts';
 import { getNameFeedback, validateDisplayName } from '../../utils/validation.ts';
@@ -39,8 +40,29 @@ const INITIAL_FORM: Form = {
   streamingServices: [],
 };
 
+function CheckIcon() {
+  return (
+    <svg width="16" height="12" viewBox="0 0 16 12" fill="none" aria-hidden="true">
+      <path
+        d="m1.5 6.5 4 4 9-9"
+        stroke="#43e0a4"
+        strokeWidth="1.5"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+    </svg>
+  );
+}
+
+/**
+ * /create-room - the host sets the preferences of the session. A guest also types a name;
+ * a signed-in person plays under the account's name, so the field is not shown
+ * (mockup "Create room (Signed In)").
+ */
 export default function CreateRoomPage() {
   const navigate = useNavigate();
+  const account = useAccount();
+  const user = account.user;
   usePageMeta(SEO.createRoom);
   const [form, setForm] = useState(INITIAL_FORM);
   const [serverNameError, setServerNameError] = useState('');
@@ -52,7 +74,9 @@ export default function CreateRoomPage() {
   // Live feedback: the name is checked while typing, genres are counted. The button waits for both.
   const nameError = getNameFeedback(form.hostName) || serverNameError;
   const genreError = form.genreIds.length > MAX_GENRES ? `Choose up to ${MAX_GENRES} genres` : '';
-  const canSubmit = !validateDisplayName(form.hostName) && !genreError;
+  const isNameReady = user ? true : !validateDisplayName(form.hostName);
+  // while we do not know yet who is here, neither the field nor the button is offered
+  const canSubmit = account.status !== 'loading' && isNameReady && !genreError;
 
   /**
    * Exactly one content type is always selected. Genres belong to a content type: switching it
@@ -88,7 +112,7 @@ export default function CreateRoomPage() {
 
   const handleSubmit = async (event: FormEvent) => {
     event.preventDefault();
-    const hostName = form.hostName.trim();
+    const hostName = user ? user.name : form.hostName.trim();
     if (!canSubmit) return;
 
     setIsSubmitting(true);
@@ -110,8 +134,10 @@ export default function CreateRoomPage() {
     } catch (error) {
       const message =
         error instanceof RoomApiError ? error.message : 'Something went wrong. Please try again.';
-      if (error instanceof RoomApiError && error.field === 'name') setServerNameError(message);
-      else setFormError(message);
+      // a signed-in person has no name field to show the error under
+      if (error instanceof RoomApiError && error.field === 'name' && !user) {
+        setServerNameError(message);
+      } else setFormError(message);
     } finally {
       setIsSubmitting(false);
     }
@@ -130,16 +156,18 @@ export default function CreateRoomPage() {
           </p>
 
           <div className="create-room__fields">
-            <BrandField
-              label="Your name"
-              placeholder="Enter your name"
-              hint="This is how other participants will see you."
-              value={form.hostName}
-              error={nameError}
-              success={!validateDisplayName(form.hostName)}
-              maxLength={60}
-              onChange={handleNameChange}
-            />
+            {account.status === 'guest' && (
+              <BrandField
+                label="Your name"
+                placeholder="Enter your name"
+                hint="This is how other participants will see you."
+                value={form.hostName}
+                error={nameError}
+                success={!validateDisplayName(form.hostName)}
+                maxLength={60}
+                onChange={handleNameChange}
+              />
+            )}
 
             <BrandFormSection title="Content type">
               {CONTENT_TYPES.map(({ value, label }) => (
@@ -207,6 +235,12 @@ export default function CreateRoomPage() {
           >
             Create room
           </BrandButton>
+          {user && (
+            <p className="create-room__account">
+              <CheckIcon />
+              Signed in as {user.name}
+            </p>
+          )}
         </form>
       </main>
     </div>

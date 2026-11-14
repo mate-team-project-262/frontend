@@ -1,5 +1,6 @@
 import { Navigate, useParams } from 'react-router';
 import BrandHeader from '../../components/BrandHeader/BrandHeader.tsx';
+import { useLinkRoomToAccount } from '../../hooks/useLinkRoomToAccount.ts';
 import { usePageMeta } from '../../hooks/usePageMeta.ts';
 import { useRoom } from '../../hooks/useRoom.ts';
 import { invitePath } from '../../routes.ts';
@@ -37,11 +38,13 @@ function RoomMessage({ status }: { status: keyof typeof STATUS_MESSAGES }) {
  *  - everybody has voted      -> results page (status FINISHED)
  *  - the host                 -> room lobby (share the link, see who joined, start the session)
  *  - a guest                  -> waiting room ("You're all set")
+ * A signed-in person's place in the room is tied to their account here (useLinkRoomToAccount).
  */
 export default function RoomPage() {
   const { code = '' } = useParams();
   const { status, room, refresh } = useRoom(code);
   usePageMeta(); // rooms are private: not for search engines
+  useLinkRoomToAccount(status === 'ready' && room ? code : null);
 
   if (status === 'unauthorized') return <Navigate to={invitePath(code)} replace />;
   if (status !== 'ready' || !room) {

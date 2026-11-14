@@ -72,7 +72,8 @@ docs/           architecture, Docker and deployment notes, screenshots
 - Do not retry POST requests automatically (no idempotency keys on the backend).
 - Accounts: the session is an HttpOnly cookie, nothing is stored in the browser. Read the user with
   `useAccount()`; every POST under `/auth` and `/me` goes through `accountPost()` (it adds the CSRF
-  token). Room pages still use the participant token.
+  token). Room pages still use the participant token; `useLinkRoomToAccount` in `RoomPage` ties it
+  to the account so the session is saved to the history.
 - Polling = `refetchInterval: POLL_INTERVAL_MS` on the query (see `useRoom`); TanStack Query stops
   it when the component unmounts.
 - Respect `prefers-reduced-motion` in animations.

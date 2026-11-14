@@ -1,6 +1,7 @@
 import { type FormEvent, useState } from 'react';
 import { track } from '../../analytics/analytics.ts';
 import { RoomApiError, joinRoom } from '../../api/roomsApi.ts';
+import { useAccount } from '../../hooks/useAccount.ts';
 import { cx } from '../../utils/classNames.ts';
 import { extractRoomCode } from '../../utils/roomLinks.ts';
 import { getNameFeedback, validateDisplayName } from '../../utils/validation.ts';
@@ -30,10 +31,15 @@ interface Props {
  * The name is checked while typing; "Join room" stays disabled until the name is valid and
  * (when asked) the room link is a real link or code. The link error appears when the field
  * loses focus. Errors from the backend (name taken, room full ...) replace the hint.
+ * A signed-in person finds the account's name already in the field and may change it for this
+ * room (the same name can be taken there).
  */
 export default function JoinRoom({ title, code, onJoined }: Props) {
   const [link, setLink] = useState('');
-  const [name, setName] = useState('');
+  const { user } = useAccount();
+  // null = not typed yet: then a signed-in person's own name is offered
+  const [typedName, setTypedName] = useState<string | null>(null);
+  const name = typedName ?? user?.name ?? '';
   const [isLinkTouched, setIsLinkTouched] = useState(false);
   const [serverErrors, setServerErrors] = useState<{ link?: string; name?: string }>({});
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -109,7 +115,7 @@ export default function JoinRoom({ title, code, onJoined }: Props) {
                 maxLength={MAX_INPUT_LENGTH}
                 value={name}
                 onChange={(event) => {
-                  setName(event.target.value);
+                  setTypedName(event.target.value);
                   clearServerError();
                 }}
               />
@@ -121,7 +127,9 @@ export default function JoinRoom({ title, code, onJoined }: Props) {
             >
               Join room
             </BrandButton>
-            <p className="join-room__note">No account needed to join</p>
+            <p className="join-room__note">
+              {user ? `Signed in as ${user.name}` : 'No account needed to join'}
+            </p>
           </form>
         </section>
       </main>

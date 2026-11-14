@@ -1,11 +1,14 @@
 /**
  * What the account keeps between sessions: the history of finished sessions and the taste
  * statistics ("Movie identity"). GET /me/history, GET /me/history/{sessionId},
- * GET /me/movie-identity. All need the account session (cookie); a guest gets
+ * GET /me/movie-identity, POST /me/participants/link. All need the account session (cookie); a guest gets
  * AUTHENTICATION_REQUIRED.
  */
+import { accountPost } from './auth.ts';
 import { call } from './client.ts';
+import { errorCode } from './errors.ts';
 import { toPosterUrl } from './game.ts';
+import { getRoomSession } from './roomSession.ts';
 import type {
   GenreShare,
   HistoryPageDto,
@@ -131,4 +134,24 @@ export async function getMovieIdentity(): Promise<MovieIdentity> {
       likedTitles: actor.likedTitlesCount,
     })),
   };
+}
+
+/**
+ * Ties the person's place in a room to the signed-in account, so the finished session appears
+ * in the account's history. Safe to repeat. Does nothing when this tab has no pass for the room.
+ * POST /me/participants/link (X-Participant-Token + account cookie + CSRF)
+ *
+ * PARTICIPANT_ALREADY_LINKED (the place belongs to another account, or the account already has
+ * a place in this room) is not an error for the page: there is nothing left to do.
+ *
+ * @throws {RoomApiError} AUTHENTICATION_REQUIRED, INVALID_TOKEN, a network error...
+ */
+export async function linkRoomToAccount(code: string): Promise<void> {
+  const session = getRoomSession(code);
+  if (!session) return;
+  try {
+    await accountPost<void>('/me/participants/link', { token: session.token });
+  } catch (error) {
+    if (errorCode(error) !== 'PARTICIPANT_ALREADY_LINKED') throw error;
+  }
 }
