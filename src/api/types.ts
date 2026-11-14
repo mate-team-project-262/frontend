@@ -116,6 +116,98 @@ export interface VoteResult {
   finished: boolean;
 }
 
+/** A registered account. */
+export interface User {
+  id: number;
+  email: string;
+  /** unique name, 3-20 characters; the person signs in with it */
+  name: string;
+}
+
+/** A movie as the history keeps it (fewer fields than a deck card). */
+export interface HistoryTitle {
+  id: number;
+  title: string;
+  year: number | null;
+  posterUrl: string | null;
+  runtimeMin: number | null;
+  /** TMDB vote average, 0-10 */
+  rating: number | null;
+}
+
+/** One finished session of the account. */
+export interface SessionSummary {
+  id: number;
+  /** ISO date-time */
+  finishedAt: string;
+  contentType: ContentType;
+  /** everyone who played, the account's owner included */
+  participantCount: number;
+  /** the movies tied for the most likes (empty = no match) */
+  winners: HistoryTitle[];
+  /** how many movies this person voted for / liked in the session */
+  ratedCount: number;
+  likedCount: number;
+}
+
+/** Someone who played in a finished session. */
+export interface SessionParticipant {
+  name: string;
+  isHost: boolean;
+  /** the account's owner */
+  isMe: boolean;
+}
+
+/** One movie of a finished session with the group's reaction. */
+export interface SessionCard {
+  title: HistoryTitle;
+  /** how many participants liked it */
+  likes: number;
+  isWinner: boolean;
+  /** this person's vote: true = liked, false = skipped, null = did not vote */
+  myVote: boolean | null;
+}
+
+/** Everything the history keeps about one session. */
+export interface SessionDetails {
+  session: SessionSummary;
+  participants: SessionParticipant[];
+  /** in the order the deck showed them */
+  cards: SessionCard[];
+}
+
+export interface SessionHistoryPage {
+  items: SessionSummary[];
+  page: number;
+  size: number;
+  /** all sessions of the account, not only this page */
+  total: number;
+  totalPages: number;
+}
+
+export interface GenreShare {
+  id: number;
+  name: string;
+  likes: number;
+  /** share of all genre-likes, the list sums to 100 */
+  percent: number;
+}
+
+/** Taste statistics of the account ("Movie identity"). */
+export interface MovieIdentity {
+  sessionsCount: number;
+  ratedCount: number;
+  likedCount: number;
+  /** liked genres, most liked first */
+  genreMix: GenreShare[];
+  favoriteGenre: GenreShare | null;
+  leastLikedGenre: { id: number; name: string; dislikePercent: number } | null;
+  /** liked movies per decade, oldest first */
+  decadeMix: { decade: number; label: string; likes: number; percent: number }[];
+  favoriteDecade: { decade: number; label: string } | null;
+  favoriteActors: { name: string; likedTitles: number }[];
+}
+
 /* ---- Backend JSON (docs/frontend-api.md of the backend repository) ---- */
 
 export interface ParticipantDto {
@@ -124,6 +216,12 @@ export interface ParticipantDto {
   host: boolean;
   token?: string;
   finished?: boolean;
+}
+
+export interface UserDto {
+  id: number;
+  email: string;
+  displayName: string;
 }
 
 export interface RoomDto {
@@ -192,4 +290,55 @@ export interface VoteDto {
   votedCount: number;
   totalCards: number;
   participantFinished: boolean;
+}
+
+export interface HistoryTitleDto {
+  id: number;
+  title: string;
+  year?: number | null;
+  posterUrl?: string | null;
+  runtimeMinutes?: number | null;
+  voteAverage?: number | null;
+}
+
+export interface SessionSummaryDto {
+  sessionId: number;
+  finishedAt: string;
+  contentType: ContentType;
+  participantCount: number;
+  winnerTitles?: HistoryTitleDto[];
+  ratedCount: number;
+  likedCount: number;
+}
+
+export interface HistoryPageDto {
+  items: SessionSummaryDto[];
+  page: number;
+  size: number;
+  totalElements: number;
+  totalPages: number;
+}
+
+export interface SessionDetailsDto {
+  session: SessionSummaryDto;
+  participants?: { displayName: string; host: boolean; me: boolean }[];
+  cards?: {
+    position: number;
+    title: HistoryTitleDto;
+    likesCount: number;
+    winner: boolean;
+    myVote?: boolean | null;
+  }[];
+}
+
+export interface MovieIdentityDto {
+  sessionsCount: number;
+  ratedCount: number;
+  likedCount: number;
+  genreMix?: { id: number; name: string; likesCount: number; percentage: number }[];
+  favoriteGenre?: { id: number; name: string; likesCount: number; percentage: number } | null;
+  leastLikedGenre?: { id: number; name: string; dislikePercentage: number } | null;
+  decadeMix?: { decade: number; label: string; likedCount: number; percentage: number }[];
+  favoriteDecade?: { decade: number; label: string } | null;
+  favoriteActors?: { name: string; likedTitlesCount: number }[];
 }

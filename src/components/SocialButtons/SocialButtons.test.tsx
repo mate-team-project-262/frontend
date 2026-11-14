@@ -3,10 +3,11 @@ import userEvent from '@testing-library/user-event';
 import SocialButtons from './SocialButtons.tsx';
 
 describe('SocialButtons', () => {
-  it('is disabled while the backend has no social login', () => {
+  it('says "coming soon" while the backend has no social login', async () => {
     render(<SocialButtons />);
-    expect(screen.getByRole('button', { name: 'Google' })).toBeDisabled();
-    expect(screen.getByRole('button', { name: 'Facebook' })).toBeDisabled();
+    expect(screen.getByRole('status')).toBeEmptyDOMElement();
+    await userEvent.click(screen.getByRole('button', { name: 'Facebook' }));
+    expect(screen.getByRole('status')).toHaveTextContent('Sign in with Facebook is coming soon');
   });
 
   it('reports the chosen provider once a handler is given', async () => {

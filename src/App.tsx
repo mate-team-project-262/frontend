@@ -1,11 +1,18 @@
 import { useEffect } from 'react';
 import { Navigate, Route, Routes, useLocation } from 'react-router';
 import { toReportedPath, track } from './analytics/analytics.ts';
+import RequireAccount from './components/RequireAccount/RequireAccount.tsx';
 import CreateRoomPage from './pages/CreateRoomPage/CreateRoomPage.tsx';
+import MovieIdentityPage from './pages/MovieIdentityPage/MovieIdentityPage.tsx';
 import LandingPage from './pages/LandingPage/LandingPage.tsx';
+import HomePage from './pages/HomePage/HomePage.tsx';
+import SessionDetailsPage from './pages/SessionDetailsPage/SessionDetailsPage.tsx';
+import SessionsPage from './pages/SessionsPage/SessionsPage.tsx';
 import InvitePage from './pages/InvitePage/InvitePage.tsx';
 import JoinRoomPage from './pages/JoinRoomPage/JoinRoomPage.tsx';
 import RoomPage from './pages/RoomPage/RoomPage.tsx';
+import SignInPage from './pages/SignInPage/SignInPage.tsx';
+import SignUpPage from './pages/SignUpPage/SignUpPage.tsx';
 import { ROUTES } from './routes.ts';
 
 export default function App() {
@@ -28,6 +35,40 @@ export default function App() {
       <Route path={ROUTES.createRoom} element={<CreateRoomPage />} />
       <Route path={ROUTES.join} element={<JoinRoomPage />} />
       <Route path={ROUTES.invite} element={<InvitePage />} />
+      <Route path={ROUTES.signIn} element={<SignInPage />} />
+      <Route path={ROUTES.signUp} element={<SignUpPage />} />
+      <Route
+        path={ROUTES.dashboard}
+        element={
+          <RequireAccount>
+            <HomePage />
+          </RequireAccount>
+        }
+      />
+      <Route
+        path={ROUTES.sessions}
+        element={
+          <RequireAccount>
+            <SessionsPage />
+          </RequireAccount>
+        }
+      />
+      <Route
+        path={ROUTES.sessionDetails}
+        element={
+          <RequireAccount>
+            <SessionDetailsPage />
+          </RequireAccount>
+        }
+      />
+      <Route
+        path={ROUTES.movieIdentity}
+        element={
+          <RequireAccount>
+            <MovieIdentityPage />
+          </RequireAccount>
+        }
+      />
       <Route path={ROUTES.room} element={<RoomPage />} />
       <Route path="*" element={<Navigate to={ROUTES.home} replace />} />
     </Routes>

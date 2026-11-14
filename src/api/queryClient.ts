@@ -9,6 +9,14 @@ export const queryKeys = {
   deck: (code: string) => ['room', code, 'deck'] as const,
   progress: (code: string) => ['room', code, 'progress'] as const,
   results: (code: string) => ['room', code, 'results'] as const,
+  /** the signed-in account (or null for a guest) */
+  me: ['me'] as const,
+  /** the account's finished sessions, newest first */
+  history: (page: number, size: number) => ['account', 'history', page, size] as const,
+  /** the whole list of sessions, loaded page by page */
+  historyList: (size: number) => ['account', 'history', 'list', size] as const,
+  sessionDetails: (sessionId: number) => ['account', 'session', sessionId] as const,
+  movieIdentity: ['account', 'movie-identity'] as const,
 };
 
 /**

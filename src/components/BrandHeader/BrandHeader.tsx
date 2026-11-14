@@ -1,7 +1,9 @@
 import { Link, useNavigate } from 'react-router';
 import logo from '../../assets/landing/w2w-logo.svg';
+import { useAccount } from '../../hooks/useAccount.ts';
 import { ROUTES } from '../../routes.ts';
 import { cx } from '../../utils/classNames.ts';
+import UserMenu from '../UserMenu/UserMenu.tsx';
 import './BrandHeader.css';
 
 function ArrowLeft() {
@@ -39,6 +41,7 @@ function LeaveIcon() {
  * Header of the dark pages: W2W logo and a "Back" button. Without `onBack` it goes to the
  * landing page; pass `onBack` when going back must do something first (e.g. leave the room).
  * `action="leave"` shows "Leave room" with the leave icon instead (swipe session).
+ * A signed-in person also gets the menu with their name (mockup "Create room (Signed In)").
  */
 export default function BrandHeader({
   onBack,
@@ -48,6 +51,7 @@ export default function BrandHeader({
   action?: 'back' | 'leave';
 }) {
   const navigate = useNavigate();
+  const { user } = useAccount();
 
   return (
     <header className={cx('brand-header', action === 'leave' && 'brand-header--leave')}>
@@ -55,14 +59,17 @@ export default function BrandHeader({
         <Link to={ROUTES.home} className="brand-header__logo" aria-label="W2W, home page">
           <img src={logo} width="106" height="48" alt="" />
         </Link>
-        <button
-          type="button"
-          className="brand-header__back"
-          onClick={onBack ?? (() => navigate(ROUTES.home))}
-        >
-          {action === 'leave' ? <LeaveIcon /> : <ArrowLeft />}
-          {action === 'leave' ? 'Leave room' : 'Back'}
-        </button>
+        <div className={cx('brand-header__actions', user && 'brand-header__actions--account')}>
+          <button
+            type="button"
+            className="brand-header__back"
+            onClick={onBack ?? (() => navigate(user ? ROUTES.dashboard : ROUTES.home))}
+          >
+            {action === 'leave' ? <LeaveIcon /> : <ArrowLeft />}
+            {action === 'leave' ? 'Leave room' : 'Back'}
+          </button>
+          {user && <UserMenu user={user} />}
+        </div>
       </div>
     </header>
   );

@@ -4,6 +4,9 @@ Guide for AI coding agents and new teammates. Read it before changing code.
 
 ## Commands
 
+Node.js 20.19+ is required (20 is what CI and the Dockerfile use). Before upgrading Vitest, jsdom,
+lint-staged or jest-dom to a new major version, check its `engines.node`: the newest majors need Node 22.
+
 | Command             | What it does                                                            |
 | ------------------- | ----------------------------------------------------------------------- |
 | `npm install`       | install dependencies                                                    |
@@ -25,6 +28,8 @@ src/
   api/          backend calls only; pages import from api/roomsApi.ts
     rooms.ts      create / join / read / leave a room, start the session
     game.ts       deck, votes, voting progress, results
+    auth.ts       accounts: register, sign in, sign out, current user (cookie session + CSRF)
+    account.ts    the account's session history and movie identity (GET /me/...)
     types.ts      Room, MovieCard, RoundResults ... and the backend JSON shapes (*Dto)
     client.ts     call() + requireSession(); errors.ts maps backend codes to user messages
     http.ts       fetch wrapper (base /api, X-Participant-Token header)
@@ -35,7 +40,10 @@ src/
                 data with TanStack Query (useQuery / useMutation)
   pages/        one folder per route; RoomPage picks Lobby / Waiting / Swipe / Results by room status
   components/   reusable UI; Brand* = the W2W UI kit (buttons, fields, chips ...);
-                AuthLayout + LightField + SocialButtons = the account screens (cream card)
+                AuthLayout + LightField + SocialButtons = the account screens (cream card);
+                ConfirmModal = "Leave room?" / "Log out?"; UserMenu = the name pill in the header;
+                RequireAccount = wrapper for pages that need a signed-in person;
+                AccountLayout = greeting + tabs + cream panel of the signed-in pages (/home...)
   sections/     big landing blocks, also reused on the results page
   utils/        pure functions (formatting, validation, links) — easy to unit-test
   config/       feature flags (FEATURES)
@@ -62,6 +70,10 @@ docs/           architecture, Docker and deployment notes, screenshots
   no `useEffect` + `fetch` + `useState` for loading data.
 - Show users `RoomApiError.message` (already user-safe); decide by `error.code`, never by text.
 - Do not retry POST requests automatically (no idempotency keys on the backend).
+- Accounts: the session is an HttpOnly cookie, nothing is stored in the browser. Read the user with
+  `useAccount()`; every POST under `/auth` and `/me` goes through `accountPost()` (it adds the CSRF
+  token). Room pages still use the participant token; `useLinkRoomToAccount` in `RoomPage` ties it
+  to the account so the session is saved to the history.
 - Polling = `refetchInterval: POLL_INTERVAL_MS` on the query (see `useRoom`); TanStack Query stops
   it when the component unmounts.
 - Respect `prefers-reduced-motion` in animations.

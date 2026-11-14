@@ -1,8 +1,9 @@
 import type { ReactNode } from 'react';
+import { useNavigate } from 'react-router';
 import BrandButton from '../../components/BrandButton/BrandButton.tsx';
 import illustration from '../../assets/landing/account-illustration.webp';
 import { ACCOUNT_BENEFITS } from '../../data/content.ts';
-import { onCreateAccount, onSignIn } from '../../handlers.ts';
+import { ROUTES } from '../../routes.ts';
 import './AccountBenefits.css';
 
 function StarIcon() {
@@ -42,6 +43,8 @@ export default function AccountBenefits({
   signInText?: string;
   variant?: 'stacked';
 }) {
+  const navigate = useNavigate();
+
   return (
     <section className={variant === 'stacked' ? 'account account--stacked' : 'account'} id={id}>
       <div className="container account__inner">
@@ -49,12 +52,16 @@ export default function AccountBenefits({
           <h2 className="account__title">{title}</h2>
           <p className="account__lead">{lead}</p>
           <div className="account__actions">
-            <BrandButton className="account__button" onClick={onCreateAccount}>
+            <BrandButton className="account__button" onClick={() => navigate(ROUTES.signUp)}>
               {buttonLabel}
             </BrandButton>
             <p className="account__sign-in">
               {signInText}{' '}
-              <button type="button" className="account__sign-in-link" onClick={onSignIn}>
+              <button
+                type="button"
+                className="account__sign-in-link"
+                onClick={() => navigate(ROUTES.signIn)}
+              >
                 Sign In
               </button>
             </p>

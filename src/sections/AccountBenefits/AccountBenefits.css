@@ -176,6 +176,7 @@
     position: relative;
     top: 0;
     left: 0;
+    display: block; /* an inline image ignores "margin: auto" and sticks to the left */
     width: min(100%, 520px);
     height: auto;
     margin: 56px auto 0;

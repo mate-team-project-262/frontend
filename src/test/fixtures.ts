@@ -45,6 +45,7 @@ export const signIn = (code = 'ABC123', participantId = 1) =>
 /**
  * Fakes the backend: `routes` maps "METHOD /path" (without /api) to a JSON body, a function
  * (request body) => body, or { status, body }. Returns the fetch mock to inspect the calls.
+ * A body that has its own `status` field (a room) must be wrapped: { status: 200, body: room }.
  */
 type Answer = unknown | ((body: unknown) => unknown);
 

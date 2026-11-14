@@ -78,7 +78,7 @@ interface Props extends ComponentPropsWithoutRef<'input'> {
   label: string;
   /** shown at the right of the label, e.g. the "Forgot password?" link (class `light-field__action`) */
   labelAction?: ReactNode;
-  /** small icon inside the field, before the text */
+  /** small icon inside the empty field, before the placeholder */
   icon?: IconName;
   hint?: string;
   /** error text; replaces the hint and paints the field red */
@@ -105,9 +105,11 @@ export default function LightField({
   // the show / hide button appears once something is typed (an empty field has nothing to show)
   const [hasValue, setHasValue] = useState(Boolean(inputProps.value ?? inputProps.defaultValue));
   const isPassword = type === 'password';
-  const showToggle = isPassword && (hasValue || Boolean(inputProps.value));
+  const isFilled = inputProps.value !== undefined ? inputProps.value !== '' : hasValue;
+  const showToggle = isPassword && isFilled;
   const message = error || hint;
-  const hasIcon = Boolean(icon) || Boolean(error);
+  // as in the mockups, the icon belongs to the empty field (next to the placeholder)
+  const hasIcon = Boolean(error) || (Boolean(icon) && !isFilled);
 
   return (
     <div className={cx('light-field', error && 'light-field--error', className)}>

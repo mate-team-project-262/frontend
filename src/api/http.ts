@@ -41,6 +41,8 @@ export interface RequestOptions {
   body?: unknown;
   /** sent in the X-Participant-Token header */
   token?: string;
+  /** extra request headers, e.g. the CSRF token of the account API */
+  headers?: Record<string, string>;
 }
 
 /**
@@ -49,9 +51,9 @@ export interface RequestOptions {
  */
 export async function apiRequest<T = unknown>(
   path: string,
-  { method = 'GET', body, token }: RequestOptions = {},
+  { method = 'GET', body, token, headers: extraHeaders }: RequestOptions = {},
 ): Promise<T> {
-  const headers: Record<string, string> = {};
+  const headers: Record<string, string> = { ...extraHeaders };
   if (body !== undefined) headers['Content-Type'] = 'application/json';
   if (token) headers['X-Participant-Token'] = token;
 

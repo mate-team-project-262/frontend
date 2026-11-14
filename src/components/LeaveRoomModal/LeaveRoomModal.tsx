@@ -1,41 +1,4 @@
-import { useEffect, useRef } from 'react';
-import { cx } from '../../utils/classNames.ts';
-import BrandButton from '../BrandButton/BrandButton.tsx';
-import './LeaveRoomModal.css';
-
-function LeaveIcon() {
-  return (
-    <svg width="40" height="40" viewBox="0 0 40 40" fill="none" aria-hidden="true">
-      <path
-        d="M5 13V5h30v30H5v-8"
-        stroke="currentColor"
-        strokeWidth="2.2"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      />
-      <path
-        d="M3 20h20M17 14l6 6-6 6"
-        stroke="currentColor"
-        strokeWidth="2.2"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      />
-    </svg>
-  );
-}
-
-function CloseIcon() {
-  return (
-    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-      <path
-        d="M2 2l20 20M22 2 2 22"
-        stroke="currentColor"
-        strokeWidth="1.6"
-        strokeLinecap="round"
-      />
-    </svg>
-  );
-}
+import ConfirmModal from '../ConfirmModal/ConfirmModal.tsx';
 
 /** Texts of the two variants (Figma: "leave room as PARTICIPANT" / "leave room as HOST"). */
 function getTexts(isHost: boolean, isAlone: boolean) {
@@ -66,7 +29,7 @@ interface Props {
 
 /**
  * "Leave room?" confirmation. `onStay` closes it (✕, Esc, a click outside, "Stay in room"),
- * `onLeave` leaves the room. Focus starts on "Stay in room" and stays inside the dialog.
+ * `onLeave` leaves the room.
  */
 export default function LeaveRoomModal({
   isHost,
@@ -76,87 +39,19 @@ export default function LeaveRoomModal({
   onStay,
   onLeave,
 }: Props) {
-  const panelRef = useRef<HTMLDivElement>(null);
-  const stayRef = useRef<HTMLButtonElement>(null);
   const { text, note } = getTexts(isHost, isAlone);
-
-  useEffect(() => {
-    stayRef.current?.focus();
-    const onKeyDown = (event: KeyboardEvent) => {
-      if (event.key === 'Escape') {
-        onStay();
-        return;
-      }
-      if (event.key !== 'Tab') return;
-      // Keep Tab inside the dialog
-      const items = [
-        ...(panelRef.current?.querySelectorAll<HTMLButtonElement>('button:not(:disabled)') ?? []),
-      ];
-      if (items.length === 0) return;
-      const first = items[0];
-      const last = items[items.length - 1];
-      if (event.shiftKey && document.activeElement === first) {
-        event.preventDefault();
-        last.focus();
-      } else if (!event.shiftKey && document.activeElement === last) {
-        event.preventDefault();
-        first.focus();
-      }
-    };
-    window.addEventListener('keydown', onKeyDown);
-    return () => window.removeEventListener('keydown', onKeyDown);
-  }, [onStay]);
-
   return (
-    <div
-      className="leave-modal"
-      role="presentation" /* a click on the dimmed backdrop closes it, Esc does the same */
-      onClick={(event) => event.target === event.currentTarget && onStay()}
-    >
-      <section
-        ref={panelRef}
-        className={cx('leave-modal__panel', isHost && 'leave-modal__panel--host')}
-        role="alertdialog"
-        aria-modal="true"
-        aria-labelledby="leave-modal-title"
-        aria-describedby="leave-modal-text"
-      >
-        <button type="button" className="leave-modal__close" aria-label="Close" onClick={onStay}>
-          <CloseIcon />
-        </button>
-        <div className="leave-modal__icon">
-          <LeaveIcon />
-        </div>
-        <h2 className="leave-modal__title" id="leave-modal-title">
-          Leave room?
-        </h2>
-        <p className="leave-modal__text" id="leave-modal-text">
-          {text}
-        </p>
-        {note && <p className="leave-modal__note">{note}</p>}
-        {error && (
-          <p className="leave-modal__error" role="alert">
-            {error}
-          </p>
-        )}
-        <div className="leave-modal__actions">
-          <BrandButton
-            ref={stayRef}
-            variant="ghost"
-            className="leave-modal__button leave-modal__button--stay"
-            onClick={onStay}
-          >
-            Stay in room
-          </BrandButton>
-          <BrandButton
-            className="leave-modal__button leave-modal__button--leave"
-            disabled={isLeaving}
-            onClick={onLeave}
-          >
-            Leave room
-          </BrandButton>
-        </div>
-      </section>
-    </div>
+    <ConfirmModal
+      title="Leave room?"
+      text={text}
+      note={note}
+      error={error}
+      cancelLabel="Stay in room"
+      confirmLabel="Leave room"
+      isBusy={isLeaving}
+      wide={isHost}
+      onCancel={onStay}
+      onConfirm={onLeave}
+    />
   );
 }
