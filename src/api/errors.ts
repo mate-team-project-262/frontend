@@ -50,6 +50,7 @@ const KNOWN_ERRORS: Record<string, [ErrorField, string]> = {
   USERNAME_TAKEN: ['name', 'This name is already taken. Please choose another one.'],
   INVALID_CREDENTIALS: [null, 'Wrong name or password. Please try again.'],
   AUTHENTICATION_REQUIRED: [null, 'Please sign in to continue.'],
+  PARTICIPANT_ALREADY_LINKED: [null, 'This room is already linked to an account.'],
   HISTORY_NOT_FOUND: [null, 'This session is not in your history.'],
   ACCESS_DENIED: [null, 'The page is out of date. Reload it and try again.'],
   WRONG_ROOM: [null, SESSION_EXPIRED],
