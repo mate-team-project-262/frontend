@@ -80,8 +80,11 @@ describe('useLinkRoomToAccount', () => {
     second.unmount();
 
     // "already linked" counts as done: no third request
+    await new Promise((resolve) => setTimeout(resolve, 20)); // let the answer be handled
+    const callsBefore = taken.mock.calls.length;
     renderHookWithQuery(() => useLinkRoomToAccount('ABC123'));
-    await waitFor(() => expect(taken.mock.calls.length).toBeGreaterThan(2));
+    await waitFor(() => expect(taken.mock.calls.length).toBeGreaterThan(callsBefore));
+    await new Promise((resolve) => setTimeout(resolve, 20));
     expect(linkCalls(taken)).toHaveLength(1);
   });
 });
