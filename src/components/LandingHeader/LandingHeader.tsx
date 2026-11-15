@@ -49,12 +49,9 @@ export default function LandingHeader() {
   return (
     <header className="landing-header">
       <div className="container landing-header__inner">
-        <Link
-          to={ROUTES.home}
-          className="landing-header__logo"
-          aria-label="W2W – What To Watch, home page"
-        >
-          <img src={logo} width="106" height="48" alt="" />
+        <Link to={ROUTES.home} className="landing-header__logo" title="Home page">
+          {/* the logo's ALT is also the name of the link */}
+          <img src={logo} width="106" height="48" alt="W2W – What To Watch" />
         </Link>
         {user ? (
           <div className="landing-header__account">

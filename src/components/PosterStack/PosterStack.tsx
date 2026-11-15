@@ -38,6 +38,9 @@ function getImageFrame({ zoom = 1, focusX = 0.5, focusY = 0.5 }: Poster) {
   };
 }
 
+const HERO_POSTERS_ALT =
+  'Movie cards displayed for friends to discover and choose a movie together.';
+
 /**
  * Card boxes from the Figma frame, relative to the front card's top-left corner, plus how the
  * "hierarchy" looks: only the front card has the cream frame and full brightness; every card
@@ -105,7 +108,9 @@ export default function PosterStack() {
   return (
     <div
       className="poster-stack"
-      aria-hidden="true"
+      // one description for the whole stack: the six posters keep alt="" so it is not repeated
+      role="img"
+      aria-label={HERO_POSTERS_ALT}
       style={{ width: slots[0].w, height: slots[0].h }}
     >
       {POSTERS.map((poster, posterId) => {
