@@ -46,9 +46,12 @@ function LeaveIcon() {
 export default function BrandHeader({
   onBack,
   action = 'back',
+  backLabel = 'Back',
 }: {
   onBack?: () => void;
   action?: 'back' | 'leave';
+  /** the text of the "Back" button, e.g. "Back to Home" */
+  backLabel?: string;
 }) {
   const navigate = useNavigate();
   const { user } = useAccount();
@@ -62,11 +65,21 @@ export default function BrandHeader({
         <div className={cx('brand-header__actions', user && 'brand-header__actions--account')}>
           <button
             type="button"
-            className="brand-header__back"
+            className={cx(
+              'brand-header__back',
+              // a long label next to the user menu does not fit a phone: only the arrow stays there
+              action === 'back' &&
+                backLabel !== 'Back' &&
+                user &&
+                'brand-header__back--short-on-phone',
+            )}
+            aria-label={action === 'leave' ? 'Leave room' : backLabel}
             onClick={onBack ?? (() => navigate(user ? ROUTES.dashboard : ROUTES.home))}
           >
             {action === 'leave' ? <LeaveIcon /> : <ArrowLeft />}
-            {action === 'leave' ? 'Leave room' : 'Back'}
+            <span className="brand-header__back-text">
+              {action === 'leave' ? 'Leave room' : backLabel}
+            </span>
           </button>
           {user && <UserMenu user={user} />}
         </div>

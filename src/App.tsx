@@ -3,6 +3,7 @@ import { Navigate, Route, Routes, useLocation } from 'react-router';
 import { toReportedPath, track } from './analytics/analytics.ts';
 import RequireAccount from './components/RequireAccount/RequireAccount.tsx';
 import CreateRoomPage from './pages/CreateRoomPage/CreateRoomPage.tsx';
+import MyAccountPage from './pages/MyAccountPage/MyAccountPage.tsx';
 import MovieIdentityPage from './pages/MovieIdentityPage/MovieIdentityPage.tsx';
 import LandingPage from './pages/LandingPage/LandingPage.tsx';
 import HomePage from './pages/HomePage/HomePage.tsx';
@@ -66,6 +67,14 @@ export default function App() {
         element={
           <RequireAccount>
             <MovieIdentityPage />
+          </RequireAccount>
+        }
+      />
+      <Route
+        path={ROUTES.account}
+        element={
+          <RequireAccount>
+            <MyAccountPage />
           </RequireAccount>
         }
       />

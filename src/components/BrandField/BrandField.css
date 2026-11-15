@@ -88,3 +88,34 @@
 .brand-field__input:read-only:not(:disabled) {
   cursor: text;
 }
+
+/* Password: the eye button at the right end of the pill */
+.brand-field__input--with-toggle {
+  padding-right: 56px;
+}
+
+.brand-field__toggle {
+  position: absolute;
+  top: 50%;
+  right: 12px;
+  display: grid;
+  place-items: center;
+  width: 36px;
+  height: 36px;
+  padding: 0;
+  border: 0;
+  border-radius: 50%;
+  background: none;
+  color: #d8d2e6;
+  cursor: pointer;
+  transform: translateY(-50%);
+}
+
+.brand-field__toggle:hover {
+  color: #fffaef;
+}
+
+.brand-field__toggle:focus-visible {
+  outline: 2px solid #b18aff;
+  outline-offset: -2px;
+}

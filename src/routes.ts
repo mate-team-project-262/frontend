@@ -11,6 +11,7 @@ export const ROUTES = {
   sessions: '/home/sessions',
   sessionDetails: '/home/sessions/:sessionId',
   movieIdentity: '/home/movie-identity',
+  account: '/account', // "My account": name, email, password, delete the account
   room: '/room/:code', // inside a room: host lobby or guest waiting room (needs a token)
 } as const;
 

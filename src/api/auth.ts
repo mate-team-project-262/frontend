@@ -1,6 +1,7 @@
 /**
- * Accounts: register, sign in, sign out, the current user.
- * GET /auth/csrf, POST /auth/register, POST /auth/login, POST /auth/logout, GET /me.
+ * Accounts: register, sign in, sign out, the current user, change or delete the account.
+ * GET /auth/csrf, POST /auth/register, POST /auth/login, POST /auth/logout, GET /me,
+ * PATCH /me, PUT /me/password, DELETE /me.
  *
  * The account lives in a session cookie (HttpOnly, set by the backend), so nothing is stored
  * here. Every POST under /auth and /me needs a CSRF token in a header: it is asked for right
@@ -18,12 +19,15 @@ const toUser = (data: UserDto): User => ({
   name: data.displayName,
 });
 
-/** A POST to the account API with a fresh CSRF token. */
+/**
+ * A changing request (POST, PUT, PATCH, DELETE) to the account API with a fresh CSRF token.
+ * `options.method` defaults to POST.
+ */
 export async function accountPost<T>(path: string, options: RequestOptions = {}): Promise<T> {
   const csrf = await call<{ headerName: string; token: string }>('/auth/csrf');
   return call<T>(path, {
     ...options,
-    method: 'POST',
+    method: options.method && options.method !== 'GET' ? options.method : 'POST',
     headers: { ...options.headers, [csrf.headerName]: csrf.token },
   });
 }
@@ -64,6 +68,54 @@ export async function signIn(input: { name: string; password: string }): Promise
  */
 export async function signOut(): Promise<void> {
   await accountPost<null>('/auth/logout');
+}
+
+/**
+ * Changes the account's name and/or email. Changing the email needs the current password;
+ * the name alone does not. The new name is used for signing in from now on.
+ * PATCH /me
+ *
+ * @throws {RoomApiError} USERNAME_TAKEN (field 'name'), EMAIL_TAKEN (field 'email'),
+ *   INVALID_CURRENT_PASSWORD (field 'password'), VALIDATION_ERROR
+ */
+export async function updateAccount(changes: {
+  name?: string;
+  email?: string;
+  currentPassword?: string;
+}): Promise<User> {
+  const data = await accountPost<UserDto>('/me', {
+    method: 'PATCH',
+    body: {
+      displayName: changes.name,
+      email: changes.email,
+      currentPassword: changes.currentPassword,
+    },
+  });
+  return toUser(data);
+}
+
+/**
+ * Changes the password. The backend then ends this session: the person signs in again.
+ * PUT /me/password (204)
+ *
+ * @throws {RoomApiError} INVALID_CURRENT_PASSWORD, PASSWORD_NOT_CHANGED, VALIDATION_ERROR
+ */
+export async function changePassword(input: {
+  currentPassword: string;
+  newPassword: string;
+}): Promise<void> {
+  await accountPost<null>('/me/password', { method: 'PUT', body: input });
+}
+
+/**
+ * Deletes the account for good and ends the session. Finished sessions stay in the history of
+ * the other players, without the name of this account.
+ * DELETE /me (204)
+ *
+ * @throws {RoomApiError} INVALID_CURRENT_PASSWORD
+ */
+export async function deleteAccount(currentPassword: string): Promise<void> {
+  await accountPost<null>('/me', { method: 'DELETE', body: { currentPassword } });
 }
 
 /**

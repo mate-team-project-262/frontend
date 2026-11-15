@@ -75,8 +75,16 @@
   gap: 17px;
 }
 
+.brand-header__back {
+  white-space: nowrap;
+}
+
 @media (max-width: 600px) {
   .brand-header__actions {
     gap: 16px;
+  }
+
+  .brand-header__back--short-on-phone .brand-header__back-text {
+    display: none;
   }
 }

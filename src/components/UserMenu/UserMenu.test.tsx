@@ -49,7 +49,7 @@ describe('signed-in header and user menu', () => {
     setup({});
     await openMenu(user);
     expect(screen.getByRole('button', { name: 'Log out' })).toBeInTheDocument();
-    expect(screen.getByRole('button', { name: 'My account' })).toBeDisabled();
+    expect(screen.getByRole('button', { name: 'My account' })).toBeEnabled();
 
     await user.keyboard('{Escape}');
     expect(screen.queryByRole('button', { name: 'Log out' })).not.toBeInTheDocument();

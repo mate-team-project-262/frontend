@@ -1,5 +1,5 @@
-import { type FormEvent, useState } from 'react';
-import { Link, Navigate, useNavigate } from 'react-router';
+import { type FormEvent, useEffect, useState } from 'react';
+import { Link, Navigate, useLocation, useNavigate } from 'react-router';
 import { track } from '../../analytics/analytics.ts';
 import { RoomApiError, signIn } from '../../api/roomsApi.ts';
 import AuthLayout from '../../components/AuthLayout/AuthLayout.tsx';
@@ -19,11 +19,20 @@ const FAILED = 'We could not sign you in. Please try again.';
  * /sign-in - "Sign In" by the account name and password (POST /auth/login). The backend gives
  * the same answer for a wrong name and a wrong password, so the message does not say which.
  * "Forgot password?" appears with the password reset flow (the backend has no endpoint yet).
+ * Another page can leave a line on top of the form in `state.notice` (e.g. after a password
+ * change, which ends the session).
  */
 export default function SignInPage() {
   usePageMeta();
   const navigate = useNavigate();
+  const { notice, signedOut = false } =
+    (useLocation().state as { notice?: string; signedOut?: boolean } | null) ?? {};
   const { status, setUser } = useAccount();
+
+  // the previous page ended the session on the backend (a password change): forget the user here
+  useEffect(() => {
+    if (signedOut) setUser(null);
+  }, [signedOut, setUser]);
   const form = useFormFields({
     name: validateAccountName,
     password: (value) => (value ? '' : 'Please enter your password'),
@@ -31,7 +40,9 @@ export default function SignInPage() {
   const [formError, setFormError] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  if (status === 'signed-in' && !isSubmitting) return <Navigate to={ROUTES.dashboard} replace />;
+  if (status === 'signed-in' && !isSubmitting && !signedOut) {
+    return <Navigate to={ROUTES.dashboard} replace />;
+  }
 
   const handleSubmit = async (event: FormEvent) => {
     event.preventDefault();
@@ -57,6 +68,11 @@ export default function SignInPage() {
       subtitle="Save your results, track your movie identity and get personalised recommendations"
     >
       <form className="auth-form" noValidate onSubmit={handleSubmit}>
+        {notice && (
+          <p className="auth-form__notice" role="status">
+            {notice}
+          </p>
+        )}
         <LightField
           label="Your name"
           icon="user"
