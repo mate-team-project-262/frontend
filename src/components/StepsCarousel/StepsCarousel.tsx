@@ -23,6 +23,8 @@ export interface Step {
   title: string;
   text: string;
   image: string;
+  /** what the photo shows (ALT text) */
+  alt: string;
   /** photo framing, see HowItWorks */
   scale: number;
   x: number;
@@ -149,6 +151,17 @@ export default function StepsCarousel({ steps, label }: { steps: Step[]; label: 
           {virtualIndexes.map((virtualIndex) => {
             const step = steps[mod(virtualIndex, steps.length)];
             const isActive = virtualIndex === index;
+            // the endless loop draws some steps twice: only one copy of each photo is described
+            const distance = (at: number) => Math.abs(at - index);
+            // the endless loop draws some steps twice: only the copy nearest the active card
+            // (the later one on a tie) gets the description, so no ALT text is repeated
+            const isCopy = virtualIndexes.some(
+              (other) =>
+                other !== virtualIndex &&
+                mod(other, steps.length) === mod(virtualIndex, steps.length) &&
+                (distance(other) < distance(virtualIndex) ||
+                  (distance(other) === distance(virtualIndex) && other > virtualIndex)),
+            );
             return (
               <article
                 key={virtualIndex}
@@ -171,7 +184,7 @@ export default function StepsCarousel({ steps, label }: { steps: Step[]; label: 
                 <img
                   className="step-card__image"
                   src={step.image}
-                  alt=""
+                  alt={isCopy ? '' : step.alt}
                   draggable={false}
                   loading="lazy"
                   decoding="async"

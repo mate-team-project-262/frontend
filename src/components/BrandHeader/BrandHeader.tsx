@@ -56,8 +56,8 @@ export default function BrandHeader({
   return (
     <header className={cx('brand-header', action === 'leave' && 'brand-header--leave')}>
       <div className="container brand-header__inner">
-        <Link to={ROUTES.home} className="brand-header__logo" aria-label="W2W, home page">
-          <img src={logo} width="106" height="48" alt="" />
+        <Link to={ROUTES.home} className="brand-header__logo" title="Home page">
+          <img src={logo} width="106" height="48" alt="W2W – What To Watch" />
         </Link>
         <div className={cx('brand-header__actions', user && 'brand-header__actions--account')}>
           <button
