@@ -1,4 +1,4 @@
-import type { HistoryTitle } from '../api/types.ts';
+import type { HistoryTitle, SessionSummary } from '../api/types.ts';
 
 const dateFormat = new Intl.DateTimeFormat('en-US', {
   month: 'short',
@@ -31,3 +31,20 @@ export const formatMyLikes = (liked: number, rated: number): string =>
 
 /** "S" for "Sofiia": the letter inside a participant's round avatar. */
 export const getInitial = (name: string): string => name.trim().charAt(0).toUpperCase();
+
+/**
+ * The "+16" next to the small posters of a session: the movies shown nowhere in the row.
+ * The winner and the previews may overlap (the backend does not promise either way), so each
+ * movie is counted once. 0 = nothing to add.
+ */
+export function countHiddenMovies(
+  session: Pick<SessionSummary, 'winners' | 'previews' | 'totalCards'>,
+): number {
+  if (session.totalCards === null) return 0;
+  const shown = new Set([...session.winners.slice(0, 1), ...session.previews].map((t) => t.id));
+  return Math.max(session.totalCards - shown.size, 0);
+}
+
+/** "4 / 4 likes": how many of the group liked the winner. */
+export const formatWinnerLikes = (likes: number, people: number): string =>
+  `${likes} / ${people} ${likes === 1 && people === 1 ? 'like' : 'likes'}`;

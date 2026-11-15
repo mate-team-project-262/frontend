@@ -1,13 +1,22 @@
 import { toSlices } from '../components/GenreDonut/slices.ts';
-import { formatFriends, formatSessionDate, getInitial, getWinnerLabel } from './sessionFormat.ts';
+import {
+  countHiddenMovies,
+  formatFriends,
+  formatSessionDate,
+  formatWinnerLikes,
+  getInitial,
+  getWinnerLabel,
+} from './sessionFormat.ts';
 
-const title = (name: string) => ({
-  id: 1,
+const title = (name: string, id = 1) => ({
+  id,
   title: name,
   year: null,
   posterUrl: null,
   runtimeMin: null,
   rating: null,
+  genres: [],
+  likes: null,
 });
 
 describe('session texts', () => {
@@ -20,6 +29,21 @@ describe('session texts', () => {
     expect(getWinnerLabel([title('Dune')])).toBe('Winner: Dune');
     expect(getWinnerLabel([title('Dune'), title('Moana'), title('F1')])).toBe('Winners: Dune +2');
     expect(getWinnerLabel([])).toBe('No match');
+  });
+
+  it('counts the movies of a session that the row does not show', () => {
+    const previews = [title('A', 2), title('B', 3), title('C', 4)];
+    // winner + 3 previews of 20
+    expect(countHiddenMovies({ winners: [title('W', 1)], previews, totalCards: 20 })).toBe(16);
+    // the winner is one of the previews: counted once
+    expect(countHiddenMovies({ winners: [title('A', 2)], previews, totalCards: 20 })).toBe(17);
+    expect(countHiddenMovies({ winners: [], previews, totalCards: 3 })).toBe(0);
+    expect(countHiddenMovies({ winners: [], previews, totalCards: null })).toBe(0);
+  });
+
+  it('shows how many of the group liked the winner', () => {
+    expect(formatWinnerLikes(4, 4)).toBe('4 / 4 likes');
+    expect(formatWinnerLikes(1, 1)).toBe('1 / 1 like');
   });
 
   it('counts friends without the account owner', () => {

@@ -30,6 +30,8 @@ export const toHistoryTitle = (title: HistoryTitleDto): HistoryTitle => ({
   posterUrl: toPosterUrl(title.posterUrl),
   runtimeMin: title.runtimeMinutes ?? null,
   rating: title.voteAverage ?? null,
+  genres: (title.genres ?? []).map((genre) => genre.name).filter(Boolean),
+  likes: title.likesCount ?? null,
 });
 
 export const toSessionSummary = (session: SessionSummaryDto): SessionSummary => ({
@@ -38,6 +40,8 @@ export const toSessionSummary = (session: SessionSummaryDto): SessionSummary => 
   contentType: session.contentType,
   participantCount: session.participantCount,
   winners: (session.winnerTitles ?? []).map(toHistoryTitle),
+  previews: (session.previewTitles ?? []).map(toHistoryTitle),
+  totalCards: session.totalCards ?? null,
   ratedCount: session.ratedCount,
   likedCount: session.likedCount,
 });
