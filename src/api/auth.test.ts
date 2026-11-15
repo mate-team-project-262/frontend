@@ -1,5 +1,13 @@
 import { mockBackend } from '../test/fixtures.ts';
-import { getCurrentUser, register, signIn, signOut } from './auth.ts';
+import {
+  changePassword,
+  deleteAccount,
+  getCurrentUser,
+  register,
+  signIn,
+  signOut,
+  updateAccount,
+} from './auth.ts';
 
 const csrf = { 'GET /auth/csrf': { headerName: 'X-CSRF-TOKEN', token: 'csrf-1' } };
 const anna = { id: 7, email: 'anna@example.com', displayName: 'Anna' };
@@ -70,6 +78,31 @@ describe('account API', () => {
       email: 'anna@example.com',
       name: 'Anna',
     });
+  });
+
+  it('changes the account with PATCH, PUT and DELETE, each with a CSRF token', async () => {
+    const fetchMock = mockBackend({
+      ...csrf,
+      'PATCH /me': anna,
+      'PUT /me/password': { status: 204, body: null },
+      'DELETE /me': { status: 204, body: null },
+    });
+
+    await expect(updateAccount({ name: 'Anna' })).resolves.toEqual({
+      id: 7,
+      email: 'anna@example.com',
+      name: 'Anna',
+    });
+    await changePassword({ currentPassword: 'old12345', newPassword: 'new12345' });
+    await deleteAccount('new12345');
+
+    const changes = requests(fetchMock).filter((request) => request.method !== 'GET');
+    expect(changes.map(({ method, url, body }) => [method, url, body])).toEqual([
+      ['PATCH', '/api/me', { displayName: 'Anna' }],
+      ['PUT', '/api/me/password', { currentPassword: 'old12345', newPassword: 'new12345' }],
+      ['DELETE', '/api/me', { currentPassword: 'new12345' }],
+    ]);
+    expect(changes.every((request) => request.headers['X-CSRF-TOKEN'] === 'csrf-1')).toBe(true);
   });
 
   it('signs out with a CSRF token', async () => {

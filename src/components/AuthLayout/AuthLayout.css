@@ -165,6 +165,17 @@
 }
 
 /* An error of the whole form (wrong name or password, the server cannot be reached) */
+/* a message from the previous page, e.g. "Your password has been changed" */
+.auth-form__notice {
+  margin: 0;
+  padding: 10px 16px;
+  border-radius: 16px;
+  background: #e2f4ea;
+  color: #00632f;
+  font-size: 14px;
+  line-height: 1.5;
+}
+
 .auth-form__error {
   margin: 0;
   color: #d60004;

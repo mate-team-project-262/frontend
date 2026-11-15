@@ -1,0 +1,89 @@
+/* Figma "Change password" / "Delete account": 472px panel, 40px padding, text on the left */
+.form-modal {
+  position: relative;
+  box-sizing: border-box;
+  width: 472px;
+  max-width: 100%;
+  margin: 0;
+  padding: 40px;
+  border: 1px solid var(--l-accent);
+  border-radius: 40px;
+  background: linear-gradient(200deg, rgba(23, 18, 88, 0.86), rgba(9, 2, 36, 0.9));
+  box-shadow: 0 0 24px rgba(177, 138, 255, 0.35);
+  color: var(--l-cream);
+}
+
+.form-modal__title {
+  margin: 0;
+  padding-right: 32px; /* room for ✕ */
+  font-family: var(--l-font-display);
+  font-size: 24px;
+  font-weight: 700;
+  line-height: 1.25;
+}
+
+.form-modal__text {
+  margin: 8px -4px 0 0; /* the mockup fits "...choose a new one" on one line */
+  color: var(--l-lavender);
+  font-family: var(--l-font-text);
+  font-size: 16px;
+  line-height: 1.5;
+}
+
+.form-modal__fields {
+  display: grid;
+  gap: 16px;
+  margin-top: 24px;
+}
+
+/* the rule under the new password turns green with the border once it is met (mockup) */
+.form-modal .brand-field--success .brand-field__message {
+  color: #12a35c;
+}
+
+.form-modal__error {
+  margin: 16px 0 0;
+  color: #eb4b5b;
+  font-family: var(--l-font-text);
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+.form-modal__actions {
+  display: flex;
+  gap: 16px;
+  margin-top: 32px;
+}
+
+.form-modal__button {
+  flex: 1;
+  height: 52px;
+  padding: 0 12px;
+}
+
+/* "Delete account": a red button for an action that cannot be undone */
+.form-modal__button--danger:not(:disabled),
+.form-modal__button--danger:not(:disabled):hover,
+.form-modal__button--danger:not(:disabled):active {
+  background: #d70000;
+}
+
+.form-modal__button--danger:not(:disabled):hover {
+  filter: brightness(1.1);
+}
+
+@media (max-width: 520px) {
+  .form-modal {
+    padding: 32px 20px 24px;
+    border-radius: 28px;
+  }
+
+  .form-modal__actions {
+    flex-direction: column-reverse;
+  }
+
+  .form-modal__button {
+    flex: none;
+    width: 100%;
+  }
+}

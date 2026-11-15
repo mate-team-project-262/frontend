@@ -25,7 +25,7 @@ const LOGOUT_FAILED = 'Could not log out. Check your connection and try again.';
 
 /**
  * The pill with the user's name in the header (UI kit "user menu"). It opens a small menu:
- * "My account" (inactive until that page exists) and "Log out", which asks first.
+ * "My account" and "Log out", which asks first.
  * The menu closes on Esc, on a click outside and when focus leaves it.
  */
 export default function UserMenu({ user }: { user: User }) {
@@ -90,7 +90,14 @@ export default function UserMenu({ user }: { user: User }) {
       {isOpen && (
         <ul className="user-menu__list" id={menuId}>
           <li>
-            <button type="button" className="user-menu__item" disabled title="Coming soon">
+            <button
+              type="button"
+              className="user-menu__item"
+              onClick={() => {
+                setIsOpen(false);
+                navigate(ROUTES.account);
+              }}
+            >
               My account
             </button>
           </li>
