@@ -1,0 +1,303 @@
+/* Figma "Signed IN (Home) - my account" 1440 x 1024: a 703px column (x 369-1072) on dark violet */
+.my-account {
+  min-height: 100vh;
+  background:
+    radial-gradient(60% 55% at 50% 45%, rgba(52, 8, 150, 0.55), transparent 80%),
+    linear-gradient(180deg, #12053f 0%, #1a0757 50%, #0d0335 100%);
+  color: var(--l-cream);
+}
+
+.my-account__main {
+  box-sizing: border-box;
+  width: 703px;
+  max-width: calc(100% - 32px);
+  margin: 0 auto;
+  padding: 40px 0 72px;
+}
+
+.my-account__title {
+  margin: 0;
+  background: linear-gradient(90deg, #c9b8fb 20%, #9469ff 80%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  font-family: var(--l-font-display);
+  font-size: 48px;
+  font-weight: 700;
+  line-height: 1.2;
+  letter-spacing: -0.02em;
+  text-align: center;
+}
+
+.my-account__subtitle {
+  margin: 8px 0 0;
+  font-family: var(--l-font-text);
+  font-size: 16px;
+  line-height: 1.5;
+  text-align: center;
+}
+
+/* avatar | name and email, centred as one group */
+.my-account__profile {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 34px;
+  margin-top: 40px;
+  padding-bottom: 24px;
+  border-bottom: 1px solid rgba(155, 149, 184, 0.35);
+}
+
+.my-account__avatar {
+  display: grid;
+  flex: none;
+  place-items: center;
+  width: 120px;
+  height: 120px;
+  border-radius: 50%;
+  background: #b18aff;
+  color: #170e43;
+  font-family: var(--l-font-display);
+  font-size: 48px;
+  font-weight: 700;
+}
+
+.my-account__who {
+  min-width: 0;
+  padding: 10px 0 10px 24px;
+  border-left: 1px solid rgba(155, 149, 184, 0.35);
+}
+
+.my-account__name {
+  margin: 0;
+  overflow-wrap: anywhere;
+  font-family: var(--l-font-display);
+  font-size: 36px;
+  font-weight: 700;
+  line-height: 1.2;
+}
+
+.my-account__email {
+  margin: 20px 0 0;
+  overflow-wrap: anywhere;
+  font-family: var(--l-font-text);
+  font-size: 16px;
+  line-height: 1.5;
+}
+
+.my-account__section {
+  display: grid;
+  gap: 24px;
+  padding: 24px 0;
+  border-bottom: 1px solid rgba(155, 149, 184, 0.35);
+}
+
+.my-account__section-title {
+  margin: 0 0 -8px;
+  color: #9b95b8;
+  font-family: var(--l-font-text);
+  font-size: 16px;
+  font-weight: 400;
+  line-height: 1.5;
+}
+
+/* One line: the field (453px, 40px in from the column) and its button 26px to the right */
+.account-row {
+  display: flex;
+  align-items: flex-start;
+  gap: 26px;
+  margin: 0;
+  padding-left: 40px;
+}
+
+.account-row__fields {
+  display: grid;
+  flex: none;
+  gap: 16px;
+  width: 453px;
+  max-width: 100%;
+}
+
+.account-row__field--locked .brand-field__input {
+  background: #170e43;
+  cursor: default;
+}
+
+.account-row__actions {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  height: 52px;
+  margin-top: 32px; /* the label of the field above the input */
+}
+
+.account-row__error {
+  margin: 0;
+  color: #eb4b5b;
+  font-family: var(--l-font-text);
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+/* "Password" with twelve dots: looks like the fields, but is not one */
+.account-row__static {
+  display: grid;
+  gap: 8px;
+}
+
+.account-row__label {
+  font-family: var(--l-font-text);
+  font-size: 16px;
+  line-height: 1.5;
+}
+
+.account-row__value {
+  display: flex;
+  align-items: center;
+  box-sizing: border-box;
+  height: 52px;
+  padding: 0 16px;
+  border: 1px solid #b18aff;
+  border-radius: 999px;
+  background: #170e43;
+  font-size: 14px;
+  letter-spacing: 0.12em;
+}
+
+/* "Edit ✎", "Change password →": white text buttons */
+.account-action {
+  display: inline-flex;
+  align-items: center;
+  gap: 14px;
+  padding: 6px 0;
+  border: 0;
+  background: none;
+  color: var(--l-cream);
+  font-family: var(--l-font-display);
+  font-size: 16px;
+  font-weight: 500;
+  line-height: 1.2;
+  white-space: nowrap;
+  cursor: pointer;
+}
+
+.account-action:hover:not(:disabled) {
+  text-decoration: underline;
+  text-underline-offset: 5px;
+}
+
+.account-action:disabled {
+  opacity: 0.6;
+  cursor: default;
+}
+
+.account-action:focus-visible {
+  outline: 2px solid var(--l-accent);
+  outline-offset: 4px;
+  border-radius: 4px;
+}
+
+.account-action--quiet {
+  color: var(--l-lavender);
+  font-weight: 400;
+}
+
+.account-action--danger {
+  color: #eb4b5b;
+  font-weight: 700;
+}
+
+/* Delete account */
+.my-account__danger {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+  padding: 24px 115px 0 40px;
+}
+
+.my-account__danger-title {
+  margin: 0;
+  color: #eb4b5b;
+  font-family: var(--l-font-display);
+  font-size: 24px;
+  font-weight: 700;
+  line-height: 1.3;
+}
+
+.my-account__danger-text {
+  margin: 4px 0 0;
+  color: #9b95b8;
+  font-family: var(--l-font-text);
+  font-size: 16px;
+  line-height: 1.5;
+}
+
+@media (max-width: 760px) {
+  .my-account__main {
+    padding-top: 16px;
+  }
+
+  .my-account__title {
+    font-size: 32px;
+  }
+
+  .my-account__subtitle {
+    font-size: 14px;
+  }
+
+  .my-account__profile {
+    gap: 18px;
+    margin-top: 24px;
+  }
+
+  .my-account__avatar {
+    width: 80px;
+    height: 80px;
+    font-size: 32px;
+  }
+
+  .my-account__who {
+    padding-left: 18px;
+  }
+
+  .my-account__name {
+    font-size: 24px;
+  }
+
+  .my-account__email {
+    margin-top: 8px;
+    font-size: 14px;
+  }
+
+  .account-row {
+    flex-direction: column;
+    gap: 8px;
+    padding-left: 0;
+  }
+
+  .account-row__fields {
+    width: 100%;
+  }
+
+  .account-row__actions {
+    align-self: flex-end;
+    height: auto;
+    margin-top: 0;
+  }
+
+  .my-account__danger {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 12px;
+    padding: 24px 0 0;
+  }
+
+  .my-account__danger-title {
+    font-size: 20px;
+  }
+
+  .my-account__danger-text {
+    font-size: 14px;
+  }
+}

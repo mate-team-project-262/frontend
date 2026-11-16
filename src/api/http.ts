@@ -18,6 +18,7 @@ interface ApiErrorInit {
   code: string | null;
   message: string;
   fieldErrors?: FieldError[];
+  retryAfter?: number | null;
 }
 
 export class ApiError extends Error {
@@ -26,18 +27,21 @@ export class ApiError extends Error {
   code: string | null;
   /** filled for VALIDATION_ERROR */
   fieldErrors: FieldError[];
+  /** seconds from the Retry-After header of a 429 answer, else null */
+  retryAfter: number | null;
 
-  constructor({ status, code, message, fieldErrors = [] }: ApiErrorInit) {
+  constructor({ status, code, message, fieldErrors = [], retryAfter = null }: ApiErrorInit) {
     super(message);
     this.name = 'ApiError';
     this.status = status;
     this.code = code;
     this.fieldErrors = fieldErrors;
+    this.retryAfter = retryAfter;
   }
 }
 
 export interface RequestOptions {
-  method?: 'GET' | 'POST';
+  method?: 'GET' | 'POST' | 'PUT' | 'PATCH' | 'DELETE';
   body?: unknown;
   /** sent in the X-Participant-Token header */
   token?: string;
@@ -49,6 +53,12 @@ export interface RequestOptions {
  * @param path  e.g. '/rooms'
  * @returns the parsed JSON body (null for empty answers). The caller says what shape it expects.
  */
+/** "60" -> 60; a missing or unreadable header -> null. */
+function toSeconds(header: string | null): number | null {
+  const seconds = Number(header);
+  return header && Number.isFinite(seconds) && seconds > 0 ? Math.ceil(seconds) : null;
+}
+
 export async function apiRequest<T = unknown>(
   path: string,
   { method = 'GET', body, token, headers: extraHeaders }: RequestOptions = {},
@@ -75,6 +85,7 @@ export async function apiRequest<T = unknown>(
       code: data?.code ?? null,
       message: data?.message ?? data?.error ?? response.statusText,
       fieldErrors: data?.fieldErrors ?? [],
+      retryAfter: toSeconds(response.headers.get('Retry-After')),
     });
   }
   return data as T;

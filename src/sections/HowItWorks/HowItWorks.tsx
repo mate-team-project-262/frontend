@@ -14,10 +14,18 @@ const STEP_PHOTOS = [
   { image: step3, scale: 1, x: 0, y: 0, shade: 0.002 },
   { image: step4, scale: 1, x: 0, y: 0, shade: 0.156 },
 ];
+// ALT texts from the marketing team, in the order of the steps
+const STEP_ALTS = [
+  'Cozy home theater setup ready for a movie night.',
+  'Friends enjoying popcorn together during a movie night.',
+  'Friends using their smartphones to choose a movie together.',
+  'Friends celebrating their movie choice together.',
+];
 const STEPS = HOW_IT_WORKS_STEPS.map((step, index) => ({
   ...step,
   number: index + 1,
   ...STEP_PHOTOS[index],
+  alt: STEP_ALTS[index],
 }));
 
 export default function HowItWorks() {

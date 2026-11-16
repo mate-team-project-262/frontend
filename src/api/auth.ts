@@ -1,6 +1,8 @@
 /**
- * Accounts: register, sign in, sign out, the current user.
- * GET /auth/csrf, POST /auth/register, POST /auth/login, POST /auth/logout, GET /me.
+ * Accounts: register, sign in, sign out, the current user, change or delete the account.
+ * GET /auth/csrf, POST /auth/register, POST /auth/login, POST /auth/logout, GET /me,
+ * PATCH /me, PUT /me/password, DELETE /me, password reset (/auth/forgot-password,
+ * /auth/reset-password).
  *
  * The account lives in a session cookie (HttpOnly, set by the backend), so nothing is stored
  * here. Every POST under /auth and /me needs a CSRF token in a header: it is asked for right
@@ -18,12 +20,15 @@ const toUser = (data: UserDto): User => ({
   name: data.displayName,
 });
 
-/** A POST to the account API with a fresh CSRF token. */
+/**
+ * A changing request (POST, PUT, PATCH, DELETE) to the account API with a fresh CSRF token.
+ * `options.method` defaults to POST.
+ */
 export async function accountPost<T>(path: string, options: RequestOptions = {}): Promise<T> {
   const csrf = await call<{ headerName: string; token: string }>('/auth/csrf');
   return call<T>(path, {
     ...options,
-    method: 'POST',
+    method: options.method && options.method !== 'GET' ? options.method : 'POST',
     headers: { ...options.headers, [csrf.headerName]: csrf.token },
   });
 }
@@ -64,6 +69,87 @@ export async function signIn(input: { name: string; password: string }): Promise
  */
 export async function signOut(): Promise<void> {
   await accountPost<null>('/auth/logout');
+}
+
+/**
+ * Changes the account's name and/or email. Changing the email needs the current password;
+ * the name alone does not. The new name is used for signing in from now on.
+ * PATCH /me
+ *
+ * @throws {RoomApiError} USERNAME_TAKEN (field 'name'), EMAIL_TAKEN (field 'email'),
+ *   INVALID_CURRENT_PASSWORD (field 'password'), VALIDATION_ERROR
+ */
+export async function updateAccount(changes: {
+  name?: string;
+  email?: string;
+  currentPassword?: string;
+}): Promise<User> {
+  const data = await accountPost<UserDto>('/me', {
+    method: 'PATCH',
+    body: {
+      displayName: changes.name,
+      email: changes.email,
+      currentPassword: changes.currentPassword,
+    },
+  });
+  return toUser(data);
+}
+
+/**
+ * Changes the password. The backend then ends this session: the person signs in again.
+ * PUT /me/password (204)
+ *
+ * @throws {RoomApiError} INVALID_CURRENT_PASSWORD, PASSWORD_NOT_CHANGED, VALIDATION_ERROR
+ */
+export async function changePassword(input: {
+  currentPassword: string;
+  newPassword: string;
+}): Promise<void> {
+  await accountPost<null>('/me/password', { method: 'PUT', body: input });
+}
+
+/**
+ * Deletes the account for good and ends the session. Finished sessions stay in the history of
+ * the other players, without the name of this account.
+ * DELETE /me (204)
+ *
+ * @throws {RoomApiError} INVALID_CURRENT_PASSWORD
+ */
+export async function deleteAccount(currentPassword: string): Promise<void> {
+  await accountPost<null>('/me', { method: 'DELETE', body: { currentPassword } });
+}
+
+/**
+ * Sends a password reset link to this email. The answer is the same for an unknown email, so
+ * nobody can find out who has an account. Once a minute per email at most.
+ * POST /auth/forgot-password (202)
+ *
+ * @throws {RoomApiError} TOO_MANY_REQUESTS (with `retryAfter` seconds), VALIDATION_ERROR
+ */
+export async function requestPasswordReset(email: string): Promise<void> {
+  await accountPost<unknown>('/auth/forgot-password', { body: { email } });
+}
+
+/**
+ * Whether the link from the email still works (it lives 20 minutes, works once, and a newer
+ * email cancels it). Checking does not use it up.
+ * GET /auth/reset-password/check?token= (204)
+ *
+ * @throws {RoomApiError} RESET_TOKEN_INVALID
+ */
+export async function checkResetToken(token: string): Promise<void> {
+  await call<null>(`/auth/reset-password/check?token=${encodeURIComponent(token)}`);
+}
+
+/**
+ * Sets a new password with the token from the email. Every session of the account ends; the
+ * person signs in as usual afterwards.
+ * POST /auth/reset-password (204)
+ *
+ * @throws {RoomApiError} RESET_TOKEN_INVALID, PASSWORD_NOT_CHANGED, VALIDATION_ERROR
+ */
+export async function resetPassword(input: { token: string; newPassword: string }): Promise<void> {
+  await accountPost<null>('/auth/reset-password', { body: input });
 }
 
 /**

@@ -55,13 +55,23 @@ describe('SessionDetailsPage', () => {
     setup('/home/sessions/2', {
       'GET /me/history/2': details([
         card(1, 'Moana', 1),
-        card(0, 'Dune: Part Two', 3, { winner: true, myVote: true }),
+        card(0, 'Dune: Part Two', 3, {
+          winner: true,
+          myVote: true,
+          title: {
+            ...title(1, 'Dune: Part Two'),
+            genres: [
+              { id: 878, name: 'Science Fiction' },
+              { id: 12, name: 'Adventure' },
+            ],
+          },
+        }),
         card(2, 'Verity', 0, { myVote: null }),
       ]),
     });
 
     expect(await screen.findByRole('heading', { name: 'Dune: Part Two' })).toBeInTheDocument();
-    expect(screen.getByText('2024 • 2h 47m')).toBeInTheDocument();
+    expect(screen.getByText('2024 • 2h 47m • Science Fiction and Adventure')).toBeInTheDocument();
     expect(screen.getByText('8.4 / 10')).toBeInTheDocument();
     expect(screen.getByText('Oct 14, 2026')).toBeInTheDocument();
     expect(screen.getByText('likes for winner').nextSibling).toHaveTextContent('3');

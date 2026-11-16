@@ -16,16 +16,39 @@ import { useMovieIdentity, useSessionList } from '../../hooks/useAccountData.ts'
 import { usePageMeta } from '../../hooks/usePageMeta.ts';
 import { ROUTES, sessionDetailsPath } from '../../routes.ts';
 import {
+  countHiddenMovies,
   formatFriends,
   formatMyLikes,
+  formatWinnerLikes,
   formatSessionDate,
   getWinnerLabel,
 } from '../../utils/sessionFormat.ts';
 import './SessionsPage.css';
 
-/** One finished session: the winner, the group size, the person's own likes and the date. */
+const PREVIEW_COUNT = 3;
+
+/** The small posters of a few movies of the session and "+16" for the rest. */
+function SessionPreviews({ session }: { session: SessionSummary }) {
+  const previews = session.previews.filter((title) => title.posterUrl).slice(0, PREVIEW_COUNT);
+  if (previews.length === 0) return null;
+  const hidden = countHiddenMovies({ ...session, previews });
+  return (
+    <div className="session-row__previews" aria-hidden="true">
+      {previews.map((title) => (
+        <img key={title.id} src={title.posterUrl ?? undefined} alt="" loading="lazy" />
+      ))}
+      {hidden > 0 && <span className="session-row__more">+ {hidden}</span>}
+    </div>
+  );
+}
+
+/**
+ * One finished session: the winner, the group size, the winner's likes (or the person's own when
+ * the backend did not send them), the date and a few posters of the session.
+ */
 function SessionRow({ session }: { session: SessionSummary }) {
-  const poster = session.winners[0]?.posterUrl;
+  const winner = session.winners[0];
+  const poster = winner?.posterUrl;
   return (
     <li className="session-row">
       <div className="session-row__poster">{poster && <img src={poster} alt="" />}</div>
@@ -41,7 +64,9 @@ function SessionRow({ session }: { session: SessionSummary }) {
           </span>
           <span>
             <HeartIcon filled />
-            {formatMyLikes(session.likedCount, session.ratedCount)}
+            {winner && winner.likes !== null
+              ? formatWinnerLikes(winner.likes, session.participantCount)
+              : formatMyLikes(session.likedCount, session.ratedCount)}
           </span>
         </p>
         <p className="session-row__meta">
@@ -51,6 +76,7 @@ function SessionRow({ session }: { session: SessionSummary }) {
           </span>
         </p>
       </div>
+      <SessionPreviews session={session} />
       <Link className="session-row__link" to={sessionDetailsPath(session.id)}>
         View details
         <OpenIcon />

@@ -47,8 +47,12 @@ describe('account data API', () => {
           posterUrl: 'https://img/x.jpg',
           runtimeMin: null,
           rating: null,
+          genres: [],
+          likes: null,
         },
       ],
+      previews: [],
+      totalCards: null,
       ratedCount: 20,
       likedCount: 8,
     });

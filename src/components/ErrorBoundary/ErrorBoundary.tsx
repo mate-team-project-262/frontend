@@ -31,7 +31,13 @@ export default class ErrorBoundary extends Component<Props, State> {
 
     return (
       <main className="error-boundary" role="alert">
-        <img className="error-boundary__logo" src={logo} width="106" height="48" alt="W2W" />
+        <img
+          className="error-boundary__logo"
+          src={logo}
+          width="106"
+          height="48"
+          alt="W2W – What To Watch"
+        />
         <h1 className="error-boundary__title">Something went wrong</h1>
         <p className="error-boundary__text">
           The page stopped working. Reload it to continue — your room and votes are saved.

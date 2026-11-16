@@ -9,7 +9,7 @@ import { CrownIcon } from '../../components/WinnerCard/WinnerCard.tsx';
 import { useSessionDetails } from '../../hooks/useAccountData.ts';
 import { usePageMeta } from '../../hooks/usePageMeta.ts';
 import { ROUTES } from '../../routes.ts';
-import { formatRating, formatRuntime } from '../../utils/movieFormat.ts';
+import { formatList, formatRating, formatRuntime } from '../../utils/movieFormat.ts';
 import { formatSessionDate, getInitial } from '../../utils/sessionFormat.ts';
 import './SessionDetailsPage.css';
 
@@ -28,9 +28,11 @@ function Winner({ winners }: { winners: SessionCard[] }) {
     );
   }
   const { title } = winner;
-  const meta = [title.year ? String(title.year) : null, formatRuntime(title.runtimeMin)].filter(
-    Boolean,
-  );
+  const meta = [
+    title.year ? String(title.year) : null,
+    formatRuntime(title.runtimeMin),
+    formatList(title.genres),
+  ].filter(Boolean);
   const rating = formatRating(title.rating);
   return (
     <section className="session-winner">

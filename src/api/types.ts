@@ -133,6 +133,10 @@ export interface HistoryTitle {
   runtimeMin: number | null;
   /** TMDB vote average, 0-10 */
   rating: number | null;
+  /** genre names, e.g. ['Science Fiction', 'Adventure'] */
+  genres: string[];
+  /** how many participants liked it (sent for the winners of the history list), else null */
+  likes: number | null;
 }
 
 /** One finished session of the account. */
@@ -145,6 +149,10 @@ export interface SessionSummary {
   participantCount: number;
   /** the movies tied for the most likes (empty = no match) */
   winners: HistoryTitle[];
+  /** a few movies of the session for the small posters of the list (up to 3) */
+  previews: HistoryTitle[];
+  /** how many movies the session had, null when the backend did not say */
+  totalCards: number | null;
   /** how many movies this person voted for / liked in the session */
   ratedCount: number;
   likedCount: number;
@@ -299,6 +307,8 @@ export interface HistoryTitleDto {
   posterUrl?: string | null;
   runtimeMinutes?: number | null;
   voteAverage?: number | null;
+  genres?: { id: number; name: string }[];
+  likesCount?: number | null;
 }
 
 export interface SessionSummaryDto {
@@ -307,6 +317,8 @@ export interface SessionSummaryDto {
   contentType: ContentType;
   participantCount: number;
   winnerTitles?: HistoryTitleDto[];
+  previewTitles?: HistoryTitleDto[];
+  totalCards?: number | null;
   ratedCount: number;
   likedCount: number;
 }

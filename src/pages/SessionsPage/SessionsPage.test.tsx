@@ -50,6 +50,25 @@ describe('SessionsPage', () => {
     expect(screen.queryByRole('button', { name: 'Show more' })).not.toBeInTheDocument();
   });
 
+  it('shows the winner likes and a few posters with "+N" when the backend sends them', async () => {
+    const poster = (id: number) => ({ id, title: `M${id}`, posterUrl: `https://img/${id}.jpg` });
+    setup({
+      'GET /me/history?page=0&size=10': page([
+        {
+          ...session(3, 'Dune'),
+          winnerTitles: [{ id: 3, title: 'Dune', posterUrl: null, likesCount: 4 }],
+          previewTitles: [poster(10), poster(11), poster(12)],
+          totalCards: 20,
+        },
+      ]),
+    });
+
+    expect(await screen.findByText('4 / 4 likes')).toBeInTheDocument();
+    expect(screen.queryByText('You liked 8 of 20')).not.toBeInTheDocument();
+    expect(screen.getByText('+ 16')).toBeInTheDocument();
+    expect(document.querySelectorAll('.session-row__previews img')).toHaveLength(3);
+  });
+
   it('opens the details of a session', async () => {
     setup({ 'GET /me/history?page=0&size=10': page([session(3, 'Dune')]) });
 

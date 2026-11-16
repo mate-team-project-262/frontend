@@ -140,6 +140,48 @@
   border-left: 1px solid #7b6aa6;
 }
 
+/* a few posters of the session between two thin lines (x 738 - 1093 in the frame) */
+.session-row__previews {
+  position: relative;
+  display: flex;
+  flex: none;
+  align-items: center;
+  align-self: stretch;
+  gap: 3px;
+  box-sizing: border-box;
+  width: 355px;
+  margin-right: -28px; /* the link's own left line closes the block */
+  padding-left: 42px;
+  border-left: 1px solid #4a3b86;
+}
+
+.session-row__previews img {
+  display: block;
+  width: 72px;
+  height: 96px;
+  border: 1px solid rgba(216, 210, 230, 0.7);
+  border-radius: 10px;
+  object-fit: cover;
+}
+
+.session-row__more {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+  min-width: 65px;
+  height: 42px;
+  margin-left: -18px;
+  padding: 0 12px;
+  border: 1px solid rgba(216, 210, 230, 0.7);
+  border-radius: 21px;
+  background: rgba(45, 28, 124, 0.85);
+  font-family: var(--l-font-text);
+  font-size: 16px;
+  line-height: 1;
+  white-space: nowrap;
+}
+
 .session-row__link {
   display: inline-flex;
   flex: none;
@@ -224,6 +266,12 @@
   font-family: var(--l-font-text);
   font-size: 16px;
   line-height: 1.3;
+}
+
+@media (max-width: 1100px) {
+  .session-row__previews {
+    display: none;
+  }
 }
 
 @media (max-width: 900px) {

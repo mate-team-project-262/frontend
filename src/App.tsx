@@ -3,6 +3,9 @@ import { Navigate, Route, Routes, useLocation } from 'react-router';
 import { toReportedPath, track } from './analytics/analytics.ts';
 import RequireAccount from './components/RequireAccount/RequireAccount.tsx';
 import CreateRoomPage from './pages/CreateRoomPage/CreateRoomPage.tsx';
+import ForgotPasswordPage from './pages/ForgotPasswordPage/ForgotPasswordPage.tsx';
+import ResetPasswordPage from './pages/ResetPasswordPage/ResetPasswordPage.tsx';
+import MyAccountPage from './pages/MyAccountPage/MyAccountPage.tsx';
 import MovieIdentityPage from './pages/MovieIdentityPage/MovieIdentityPage.tsx';
 import LandingPage from './pages/LandingPage/LandingPage.tsx';
 import HomePage from './pages/HomePage/HomePage.tsx';
@@ -37,6 +40,8 @@ export default function App() {
       <Route path={ROUTES.invite} element={<InvitePage />} />
       <Route path={ROUTES.signIn} element={<SignInPage />} />
       <Route path={ROUTES.signUp} element={<SignUpPage />} />
+      <Route path={ROUTES.forgotPassword} element={<ForgotPasswordPage />} />
+      <Route path={ROUTES.resetPassword} element={<ResetPasswordPage />} />
       <Route
         path={ROUTES.dashboard}
         element={
@@ -66,6 +71,14 @@ export default function App() {
         element={
           <RequireAccount>
             <MovieIdentityPage />
+          </RequireAccount>
+        }
+      />
+      <Route
+        path={ROUTES.account}
+        element={
+          <RequireAccount>
+            <MyAccountPage />
           </RequireAccount>
         }
       />
