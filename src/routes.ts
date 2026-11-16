@@ -6,6 +6,8 @@ export const ROUTES = {
   invite: '/join/:code', // the link the host shares (the backend asks for /join/{code})
   signIn: '/sign-in',
   signUp: '/sign-up',
+  forgotPassword: '/forgot-password', // ask for a password reset link
+  resetPassword: '/reset-password', // the link from the email: ?token=...
   // pages of a signed-in person
   dashboard: '/home',
   sessions: '/home/sessions',

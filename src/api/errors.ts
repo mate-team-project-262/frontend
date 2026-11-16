@@ -11,15 +11,22 @@ export class RoomApiError extends Error {
   /** backend error code (NAME_TAKEN ...) or one of ours: NO_SESSION, NETWORK_ERROR, UNAVAILABLE, UNKNOWN */
   code: string | null;
   field: ErrorField;
+  /** TOO_MANY_REQUESTS: how many seconds to wait (the Retry-After header), else null */
+  retryAfter: number | null;
 
   constructor(
     message: string,
-    { code = null, field = null }: { code?: string | null; field?: ErrorField } = {},
+    {
+      code = null,
+      field = null,
+      retryAfter = null,
+    }: { code?: string | null; field?: ErrorField; retryAfter?: number | null } = {},
   ) {
     super(message);
     this.name = 'RoomApiError';
     this.code = code;
     this.field = field;
+    this.retryAfter = retryAfter;
   }
 }
 
@@ -54,6 +61,8 @@ const KNOWN_ERRORS: Record<string, [ErrorField, string]> = {
   HISTORY_NOT_FOUND: [null, 'This session is not in your history.'],
   INVALID_CURRENT_PASSWORD: ['password', 'The current password is incorrect.'],
   PASSWORD_NOT_CHANGED: ['password', 'The new password must be different from the current one.'],
+  RESET_TOKEN_INVALID: [null, 'This link has expired or was already used. Request a new one.'],
+  TOO_MANY_REQUESTS: [null, 'Too many requests. Please wait a moment and try again.'],
   ACCESS_DENIED: [null, 'The page is out of date. Reload it and try again.'],
   WRONG_ROOM: [null, SESSION_EXPIRED],
 };
@@ -63,7 +72,13 @@ export function toRoomApiError(error: unknown): unknown {
   if (!(error instanceof ApiError)) return error;
 
   const known = error.code ? KNOWN_ERRORS[error.code] : undefined;
-  if (known) return new RoomApiError(known[1], { code: error.code, field: known[0] });
+  if (known) {
+    return new RoomApiError(known[1], {
+      code: error.code,
+      field: known[0],
+      retryAfter: error.retryAfter,
+    });
+  }
 
   if (error.code === 'VALIDATION_ERROR') {
     const has = (name: string) => error.fieldErrors.some(({ field }) => field.endsWith(name));

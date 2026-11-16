@@ -71,6 +71,12 @@ email needs the current password), the password (`PUT /me/password`) and deletes
 the backend: after a password change Sign In opens with `state.signedOut` and forgets the user
 there; after a deletion the user is forgotten at once and `RequireAccount` opens the landing page.
 
+Password reset: "Forgot password?" on Sign In -> `/forgot-password` (`POST /auth/forgot-password`,
+"Resend email" waits for the minute the backend allows, or for `Retry-After`) -> the email link
+`/reset-password?token=...`. The page moves the token from the address into the history state,
+checks it first (`GET /auth/reset-password/check`), then sets the password
+(`POST /auth/reset-password`) and shows "Password updated" with "Sign In".
+
 ## Server data: TanStack Query, live updates by polling
 
 Everything that comes from the backend is read through TanStack Query (`@tanstack/react-query`); the

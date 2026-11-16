@@ -18,7 +18,7 @@ const FAILED = 'We could not sign you in. Please try again.';
 /**
  * /sign-in - "Sign In" by the account name and password (POST /auth/login). The backend gives
  * the same answer for a wrong name and a wrong password, so the message does not say which.
- * "Forgot password?" appears with the password reset flow (the backend has no endpoint yet).
+ * "Forgot password?" leads to the password reset (/forgot-password).
  * Another page can leave a line on top of the form in `state.notice` (e.g. after a password
  * change, which ends the session).
  */
@@ -83,6 +83,11 @@ export default function SignInPage() {
         />
         <LightField
           label="Password"
+          labelAction={
+            <Link className="light-field__action" to={ROUTES.forgotPassword}>
+              Forgot password?
+            </Link>
+          }
           type="password"
           icon="lock"
           placeholder="Enter your password"
