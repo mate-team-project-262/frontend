@@ -28,6 +28,8 @@ interface Props {
   subtitle?: ReactNode;
   /** `center` = the short confirmation cards ("Check your email", "Password updated") */
   align?: 'start' | 'center';
+  /** a round badge above the title (`AuthBadge`) */
+  badge?: ReactNode;
   children: ReactNode;
 }
 
@@ -35,7 +37,7 @@ interface Props {
  * Shared page of the account screens (Sign In, Sign Up, password reset): the landing header, a
  * curved strip of posters behind, and a cream card in the middle with the title and the form.
  */
-export default function AuthLayout({ title, subtitle, align = 'start', children }: Props) {
+export default function AuthLayout({ title, subtitle, align = 'start', badge, children }: Props) {
   return (
     <div className="auth-page landing">
       <LandingHeader />
@@ -56,6 +58,7 @@ export default function AuthLayout({ title, subtitle, align = 'start', children 
           className={align === 'center' ? 'auth-card auth-card--center' : 'auth-card'}
           aria-labelledby="auth-card-title"
         >
+          {badge}
           <h1 className="auth-card__title" id="auth-card-title">
             {title}
           </h1>

@@ -1,9 +1,12 @@
 import { mockBackend } from '../test/fixtures.ts';
 import {
   changePassword,
+  checkResetToken,
   deleteAccount,
   getCurrentUser,
   register,
+  requestPasswordReset,
+  resetPassword,
   signIn,
   signOut,
   updateAccount,
@@ -103,6 +106,42 @@ describe('account API', () => {
       ['DELETE', '/api/me', { currentPassword: 'new12345' }],
     ]);
     expect(changes.every((request) => request.headers['X-CSRF-TOKEN'] === 'csrf-1')).toBe(true);
+  });
+
+  it('resets a password: the email, the check of the link, the new password', async () => {
+    const fetchMock = mockBackend({
+      ...csrf,
+      'POST /auth/forgot-password': { status: 202, body: {} },
+      'GET /auth/reset-password/check?token=a%2Fb': { status: 204, body: null },
+      'POST /auth/reset-password': { status: 204, body: null },
+    });
+
+    await requestPasswordReset('anna@example.com');
+    await checkResetToken('a/b');
+    await resetPassword({ token: 'a/b', newPassword: 'new12345' });
+
+    const calls = requests(fetchMock).filter((request) => !request.url.endsWith('/csrf'));
+    expect(calls.map(({ method, url, body }) => [method, url, body])).toEqual([
+      ['POST', '/api/auth/forgot-password', { email: 'anna@example.com' }],
+      ['GET', '/api/auth/reset-password/check?token=a%2Fb', undefined],
+      ['POST', '/api/auth/reset-password', { token: 'a/b', newPassword: 'new12345' }],
+    ]);
+  });
+
+  it('reads how long to wait after "too many requests"', async () => {
+    vi.spyOn(globalThis, 'fetch').mockImplementation(async (url) =>
+      String(url).endsWith('/csrf')
+        ? new Response(JSON.stringify(csrf['GET /auth/csrf']))
+        : new Response(JSON.stringify({ code: 'TOO_MANY_REQUESTS' }), {
+            status: 429,
+            headers: { 'Retry-After': '42' },
+          }),
+    );
+
+    await expect(requestPasswordReset('anna@example.com')).rejects.toMatchObject({
+      code: 'TOO_MANY_REQUESTS',
+      retryAfter: 42,
+    });
   });
 
   it('signs out with a CSRF token', async () => {

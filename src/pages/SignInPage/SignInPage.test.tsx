@@ -19,6 +19,7 @@ function setup(routes: Record<string, unknown>) {
       <Routes>
         <Route path="/sign-in" element={<SignInPage />} />
         <Route path="/home" element={<h1>Home page</h1>} />
+        <Route path="/forgot-password" element={<h1>Forgot password page</h1>} />
       </Routes>
     </MemoryRouter>,
   );
@@ -29,6 +30,12 @@ const submitButton = () =>
   within(screen.getByRole('main')).getByRole('button', { name: /Sign In/ });
 
 describe('SignInPage', () => {
+  it('leads to the password reset', async () => {
+    setup({});
+    await userEvent.click(screen.getByRole('link', { name: 'Forgot password?' }));
+    expect(screen.getByRole('heading', { name: 'Forgot password page' })).toBeInTheDocument();
+  });
+
   it('signs in and opens the home page', async () => {
     const user = userEvent.setup();
     setup({ 'POST /auth/login': anna });
