@@ -1,6 +1,7 @@
 import { useQueryClient } from '@tanstack/react-query';
 import { useState } from 'react';
 import { useNavigate } from 'react-router';
+import { logEvent } from '../../analytics/productEvents.ts';
 import { updateAccount } from '../../api/roomsApi.ts';
 import BrandHeader from '../../components/BrandHeader/BrandHeader.tsx';
 import { ArrowRightIcon } from '../../components/WinnerCard/WinnerCard.tsx';
@@ -124,7 +125,10 @@ export default function MyAccountPage() {
               <button
                 type="button"
                 className="account-action"
-                onClick={() => setDialog('password')}
+                onClick={() => {
+                  logEvent('change_password_clicked');
+                  setDialog('password');
+                }}
               >
                 Change password
                 <ArrowRightIcon />
@@ -145,7 +149,10 @@ export default function MyAccountPage() {
           <button
             type="button"
             className="account-action account-action--danger"
-            onClick={() => setDialog('delete')}
+            onClick={() => {
+              logEvent('delete_account_clicked');
+              setDialog('delete');
+            }}
           >
             Delete
             <ArrowRightIcon />

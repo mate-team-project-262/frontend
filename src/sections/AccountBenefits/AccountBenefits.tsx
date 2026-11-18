@@ -1,5 +1,6 @@
 import type { ReactNode } from 'react';
 import { useNavigate } from 'react-router';
+import { logEvent } from '../../analytics/productEvents.ts';
 import BrandButton from '../../components/BrandButton/BrandButton.tsx';
 import illustration from '../../assets/landing/account-illustration.webp';
 import { ACCOUNT_BENEFITS } from '../../data/content.ts';
@@ -44,6 +45,8 @@ export default function AccountBenefits({
   variant?: 'stacked';
 }) {
   const navigate = useNavigate();
+  // analytics: the same block sits on the landing page and on the results page
+  const source = variant === 'stacked' ? 'results' : 'landing';
 
   return (
     <section className={variant === 'stacked' ? 'account account--stacked' : 'account'} id={id}>
@@ -52,7 +55,13 @@ export default function AccountBenefits({
           <h2 className="account__title">{title}</h2>
           <p className="account__lead">{lead}</p>
           <div className="account__actions">
-            <BrandButton className="account__button" onClick={() => navigate(ROUTES.signUp)}>
+            <BrandButton
+              className="account__button"
+              onClick={() => {
+                logEvent('sign_up_clicked', { source });
+                navigate(ROUTES.signUp);
+              }}
+            >
               {buttonLabel}
             </BrandButton>
             <p className="account__sign-in">
@@ -60,7 +69,10 @@ export default function AccountBenefits({
               <button
                 type="button"
                 className="account__sign-in-link"
-                onClick={() => navigate(ROUTES.signIn)}
+                onClick={() => {
+                  logEvent('account_section_sign_in_clicked', { source });
+                  navigate(ROUTES.signIn);
+                }}
               >
                 Sign In
               </button>

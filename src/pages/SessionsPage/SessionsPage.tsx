@@ -1,4 +1,5 @@
 import { Link, useNavigate } from 'react-router';
+import { logEvent } from '../../analytics/productEvents.ts';
 import type { SessionSummary } from '../../api/roomsApi.ts';
 import clapper from '../../assets/account/clapper.webp';
 import AccountLayout from '../../components/AccountLayout/AccountLayout.tsx';
@@ -29,7 +30,12 @@ const PREVIEW_COUNT = 3;
 
 /** The small posters of a few movies of the session and "+16" for the rest. */
 function SessionPreviews({ session }: { session: SessionSummary }) {
-  const previews = session.previews.filter((title) => title.posterUrl).slice(0, PREVIEW_COUNT);
+  // the backend sends the first three cards of the deck; the winner may be one of them, but it
+  // already has the big poster of the row, so it is not repeated here
+  const winnerIds = new Set(session.winners.map((title) => title.id));
+  const previews = session.previews
+    .filter((title) => title.posterUrl && !winnerIds.has(title.id))
+    .slice(0, PREVIEW_COUNT);
   if (previews.length === 0) return null;
   const hidden = countHiddenMovies({ ...session, previews });
   return (
@@ -77,7 +83,11 @@ function SessionRow({ session }: { session: SessionSummary }) {
         </p>
       </div>
       <SessionPreviews session={session} />
-      <Link className="session-row__link" to={sessionDetailsPath(session.id)}>
+      <Link
+        className="session-row__link"
+        to={sessionDetailsPath(session.id)}
+        onClick={() => logEvent('session_details_clicked', { source: 'sessions' })}
+      >
         View details
         <OpenIcon />
       </Link>

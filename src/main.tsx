@@ -8,12 +8,14 @@ import { StrictMode } from 'react';
 import { createRoot } from 'react-dom/client';
 import { BrowserRouter } from 'react-router';
 import { initAnalytics } from './analytics/analytics.ts';
+import { initProductEvents } from './analytics/productEvents.ts';
 import { createQueryClient } from './api/queryClient.ts';
 import App from './App.tsx';
 import ErrorBoundary from './components/ErrorBoundary/ErrorBoundary.tsx';
 
 const queryClient = createQueryClient();
 initAnalytics();
+initProductEvents();
 
 createRoot(document.querySelector('#root')!).render(
   <StrictMode>

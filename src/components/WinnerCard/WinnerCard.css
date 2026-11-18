@@ -160,3 +160,52 @@
     transform: none;
   }
 }
+
+/* Phones (designer, 18.11): tighter lines between the title, the details and the rating */
+@media (max-width: 720px) {
+  .winner-card__likes {
+    margin-top: 4px;
+    font-size: 18px;
+  }
+
+  .winner-card__title {
+    margin-top: 12px;
+  }
+
+  .winner-card__meta {
+    margin-top: 8px;
+    font-size: 15px;
+  }
+
+  .winner-card__rating {
+    margin-top: 8px;
+    font-size: 18px;
+  }
+
+  .winner-card__overview {
+    margin-top: 14px;
+  }
+}
+
+/* Phones (designer): the text under the poster one step smaller */
+@media (max-width: 720px) {
+  .winner-card__likes {
+    font-size: 16px;
+  }
+
+  .winner-card__title {
+    font-size: 24px;
+  }
+
+  .winner-card__meta {
+    font-size: 14px;
+  }
+
+  .winner-card__rating {
+    font-size: 16px;
+  }
+
+  .winner-card__overview {
+    font-size: 14px;
+  }
+}

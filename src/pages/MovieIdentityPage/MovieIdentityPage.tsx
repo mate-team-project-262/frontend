@@ -69,7 +69,6 @@ function GenreMix({ identity }: { identity: MovieIdentity }) {
 function Era({ identity }: { identity: MovieIdentity }) {
   const decades = pickDecades(identity.decadeMix);
   const hasData = decades.length > 0;
-  const top = Math.max(...decades.map((item) => item.percent), 0);
 
   return (
     <section className="identity-card identity-era" aria-labelledby="identity-era-title">
@@ -91,7 +90,7 @@ function Era({ identity }: { identity: MovieIdentity }) {
                       ? 'identity-bars__fill identity-bars__fill--top'
                       : 'identity-bars__fill'
                   }
-                  style={{ width: `${getBarWidth(item.percent, top)}%` }}
+                  style={{ width: `${getBarWidth(item.percent)}%` }}
                 />
               </span>
               <span className="identity-bars__value">{Math.round(item.percent)}%</span>

@@ -230,3 +230,29 @@
     animation: none;
   }
 }
+
+/*
+ * Phones (designer): less room above the title; in "Also highly rated" the subtitle sits close
+ * to its title and the cards start clearly lower, so the heading reads as one group.
+ */
+@media (max-width: 720px) {
+  .results-hero__inner {
+    padding-top: 12px;
+  }
+
+  .results-list {
+    padding-top: 32px;
+  }
+
+  .results-list__title {
+    line-height: 1.15;
+  }
+
+  .results-list__subtitle {
+    margin-top: 4px;
+  }
+
+  .results-list__cards {
+    margin-top: 32px;
+  }
+}

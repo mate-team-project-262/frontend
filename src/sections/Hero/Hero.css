@@ -234,3 +234,19 @@
     transform: none;
   }
 }
+
+/*
+ * Phones (designer, 18.11): the text was too small. It grows with the screen and keeps the
+ * left alignment of the 390px mockup; "Stop arguing about" stays on one line.
+ */
+@media (max-width: 600px) {
+  .hero__title {
+    /* as large as fits: the 24px side paddings, and the line is ~9.5 times its font size */
+    font-size: min(calc((100vw - 48px) / 9.6), 46px);
+  }
+
+  .hero__lead {
+    max-width: 18.75em; /* the 300px of the mockup at 16px: the same line breaks */
+    font-size: clamp(16px, 4.4vw, 19px);
+  }
+}

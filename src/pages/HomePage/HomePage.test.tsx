@@ -73,7 +73,8 @@ describe('HomePage', () => {
     });
 
     expect(await screen.findByText('Winner: Spider Man')).toBeInTheDocument();
-    expect(screen.getByRole('heading', { name: /What to Watch, Sofiia/ })).toBeInTheDocument();
+    // the same greeting on every page
+    expect(screen.getByRole('heading', { name: /Welcome, Sofiia/ })).toBeInTheDocument();
     expect(screen.getByText('Winner: Dune: Part Two')).toBeInTheDocument();
     expect(screen.getByText('4 friends')).toBeInTheDocument();
     expect(screen.getByText('1 friend')).toBeInTheDocument();
@@ -109,7 +110,7 @@ describe('HomePage', () => {
       'GET /me/movie-identity': emptyIdentity,
     });
     expect(await screen.findByText(/Could not load your sessions/)).toBeInTheDocument();
-    expect(screen.getByRole('heading', { name: /What to Watch, Sofiia/ })).toBeInTheDocument();
+    expect(screen.getByRole('heading', { name: 'Start a new movie session' })).toBeInTheDocument();
     expect(screen.getByRole('button', { name: 'Try again' })).toBeInTheDocument();
   });
 });

@@ -108,12 +108,35 @@
 
 @media (max-width: 600px) {
   .landing-header__account {
-    gap: 12px;
+    gap: 8px;
   }
 
-  /* no room for the words next to the logo and the name: a round "+" button */
+  /* the words fit next to the logo and the first name on most phones (designer, 18.11) */
   .landing-header__create {
-    width: 40px;
+    gap: 8px;
+    height: 36px;
+    padding: 0 14px;
+    font-size: 14px;
+  }
+
+  /* a signed-in header holds three things: a slightly smaller logo leaves room for the words */
+  .landing-header--account .landing-header__logo img {
+    width: 88px;
+    height: auto;
+  }
+
+  .landing-header .user-menu__toggle {
+    min-width: 0;
+    max-width: 120px;
+    height: 36px;
+    padding: 0 14px;
+  }
+}
+
+/* very narrow phones: no room for the words, a round "+" button */
+@media (max-width: 374px) {
+  .landing-header__create {
+    width: 36px;
     padding: 0;
   }
 

@@ -1,6 +1,7 @@
 import { type FormEvent, useEffect, useState } from 'react';
 import { Link, Navigate, useLocation, useNavigate } from 'react-router';
 import { track } from '../../analytics/analytics.ts';
+import { logEvent } from '../../analytics/productEvents.ts';
 import { RoomApiError, signIn } from '../../api/roomsApi.ts';
 import AuthLayout from '../../components/AuthLayout/AuthLayout.tsx';
 import BrandButton from '../../components/BrandButton/BrandButton.tsx';
@@ -46,6 +47,7 @@ export default function SignInPage() {
 
   const handleSubmit = async (event: FormEvent) => {
     event.preventDefault();
+    logEvent('sign_in_clicked');
     form.touchAll();
     if (!form.isValid) return;
 
@@ -84,7 +86,11 @@ export default function SignInPage() {
         <LightField
           label="Password"
           labelAction={
-            <Link className="light-field__action" to={ROUTES.forgotPassword}>
+            <Link
+              className="light-field__action"
+              to={ROUTES.forgotPassword}
+              onClick={() => logEvent('forgot_password_clicked')}
+            >
               Forgot password?
             </Link>
           }
@@ -108,7 +114,11 @@ export default function SignInPage() {
       <SocialButtons />
       <p className="auth-card__footer">
         Don’t have an account?
-        <Link className="auth-card__link" to={ROUTES.signUp}>
+        <Link
+          className="auth-card__link"
+          to={ROUTES.signUp}
+          onClick={() => logEvent('sign_up_clicked', { source: 'sign_in' })}
+        >
           Sign Up
         </Link>
       </p>

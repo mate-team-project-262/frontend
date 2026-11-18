@@ -19,9 +19,6 @@ export function pickDecades(decades: Decade[], count = 4): Decade[] {
     .sort((a, b) => a.decade - b.decade);
 }
 
-/** How much of the track the longest bar takes: the design never fills the track to the end. */
-const LONGEST_BAR = 68;
-
-/** Width of a decade's bar in % of the track, in proportion to the biggest share `top`. */
-export const getBarWidth = (percent: number, top: number): number =>
-  top > 0 ? Math.round((Math.max(percent, 0) / top) * LONGEST_BAR) : 0;
+/** Width of a decade's bar in % of the track: its share itself, so 100% fills the whole track. */
+export const getBarWidth = (percent: number): number =>
+  Math.round(Math.min(Math.max(percent, 0), 100));

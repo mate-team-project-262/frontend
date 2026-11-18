@@ -113,8 +113,15 @@
 }
 
 .session-winner__label svg {
+  flex: none;
   width: 30px;
   height: 25px;
+}
+
+/* the crown's weight is in its heavy base, so the word sits a little lower to look centred */
+.session-winner__label span {
+  line-height: 1;
+  transform: translateY(2px);
 }
 
 .session-winner__title {

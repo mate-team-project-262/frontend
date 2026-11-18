@@ -63,6 +63,20 @@
     box-shadow 0.2s ease;
 }
 
+/* Chrome paints an autofilled field light blue: keep the field's own look */
+.light-field__input:-webkit-autofill,
+.light-field__input:-webkit-autofill:hover {
+  -webkit-text-fill-color: #170e43;
+  box-shadow: 0 0 0 1000px #fffaef inset;
+  transition: background-color 9999s ease-out;
+}
+
+.light-field__input:-webkit-autofill:focus-visible {
+  box-shadow:
+    0 0 0 1000px #fffaef inset,
+    0 0 0 1px #7835ff;
+}
+
 .light-field__input--with-icon {
   padding-left: 50px;
 }

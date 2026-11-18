@@ -145,3 +145,14 @@ Privacy rules built into the module: names are never sent, room codes are cut ou
 addresses (`/room/:code`), and the once-per-room events are not repeated after a reload.
 The production CSP (gateway in the infra repo) must allow `googletagmanager.com` and
 `google-analytics.com`.
+
+## Product events (the analyst's specification)
+
+Besides Google Analytics, clicks and choices from the analyst's "Event Tracking Specification" go
+to our backend: `logEvent('name', params, { roomCode })` from `analytics/productEvents.ts` puts
+them in a queue, which is sent to `POST /event` every 5 seconds, at 20 events, and when the page is
+hidden or closed (`sendBeacon`). Each event has an `eventId` (the backend stores a retried event
+once), the tab's `sessionId` (lives until the tab is closed, nothing is kept between visits), the
+time and the page as a route template. Events from room screens are sent separately with the
+participant token, so the backend can link them to the room. Swipe session start / end and the
+winning movie are recorded by the backend itself. Like GA, this runs only on the real site.
