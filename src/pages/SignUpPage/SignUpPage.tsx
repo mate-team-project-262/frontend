@@ -1,6 +1,7 @@
 import { type FormEvent, useState } from 'react';
 import { Link, Navigate, useNavigate } from 'react-router';
 import { track } from '../../analytics/analytics.ts';
+import { logEvent } from '../../analytics/productEvents.ts';
 import { RoomApiError, register } from '../../api/roomsApi.ts';
 import AuthLayout from '../../components/AuthLayout/AuthLayout.tsx';
 import BrandButton from '../../components/BrandButton/BrandButton.tsx';
@@ -44,6 +45,7 @@ export default function SignUpPage() {
 
   const handleSubmit = async (event: FormEvent) => {
     event.preventDefault();
+    logEvent('sign_up_clicked', { source: 'sign_up_form' });
     form.touchAll();
     if (!form.isValid) return;
 
@@ -56,6 +58,7 @@ export default function SignUpPage() {
         password: form.values.password,
       });
       track('sign_up', { method: 'password' });
+      logEvent('sign_up_succeeded');
       setUser(user);
       navigate(ROUTES.dashboard);
     } catch (error) {
@@ -117,7 +120,11 @@ export default function SignUpPage() {
       <SocialButtons />
       <p className="auth-card__footer">
         Already have an account?
-        <Link className="auth-card__link" to={ROUTES.signIn}>
+        <Link
+          className="auth-card__link"
+          to={ROUTES.signIn}
+          onClick={() => logEvent('sign_in_from_signup_clicked')}
+        >
           Sign In
         </Link>
       </p>

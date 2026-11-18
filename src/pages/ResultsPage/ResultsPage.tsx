@@ -1,4 +1,5 @@
 import { oncePerRoom, secondsSinceSwipeStarted, track } from '../../analytics/analytics.ts';
+import { logEvent } from '../../analytics/productEvents.ts';
 import type { ResultCard as ResultCardData, Room } from '../../api/roomsApi.ts';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useNavigate } from 'react-router';
@@ -10,6 +11,7 @@ import ResultCard from '../../components/ResultCard/ResultCard.tsx';
 import WinnerCard, { ArrowRightIcon } from '../../components/WinnerCard/WinnerCard.tsx';
 import WinnersCarousel from '../../components/WinnersCarousel/WinnersCarousel.tsx';
 import ClapperIllustration from '../../components/ClapperIllustration/ClapperIllustration.tsx';
+import { useAccount } from '../../hooks/useAccount.ts';
 import { useRoulette } from '../../hooks/useRoulette.ts';
 import { useRoundResults } from '../../hooks/useRoundResults.ts';
 import { ROUTES } from '../../routes.ts';
@@ -53,6 +55,8 @@ export default function ResultsPage({ code, room }: { code: string; room: Room }
   const navigate = useNavigate();
   const state = useRoundResults(code);
   const [details, setDetails] = useState<ResultCardData | null>(null);
+  // the "create an account" block is for guests only (hidden while we do not know yet)
+  const isGuest = useAccount().status === 'guest';
   const [showAll, setShowAll] = useState(false);
   const picksRef = useRef<HTMLElement>(null);
 
@@ -88,7 +92,15 @@ export default function ResultsPage({ code, room }: { code: string; room: Room }
   }, [code, participantCount, winners]);
 
   const closeDetails = useCallback(() => setDetails(null), []);
-  const startAnotherRound = () => navigate(ROUTES.createRoom);
+  const startAnotherRound = () => {
+    logEvent('another_round_clicked', {}, { roomCode: code });
+    navigate(ROUTES.createRoom);
+  };
+  /** "View details" of a winner (the other picks of the round are not counted). */
+  const openWinnerDetails = (card: ResultCardData) => {
+    logEvent('winner_details_clicked', { movie_id: card.id }, { roomCode: code });
+    setDetails(card);
+  };
 
   const backdrop = noMatch ? cinemaPhoto : (picked ?? winners[0])?.posterUrl;
   const total = results?.total ?? 0;
@@ -156,7 +168,7 @@ export default function ResultsPage({ code, room }: { code: string; room: Room }
               card={picked}
               total={total}
               variant="chosen"
-              onDetails={() => setDetails(picked)}
+              onDetails={() => openWinnerDetails(picked)}
             />
           </div>
           {isHost && (
@@ -186,7 +198,7 @@ export default function ResultsPage({ code, room }: { code: string; room: Room }
           winners={winners}
           total={total}
           highlightedId={roulette.highlightedId}
-          onDetails={setDetails}
+          onDetails={openWinnerDetails}
         />
         {isHost && !single && (
           <div className="results-hero__roulette">
@@ -289,18 +301,20 @@ export default function ResultsPage({ code, room }: { code: string; room: Room }
 
       {state.status === 'ready' && (
         <>
-          <AccountBenefits
-            id="results-account"
-            variant="stacked"
-            title={
-              <>
-                Want us to learn <span className="account__title-accent">your taste</span> better?
-              </>
-            }
-            lead="Create an account to save this session, avoid repeats, and build a movie identity from the choices you make."
-            buttonLabel="Save and build my profile"
-            signInText="Already have an account?"
-          />
+          {isGuest && (
+            <AccountBenefits
+              id="results-account"
+              variant="stacked"
+              title={
+                <>
+                  Want us to learn <span className="account__title-accent">your taste</span> better?
+                </>
+              }
+              lead="Create an account to save this session, avoid repeats, and build a movie identity from the choices you make."
+              buttonLabel="Save and build my profile"
+              signInText="Already have an account?"
+            />
+          )}
           {!noMatch && (
             <CtaBanner
               title="Not the one?"

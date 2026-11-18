@@ -1,4 +1,5 @@
 import { Link, useNavigate } from 'react-router';
+import { logEvent } from '../../analytics/productEvents.ts';
 import type { MovieIdentity, SessionSummary } from '../../api/roomsApi.ts';
 import clapper from '../../assets/account/clapper.webp';
 import AccountLayout from '../../components/AccountLayout/AccountLayout.tsx';
@@ -48,6 +49,7 @@ function RecentSession({ session }: { session: SessionSummary }) {
       <Link
         className="recent-session__link"
         to={sessionDetailsPath(session.id)}
+        onClick={() => logEvent('session_details_clicked', { source: 'home' })}
         aria-label={`Open the session of ${formatSessionDate(session.finishedAt)}`}
       >
         <ArrowIcon size={24} />
@@ -133,7 +135,13 @@ export default function HomePage() {
           <p className="home-start__text">
             Set your preferences, invite friends and find a movie you’ll all enjoy
           </p>
-          <BrandButton className="home-start__button" onClick={() => navigate(ROUTES.createRoom)}>
+          <BrandButton
+            className="home-start__button"
+            onClick={() => {
+              logEvent('start_session_clicked', { source: 'home' });
+              navigate(ROUTES.createRoom);
+            }}
+          >
             Create a room
             <PlusIcon />
           </BrandButton>
@@ -149,7 +157,11 @@ export default function HomePage() {
               {hasSessions ? 'Recent sessions' : 'Sessions'}
             </h2>
             {hasSessions && (
-              <Link className="home-card__link" to={ROUTES.sessions}>
+              <Link
+                className="home-card__link"
+                to={ROUTES.sessions}
+                onClick={() => logEvent('view_sessions_clicked', { source: 'home' })}
+              >
                 View all
                 <ArrowIcon />
               </Link>
@@ -186,7 +198,11 @@ export default function HomePage() {
               Movie identity
             </h2>
             {hasIdentity && (
-              <Link className="home-card__link" to={ROUTES.movieIdentity}>
+              <Link
+                className="home-card__link"
+                to={ROUTES.movieIdentity}
+                onClick={() => logEvent('explore_taste_clicked', { source: 'home' })}
+              >
                 Explore
                 <ArrowIcon />
               </Link>

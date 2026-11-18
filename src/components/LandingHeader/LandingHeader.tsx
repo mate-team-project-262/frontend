@@ -1,5 +1,6 @@
 import type { ComponentPropsWithoutRef } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router';
+import { logEvent } from '../../analytics/productEvents.ts';
 import logo from '../../assets/landing/w2w-logo.svg';
 import { useAccount } from '../../hooks/useAccount.ts';
 import { ROUTES } from '../../routes.ts';
@@ -57,7 +58,10 @@ export default function LandingHeader() {
           <div className="landing-header__account">
             <BrandButton
               className="landing-header__create"
-              onClick={() => navigate(ROUTES.createRoom)}
+              onClick={() => {
+                logEvent('create_room_submitted', { source: 'header' });
+                navigate(ROUTES.createRoom);
+              }}
             >
               <span className="landing-header__create-label">Create a room</span>
               <PlusIcon />
@@ -68,7 +72,13 @@ export default function LandingHeader() {
           <nav className="landing-header__nav" aria-label="Main">
             <NavButton onClick={() => goToSection('how-it-works')}>How it works</NavButton>
             <NavButton onClick={() => goToSection('account-benefits')}>Account benefits</NavButton>
-            <NavButton bold onClick={() => navigate(ROUTES.signIn)}>
+            <NavButton
+              bold
+              onClick={() => {
+                logEvent('header_sign_in_clicked');
+                navigate(ROUTES.signIn);
+              }}
+            >
               Sign In
             </NavButton>
           </nav>

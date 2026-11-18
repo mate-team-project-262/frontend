@@ -1,4 +1,5 @@
 import { useNavigate } from 'react-router';
+import { logEvent } from '../../analytics/productEvents.ts';
 import BrandButton from '../../components/BrandButton/BrandButton.tsx';
 import LandingHeader from '../../components/LandingHeader/LandingHeader.tsx';
 import PosterStack from '../../components/PosterStack/PosterStack.tsx';
@@ -22,13 +23,22 @@ export default function Hero() {
             <strong className="hero__lead-accent">no account required</strong>
           </p>
           <div className="hero__actions">
-            <BrandButton className="hero__button" onClick={() => navigate(ROUTES.createRoom)}>
+            <BrandButton
+              className="hero__button"
+              onClick={() => {
+                logEvent('create_room_submitted', { source: 'landing' });
+                navigate(ROUTES.createRoom);
+              }}
+            >
               Create a room
             </BrandButton>
             <BrandButton
               variant="ghost"
               className="hero__button hero__button--wide"
-              onClick={() => navigate(ROUTES.join)}
+              onClick={() => {
+                logEvent('join_room_clicked', { source: 'landing' });
+                navigate(ROUTES.join);
+              }}
             >
               Join a room
             </BrandButton>
