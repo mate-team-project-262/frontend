@@ -58,6 +58,18 @@ describe('analytics', () => {
     ]);
   });
 
+  it('marks every event for DebugView when the address has ?ga_debug', () => {
+    window.history.replaceState(null, '', '/?ga_debug=1');
+    initAnalytics({ enabled: true });
+    track('room_joined', {});
+    expect(sent()).toContainEqual([
+      'event',
+      'room_joined',
+      { user_type: 'guest', debug_mode: true },
+    ]);
+    window.history.replaceState(null, '', '/');
+  });
+
   it('never reports a room code', () => {
     expect(toReportedPath('/room/K7M2QX')).toBe('/room/:code');
     expect(toReportedPath('/join/K7M2QX')).toBe('/join/:code');
