@@ -36,10 +36,14 @@
 /* H4: Geologica Bold 24 / 120% */
 .movie-card__title {
   margin: 17px 0 0;
+  overflow: hidden;
   font-family: var(--l-font-display);
   font-size: 24px;
   font-weight: 700;
   line-height: 1.2;
+  /* one line, so a long title never pushes the vote buttons down; "More details" has it in full */
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .movie-card__meta {

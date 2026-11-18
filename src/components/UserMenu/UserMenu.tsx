@@ -5,6 +5,7 @@ import { RoomApiError, type User, signOut } from '../../api/roomsApi.ts';
 import { useAccount } from '../../hooks/useAccount.ts';
 import { ROUTES } from '../../routes.ts';
 import { cx } from '../../utils/classNames.ts';
+import { getFirstName } from '../../utils/userName.ts';
 import LogoutModal from '../LogoutModal/LogoutModal.tsx';
 import './UserMenu.css';
 
@@ -85,7 +86,9 @@ export default function UserMenu({ user }: { user: User }) {
         aria-controls={menuId}
         onClick={() => setIsOpen((value) => !value)}
       >
-        <span className="user-menu__name">{user.name}</span>
+        <span className="user-menu__name" title={user.name}>
+          {getFirstName(user.name)}
+        </span>
         <Chevron />
       </button>
       {isOpen && (

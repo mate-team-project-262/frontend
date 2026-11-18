@@ -10,11 +10,18 @@
   background: linear-gradient(180deg, #170a51 0%, #0d0437 43%, #110644 88%, #160951 100%);
 }
 
-.auth-page .landing-header {
-  position: absolute;
-  top: 0;
-  right: 0;
-  left: 0;
+/* the header lies over the page (fixed from tablets up, see base.css), no spacer above the card */
+.auth-page .site-header-spacer {
+  display: none;
+}
+
+@media (max-width: 700px) {
+  .auth-page .landing-header {
+    position: absolute;
+    top: 0;
+    right: 0;
+    left: 0;
+  }
 }
 
 .auth-page__strip {

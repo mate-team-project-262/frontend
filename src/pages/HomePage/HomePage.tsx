@@ -126,7 +126,7 @@ export default function HomePage() {
   const isFirstVisit = history.isSuccess && !hasSessions;
 
   return (
-    <AccountLayout greeting={isFirstVisit ? 'Welcome' : 'What to Watch'}>
+    <AccountLayout>
       <section className="home-start" aria-labelledby="home-start-title">
         <div>
           <h2 className="home-start__title" id="home-start-title">

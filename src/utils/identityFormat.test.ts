@@ -26,10 +26,10 @@ describe('identityFormat', () => {
     expect(picked.map((item) => item.label)).toEqual(['1990s', '2000s', '2010s', '2020s']);
   });
 
-  it('sizes the bars against the biggest share', () => {
-    expect(getBarWidth(42, 42)).toBe(68);
-    expect(getBarWidth(21, 42)).toBe(34);
-    expect(getBarWidth(0, 42)).toBe(0);
-    expect(getBarWidth(0, 0)).toBe(0);
+  it('makes a bar as long as its share of the track', () => {
+    expect(getBarWidth(100)).toBe(100);
+    expect(getBarWidth(42.4)).toBe(42);
+    expect(getBarWidth(0)).toBe(0);
+    expect(getBarWidth(120)).toBe(100);
   });
 });

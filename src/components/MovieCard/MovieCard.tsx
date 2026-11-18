@@ -49,7 +49,9 @@ export default function MovieCard({ card, onMoreDetails, className, ...props }: 
       <div className="movie-card__poster">
         {card.posterUrl && <img src={card.posterUrl} alt="" draggable={false} />}
       </div>
-      <h2 className="movie-card__title">{card.title}</h2>
+      <h2 className="movie-card__title" title={card.title}>
+        {card.title}
+      </h2>
       <p className="movie-card__meta">
         {parts.map((part) => (
           <span

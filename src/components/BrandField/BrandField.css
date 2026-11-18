@@ -119,3 +119,12 @@
   outline: 2px solid #b18aff;
   outline-offset: -2px;
 }
+
+/* Chrome paints an autofilled field light blue: keep the dark field */
+.brand-field__input:-webkit-autofill,
+.brand-field__input:-webkit-autofill:hover,
+.brand-field__input:-webkit-autofill:focus {
+  -webkit-text-fill-color: #fffaef;
+  box-shadow: 0 0 0 1000px #170e43 inset;
+  transition: background-color 9999s ease-out;
+}

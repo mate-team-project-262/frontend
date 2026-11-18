@@ -1,6 +1,7 @@
 import { Link, useNavigate } from 'react-router';
 import logo from '../../assets/landing/w2w-logo.svg';
 import { useAccount } from '../../hooks/useAccount.ts';
+import { useScrolled } from '../../hooks/useScrolled.ts';
 import { ROUTES } from '../../routes.ts';
 import { cx } from '../../utils/classNames.ts';
 import UserMenu from '../UserMenu/UserMenu.tsx';
@@ -55,35 +56,45 @@ export default function BrandHeader({
 }) {
   const navigate = useNavigate();
   const { user } = useAccount();
+  const isScrolled = useScrolled();
 
   return (
-    <header className={cx('brand-header', action === 'leave' && 'brand-header--leave')}>
-      <div className="container brand-header__inner">
-        <Link to={ROUTES.home} className="brand-header__logo" title="Home page">
-          <img src={logo} width="106" height="48" alt="W2W – What To Watch" />
-        </Link>
-        <div className={cx('brand-header__actions', user && 'brand-header__actions--account')}>
-          <button
-            type="button"
-            className={cx(
-              'brand-header__back',
-              // a long label next to the user menu does not fit a phone: only the arrow stays there
-              action === 'back' &&
-                backLabel !== 'Back' &&
-                user &&
-                'brand-header__back--short-on-phone',
-            )}
-            aria-label={action === 'leave' ? 'Leave room' : backLabel}
-            onClick={onBack ?? (() => navigate(user ? ROUTES.dashboard : ROUTES.home))}
-          >
-            {action === 'leave' ? <LeaveIcon /> : <ArrowLeft />}
-            <span className="brand-header__back-text">
-              {action === 'leave' ? 'Leave room' : backLabel}
-            </span>
-          </button>
-          {user && <UserMenu user={user} />}
+    <>
+      <div className="site-header-spacer" aria-hidden="true" />
+      <header
+        className={cx(
+          'brand-header site-header',
+          action === 'leave' && 'brand-header--leave',
+          isScrolled && 'site-header--scrolled',
+        )}
+      >
+        <div className="container brand-header__inner">
+          <Link to={ROUTES.home} className="brand-header__logo" title="Home page">
+            <img src={logo} width="106" height="48" alt="W2W – What To Watch" />
+          </Link>
+          <div className={cx('brand-header__actions', user && 'brand-header__actions--account')}>
+            <button
+              type="button"
+              className={cx(
+                'brand-header__back',
+                // a long label next to the user menu does not fit a phone: only the arrow stays there
+                action === 'back' &&
+                  backLabel !== 'Back' &&
+                  user &&
+                  'brand-header__back--short-on-phone',
+              )}
+              aria-label={action === 'leave' ? 'Leave room' : backLabel}
+              onClick={onBack ?? (() => navigate(user ? ROUTES.dashboard : ROUTES.home))}
+            >
+              {action === 'leave' ? <LeaveIcon /> : <ArrowLeft />}
+              <span className="brand-header__back-text">
+                {action === 'leave' ? 'Leave room' : backLabel}
+              </span>
+            </button>
+            {user && <UserMenu user={user} />}
+          </div>
         </div>
-      </div>
-    </header>
+      </header>
+    </>
   );
 }

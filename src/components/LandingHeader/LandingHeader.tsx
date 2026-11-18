@@ -3,6 +3,7 @@ import { Link, useLocation, useNavigate } from 'react-router';
 import { logEvent } from '../../analytics/productEvents.ts';
 import logo from '../../assets/landing/w2w-logo.svg';
 import { useAccount } from '../../hooks/useAccount.ts';
+import { useScrolled } from '../../hooks/useScrolled.ts';
 import { ROUTES } from '../../routes.ts';
 import { cx } from '../../utils/classNames.ts';
 import { scrollToSection } from '../../utils/scrollToSection.ts';
@@ -41,6 +42,7 @@ export default function LandingHeader() {
   const navigate = useNavigate();
   const { pathname } = useLocation();
   const { user } = useAccount();
+  const isScrolled = useScrolled();
 
   const goToSection = (id: string) => {
     if (pathname === ROUTES.home) scrollToSection(id);
@@ -48,42 +50,53 @@ export default function LandingHeader() {
   };
 
   return (
-    <header className="landing-header">
-      <div className="container landing-header__inner">
-        <Link to={ROUTES.home} className="landing-header__logo" title="Home page">
-          {/* the logo's ALT is also the name of the link */}
-          <img src={logo} width="106" height="48" alt="W2W – What To Watch" />
-        </Link>
-        {user ? (
-          <div className="landing-header__account">
-            <BrandButton
-              className="landing-header__create"
-              onClick={() => {
-                logEvent('create_room_submitted', { source: 'header' });
-                navigate(ROUTES.createRoom);
-              }}
-            >
-              <span className="landing-header__create-label">Create a room</span>
-              <PlusIcon />
-            </BrandButton>
-            <UserMenu user={user} />
-          </div>
-        ) : (
-          <nav className="landing-header__nav" aria-label="Main">
-            <NavButton onClick={() => goToSection('how-it-works')}>How it works</NavButton>
-            <NavButton onClick={() => goToSection('account-benefits')}>Account benefits</NavButton>
-            <NavButton
-              bold
-              onClick={() => {
-                logEvent('header_sign_in_clicked');
-                navigate(ROUTES.signIn);
-              }}
-            >
-              Sign In
-            </NavButton>
-          </nav>
+    <>
+      <div className="site-header-spacer" aria-hidden="true" />
+      <header
+        className={cx(
+          'landing-header site-header',
+          user && 'landing-header--account',
+          isScrolled && 'site-header--scrolled',
         )}
-      </div>
-    </header>
+      >
+        <div className="container landing-header__inner">
+          <Link to={ROUTES.home} className="landing-header__logo" title="Home page">
+            {/* the logo's ALT is also the name of the link */}
+            <img src={logo} width="106" height="48" alt="W2W – What To Watch" />
+          </Link>
+          {user ? (
+            <div className="landing-header__account">
+              <BrandButton
+                className="landing-header__create"
+                onClick={() => {
+                  logEvent('create_room_submitted', { source: 'header' });
+                  navigate(ROUTES.createRoom);
+                }}
+              >
+                <span className="landing-header__create-label">Create a room</span>
+                <PlusIcon />
+              </BrandButton>
+              <UserMenu user={user} />
+            </div>
+          ) : (
+            <nav className="landing-header__nav" aria-label="Main">
+              <NavButton onClick={() => goToSection('how-it-works')}>How it works</NavButton>
+              <NavButton onClick={() => goToSection('account-benefits')}>
+                Account benefits
+              </NavButton>
+              <NavButton
+                bold
+                onClick={() => {
+                  logEvent('header_sign_in_clicked');
+                  navigate(ROUTES.signIn);
+                }}
+              >
+                Sign In
+              </NavButton>
+            </nav>
+          )}
+        </div>
+      </header>
+    </>
   );
 }

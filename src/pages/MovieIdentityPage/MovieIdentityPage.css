@@ -462,3 +462,29 @@
     font-size: 12px;
   }
 }
+
+/* Phones (designer, 18.11): smaller gaps between the cards so the page reads as one block */
+@media (max-width: 700px) {
+  .identity-grid,
+  .identity-grid__side {
+    gap: 10px;
+  }
+
+  .identity-facts {
+    gap: 10px;
+  }
+
+  .identity-fact {
+    min-height: 0;
+    padding: 14px 8px;
+  }
+
+  .identity-bars {
+    margin-top: 14px;
+  }
+
+  .identity-actors,
+  .identity-actors--ghost {
+    margin-top: 16px;
+  }
+}

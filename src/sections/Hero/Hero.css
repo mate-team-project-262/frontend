@@ -234,3 +234,24 @@
     transform: none;
   }
 }
+
+/*
+ * Phones (designer, 18.11): everything centred, and the title grows with the screen so it does
+ * not look small on wide phones.
+ */
+@media (max-width: 600px) {
+  .hero__content {
+    text-align: center;
+  }
+
+  .hero__title {
+    font-size: min(8.6vw, 46px);
+  }
+
+  .hero__lead {
+    max-width: 30em;
+    margin-right: auto;
+    margin-left: auto;
+    font-size: min(4.2vw, 18px);
+  }
+}
