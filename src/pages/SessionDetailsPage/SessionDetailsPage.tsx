@@ -42,7 +42,7 @@ function Winner({ winners }: { winners: SessionCard[] }) {
       <div className="session-winner__body">
         <p className="session-winner__label">
           <CrownIcon />
-          Winner
+          <span>Winner</span>
         </p>
         <h3 className="session-winner__title">{title.title}</h3>
         {meta.length > 0 && <p className="session-winner__meta">{meta.join(' • ')}</p>}

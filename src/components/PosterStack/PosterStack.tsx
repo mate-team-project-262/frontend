@@ -63,6 +63,37 @@ const MOBILE_SLOTS: typeof SLOTS = [
   { x: 28, y: -55, w: 204, h: 278, radius: 22, opacity: 0.9, dim: 0.62, border: '#9b95b8' },
 ];
 const MOBILE_QUERY = '(max-width: 600px)';
+/** On phones the front card fills the screen width minus 28px on each side, up to 1.4 times. */
+const PHONE_SIDE_ROOM = 56;
+const MAX_PHONE_SCALE = 1.4;
+
+const scaleSlots = (slots: typeof SLOTS, scale: number): typeof SLOTS =>
+  slots.map((slot) => ({
+    ...slot,
+    x: slot.x * scale,
+    y: slot.y * scale,
+    w: slot.w * scale,
+    h: slot.h * scale,
+    radius: slot.radius * scale,
+  }));
+
+/** How much larger than the 390px mockup the cards can be on this phone (1 = as designed). */
+function usePhoneScale(isMobile: boolean): number {
+  const measure = () =>
+    Math.min(
+      MAX_PHONE_SCALE,
+      Math.max(1, (window.innerWidth - PHONE_SIDE_ROOM) / MOBILE_SLOTS[0].w),
+    );
+  const [scale, setScale] = useState(measure);
+  useEffect(() => {
+    if (!isMobile) return undefined;
+    const update = () => setScale(measure());
+    update();
+    window.addEventListener('resize', update);
+    return () => window.removeEventListener('resize', update);
+  }, [isMobile]);
+  return scale;
+}
 const FRONT_SHADOW = '0 24px 48px rgba(0, 0, 0, 0.45)';
 
 const SHUFFLE_EVERY_MS = 5200;
@@ -81,7 +112,8 @@ export default function PosterStack() {
   const [isBehind, setIsBehind] = useState(false);
   const orderRef = useRef(order);
   const isMobile = useMediaQuery(MOBILE_QUERY);
-  const slots = isMobile ? MOBILE_SLOTS : SLOTS;
+  const phoneScale = usePhoneScale(isMobile);
+  const slots = isMobile ? scaleSlots(MOBILE_SLOTS, phoneScale) : SLOTS;
 
   useEffect(() => {
     if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return undefined;

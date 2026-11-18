@@ -315,3 +315,64 @@
     font-size: 13px;
   }
 }
+
+/* the results page section must not keep its desktop height on smaller screens */
+@media (max-width: 1000px) {
+  .account--stacked {
+    min-height: 0;
+  }
+}
+
+/*
+ * Phones (designer, 18.11): centred heading, a title that grows with the screen, and larger
+ * benefits so they do not look lost under the big illustration.
+ */
+@media (max-width: 600px) {
+  .account__content {
+    text-align: center;
+  }
+
+  .account__title,
+  .account--stacked .account__title {
+    max-width: 12em;
+    margin-right: auto;
+    margin-left: auto;
+    font-size: min(9vw, 44px);
+  }
+
+  .account__lead,
+  .account--stacked .account__lead {
+    max-width: 30em;
+    margin-right: auto;
+    margin-left: auto;
+    font-size: min(4vw, 17px);
+  }
+
+  .account__sign-in {
+    font-size: 14px;
+  }
+
+  .account__illustration {
+    width: min(100%, 400px);
+  }
+
+  .account__benefits {
+    gap: 28px 16px;
+    margin: 36px 0 48px;
+  }
+
+  .benefit__star {
+    width: 26px;
+    height: 26px;
+  }
+
+  .benefit__title {
+    margin-top: 12px;
+    font-size: min(4.6vw, 20px);
+  }
+
+  .benefit__text {
+    margin-top: 6px;
+    font-size: min(3.6vw, 15px);
+  }
+}

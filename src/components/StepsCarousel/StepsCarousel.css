@@ -251,3 +251,56 @@
     line-height: 1.4;
   }
 }
+
+/*
+ * Phones (designer, 18.11): the section takes about half the screen. A tall card, centred, with
+ * the neighbours peeking out on both sides, and the text at the bottom over a darker band.
+ */
+@media (max-width: 600px) {
+  .steps-carousel {
+    --card-w: calc(100vw - 64px);
+    --gap: 10px;
+    --lead: 32px;
+  }
+
+  .steps-carousel__viewport {
+    height: min(calc(var(--card-w) * 1.15), 62vh);
+  }
+
+  .step-card {
+    border-radius: 36px;
+    text-align: left;
+  }
+
+  .step-card::after {
+    background:
+      linear-gradient(180deg, transparent 35%, rgba(4, 0, 20, 0.82) 100%),
+      rgba(0, 0, 0, var(--shade, 0.15));
+  }
+
+  .step-card__image {
+    width: auto;
+    height: 100%;
+  }
+
+  .step-card__content {
+    top: auto;
+    right: 24px;
+    bottom: 28px;
+    left: 24px;
+  }
+
+  .step-card__number {
+    font-size: 32px;
+  }
+
+  .step-card__title {
+    margin-top: 8px;
+    font-size: 24px;
+  }
+
+  .step-card__text {
+    margin-top: 8px;
+    font-size: 15px;
+  }
+}
