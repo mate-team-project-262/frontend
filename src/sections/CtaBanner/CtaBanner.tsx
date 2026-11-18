@@ -1,4 +1,5 @@
 import { useNavigate } from 'react-router';
+import { logEvent } from '../../analytics/productEvents.ts';
 import BrandButton from '../../components/BrandButton/BrandButton.tsx';
 import dune from '../../assets/landing/poster-dune.webp';
 import animals from '../../assets/landing/poster-animals.webp';
@@ -66,7 +67,13 @@ export default function CtaBanner({
         <p className="cta-banner__text">{text}</p>
         <BrandButton
           className="cta-banner__button"
-          onClick={onAction ?? (() => navigate(ROUTES.createRoom))}
+          onClick={
+            onAction ??
+            (() => {
+              logEvent('guest_start_clicked');
+              navigate(ROUTES.createRoom);
+            })
+          }
         >
           {buttonLabel}
         </BrandButton>

@@ -7,10 +7,11 @@ import { renderWithQuery } from '../../test/render.tsx';
 import ResultsPage from './ResultsPage.tsx';
 
 /** likes per card, e.g. [2, 2, 1, 0]; winners = all tied for the most (if > 0), like the backend */
-function setup(likes: number[], { host = true } = {}) {
+function setup(likes: number[], { host = true, me = null as unknown } = {}) {
   signIn('ABC123', host ? 1 : 2);
   const top = Math.max(...likes);
   mockBackend({
+    'GET /me': me ?? { status: 401, body: { code: 'AUTHENTICATION_REQUIRED' } },
     'GET /rooms/ABC123/results': {
       totalParticipants: 2,
       cards: likes.map((count, i) => ({
@@ -28,6 +29,23 @@ function setup(likes: number[], { host = true } = {}) {
 }
 
 describe('ResultsPage', () => {
+  it('offers a guest to create an account', async () => {
+    setup([2, 1, 0]);
+    expect(
+      await screen.findByRole('button', { name: 'Save and build my profile' }),
+    ).toBeInTheDocument();
+  });
+
+  it('does not offer an account to someone who is signed in', async () => {
+    setup([2, 1, 0], { me: { id: 7, email: 'sofiia@example.com', displayName: 'Sofiia' } });
+    await screen.findByRole('heading', { name: 'Tonight’s winner' });
+    // the header shows the account once /me has answered
+    await screen.findByRole('button', { name: 'Sofiia' });
+    expect(
+      screen.queryByRole('button', { name: 'Save and build my profile' }),
+    ).not.toBeInTheDocument();
+  });
+
   it('shows a single winner without the roulette', async () => {
     setup([2, 1, 0]);
     expect(await screen.findByRole('heading', { name: 'Tonight’s winner' })).toBeInTheDocument();

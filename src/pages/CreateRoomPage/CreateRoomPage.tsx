@@ -1,6 +1,7 @@
 import { type ChangeEvent, type FormEvent, useState } from 'react';
 import { useNavigate } from 'react-router';
 import { track } from '../../analytics/analytics.ts';
+import { logEvent } from '../../analytics/productEvents.ts';
 import { type ContentType, RoomApiError, createRoom } from '../../api/roomsApi.ts';
 import BrandButton from '../../components/BrandButton/BrandButton.tsx';
 import BrandChip from '../../components/BrandChip/BrandChip.tsx';
@@ -82,7 +83,10 @@ export default function CreateRoomPage() {
    * Exactly one content type is always selected. Genres belong to a content type: switching it
    * keeps the selected genres that exist in the new list (e.g. Comedy) and drops the rest.
    */
-  const selectContentType = (contentType: ContentType) =>
+  const selectContentType = (contentType: ContentType) => {
+    if (contentType !== form.contentType) {
+      logEvent('content_type_selected', { content_type: contentType });
+    }
     setForm((current) => {
       const available = GENRES_BY_CONTENT_TYPE[contentType];
       return {
@@ -91,6 +95,7 @@ export default function CreateRoomPage() {
         genreIds: current.genreIds.filter((id) => available.some((genre) => genre.id === id)),
       };
     });
+  };
 
   /** Multiple choice. */
   const toggleMany = <K extends 'genreIds' | 'durationsMin' | 'streamingServices'>(
@@ -114,6 +119,24 @@ export default function CreateRoomPage() {
     event.preventDefault();
     const hostName = user ? user.name : form.hostName.trim();
     if (!canSubmit) return;
+
+    // analytics (the analyst's spec): the final choices, then the press itself
+    if (form.genreIds.length > 0) {
+      logEvent('genres_selected', {
+        genres: genres
+          .filter((genre) => form.genreIds.includes(genre.id))
+          .map((genre) => genre.name),
+      });
+    }
+    if (form.durationsMin.length > 0) {
+      logEvent('max_duration_selected', {
+        max_duration: Math.max(...form.durationsMin),
+        durations: [...form.durationsMin].sort((a, b) => a - b),
+      });
+    }
+    logEvent(user ? 'create_room_clicked' : 'create_room_submitted', {
+      source: 'create_room_form',
+    });
 
     setIsSubmitting(true);
     setFormError('');
@@ -166,6 +189,10 @@ export default function CreateRoomPage() {
                 success={!validateDisplayName(form.hostName)}
                 maxLength={60}
                 onChange={handleNameChange}
+                onBlur={() => {
+                  // the name itself is never sent
+                  if (!validateDisplayName(form.hostName)) logEvent('guest_name_entered');
+                }}
               />
             )}
 
