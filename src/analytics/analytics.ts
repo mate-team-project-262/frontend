@@ -42,6 +42,8 @@ declare global {
 }
 
 let isActive = false;
+/** `?ga_debug=1` in the first address of the tab: every event is marked for GA4 DebugView. */
+let isDebug = false;
 let userType: 'guest' | 'registered' = 'guest';
 
 /** GA's own queue function: it must push the `arguments` object itself, not an array. */
@@ -68,6 +70,7 @@ export function isAnalyticsAllowed(
 export function initAnalytics({ enabled = isAnalyticsAllowed() } = {}): void {
   if (!enabled || isActive) return;
   isActive = true;
+  isDebug = new URLSearchParams(window.location.search).has('ga_debug');
   window.dataLayer = window.dataLayer ?? [];
 
   const script = document.createElement('script');
@@ -78,7 +81,7 @@ export function initAnalytics({ enabled = isAnalyticsAllowed() } = {}): void {
   gtag('js', new Date());
   gtag('config', MEASUREMENT_ID, {
     send_page_view: false, // page views are sent by hand, without room codes (App.tsx)
-    ...(new URLSearchParams(window.location.search).has('ga_debug') ? { debug_mode: true } : {}),
+    ...(isDebug ? { debug_mode: true } : {}),
   });
   gtag('set', 'user_properties', { user_type: 'guest' });
 }
@@ -89,7 +92,8 @@ export function track<Name extends keyof AnalyticsEvents>(
   params: AnalyticsEvents[Name],
 ): void {
   if (!isActive) return;
-  gtag('event', name, { user_type: userType, ...params });
+  // GA does not pass `debug_mode` from the config on to the events, so each event carries it
+  gtag('event', name, { user_type: userType, ...params, ...(isDebug ? { debug_mode: true } : {}) });
 }
 
 /** Runs `send` once per room and browser tab (a reload of the results page must not repeat it). */
@@ -136,6 +140,7 @@ export function setAnalyticsUserType(type: 'guest' | 'registered'): void {
 /** For tests: forget that GA was started. */
 export function resetAnalytics(): void {
   isActive = false;
+  isDebug = false;
   userType = 'guest';
   delete window.dataLayer;
 }
