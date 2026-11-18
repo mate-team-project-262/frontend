@@ -1,5 +1,6 @@
 import { useEffect, useId, useRef, useState } from 'react';
 import { useNavigate } from 'react-router';
+import { logEvent } from '../../analytics/productEvents.ts';
 import { RoomApiError, type User, signOut } from '../../api/roomsApi.ts';
 import { useAccount } from '../../hooks/useAccount.ts';
 import { ROUTES } from '../../routes.ts';
@@ -95,6 +96,7 @@ export default function UserMenu({ user }: { user: User }) {
               className="user-menu__item"
               onClick={() => {
                 setIsOpen(false);
+                logEvent('settings_clicked');
                 navigate(ROUTES.account);
               }}
             >

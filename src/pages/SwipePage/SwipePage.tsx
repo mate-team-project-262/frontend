@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router';
 import { markSwipeStarted, track } from '../../analytics/analytics.ts';
+import { logEvent } from '../../analytics/productEvents.ts';
 import { type Room, RoomApiError, leaveRoom } from '../../api/roomsApi.ts';
 import BrandButton from '../../components/BrandButton/BrandButton.tsx';
 import BrandHeader from '../../components/BrandHeader/BrandHeader.tsx';
@@ -11,6 +12,7 @@ import MovieCard from '../../components/MovieCard/MovieCard.tsx';
 import MovieDetails from '../../components/MovieDetails/MovieDetails.tsx';
 import VoteButton from '../../components/VoteButton/VoteButton.tsx';
 import VotingDone from '../../components/VotingDone/VotingDone.tsx';
+import { useAccount } from '../../hooks/useAccount.ts';
 import { useDeck } from '../../hooks/useDeck.ts';
 import { useSwipeDrag } from '../../hooks/useSwipeDrag.ts';
 import { useHostChange } from '../../hooks/useHostChange.ts';
@@ -51,6 +53,34 @@ export default function SwipePage({ code, room }: { code: string; room: Room }) 
   const [hostNotice, dismissHostNotice] = useHostChange(room);
   const cardSlot = useRef<HTMLDivElement>(null);
 
+  // analytics (the analyst's spec): guests are counted by how they voted, signed-in people as
+  // liked / disliked with the way in a parameter. Keyboard arrows count as swipes.
+  const { user } = useAccount();
+  const logVote = useCallback(
+    (liked: boolean, method: 'drag' | 'button' | 'keyboard', movieId: number) => {
+      const how = method === 'button' ? 'button' : 'swipe';
+      const params = { movie_id: movieId };
+      const options = { roomCode: code };
+      if (!user) {
+        if (how === 'button') logEvent(liked ? 'like_button' : 'dislike_button', params, options);
+        else logEvent(liked ? 'swipe_right' : 'swipe_left', params, options);
+      } else if (liked) {
+        logEvent(
+          'movie_liked',
+          { ...params, method: how === 'button' ? 'like_button' : 'swipe_right' },
+          options,
+        );
+      } else {
+        logEvent(
+          'movie_disliked',
+          { ...params, method: how === 'button' ? 'dislike_button' : 'swipe_left' },
+          options,
+        );
+      }
+    },
+    [code, user],
+  );
+
   /** Saves the vote; `method` (how the person voted) is only for analytics. */
   const vote = useCallback(
     (liked: boolean, method: 'drag' | 'button' | 'keyboard') => {
@@ -62,9 +92,10 @@ export default function SwipePage({ code, room }: { code: string; room: Room }) 
           movie_title: card.title,
         });
       }
+      if (card && !isSaving) logVote(liked, method, card.id);
       saveVote(liked);
     },
-    [card, isSaving, saveVote],
+    [card, isSaving, saveVote, logVote],
   );
   const swipe = useSwipeDrag({ disabled: isSaving, onSwipe: (liked) => vote(liked, 'drag') });
 

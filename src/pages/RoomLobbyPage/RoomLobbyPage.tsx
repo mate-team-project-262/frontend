@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router';
 import { track } from '../../analytics/analytics.ts';
+import { logEvent } from '../../analytics/productEvents.ts';
 import { type Room, RoomApiError, leaveRoom, startSession } from '../../api/roomsApi.ts';
 import BrandButton from '../../components/BrandButton/BrandButton.tsx';
 import BrandField from '../../components/BrandField/BrandField.tsx';
@@ -65,6 +66,8 @@ export default function RoomLobbyPage({ code, room, onStarted }: Props) {
   };
 
   const handleStartSession = async () => {
+    logEvent('start_session_clicked', { source: 'lobby' }, { roomCode: code });
+    logEvent('participant_count', { participant_count: participants.length }, { roomCode: code });
     setIsStarting(true);
     setStartError('');
     try {
@@ -107,6 +110,7 @@ export default function RoomLobbyPage({ code, room, onStarted }: Props) {
                   onClick={() => {
                     copy(inviteLink);
                     trackInvite('link');
+                    logEvent('room_invite_link_copied', {}, { roomCode: code });
                   }}
                 >
                   {COPY_BUTTON_LABELS[copyStatus]}
@@ -117,7 +121,10 @@ export default function RoomLobbyPage({ code, room, onStarted }: Props) {
                   href={getTelegramShareUrl(inviteLink)}
                   target="_blank"
                   rel="noopener noreferrer"
-                  onClick={() => trackInvite('telegram')}
+                  onClick={() => {
+                    trackInvite('telegram');
+                    logEvent('room_invite_telegram_clicked', {}, { roomCode: code });
+                  }}
                 >
                   <TelegramIcon />
                   Share on Telegram
