@@ -324,8 +324,8 @@
 }
 
 /*
- * Phones (designer, 18.11): centred heading, a title that grows with the screen, and larger
- * benefits so they do not look lost under the big illustration.
+ * Phones (designer, 18.11): centred heading and benefits, a title that grows with the screen, and
+ * larger benefits so they do not look lost under the big illustration.
  */
 @media (max-width: 600px) {
   .account__content {
@@ -356,14 +356,18 @@
     width: min(100%, 400px);
   }
 
+  /* centred like the heading: left-aligned text in two columns left a wider gap on the right */
   .account__benefits {
     gap: 28px 16px;
     margin: 36px 0 48px;
+    text-align: center;
   }
 
   .benefit__star {
     width: 26px;
     height: 26px;
+    margin-right: auto;
+    margin-left: auto;
   }
 
   .benefit__title {
