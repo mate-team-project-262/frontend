@@ -57,23 +57,7 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  width: min(100%, 502px);
-}
-
-/*
- * Designer: the card keeps the 502px width of the frame on every desktop window. On a lower
- * window the POSTER gets shorter (it is cropped, not squeezed), so the vote buttons stay in view
- * without scrolling.
- */
-@media (min-width: 561px) {
-  .swipe__card .movie-card__poster {
-    aspect-ratio: auto;
-    height: clamp(200px, calc(100dvh - 507px), 517px);
-  }
-
-  .swipe__card .movie-card__poster img {
-    object-position: center 20%;
-  }
+  width: min(100%, clamp(320px, calc((100dvh - 507px) * 468 / 517 + 34px), 502px));
 }
 
 .swipe__stage--hidden {
@@ -179,11 +163,6 @@
 @media (max-width: 560px) {
   .swipe {
     padding-top: 4px;
-  }
-
-  /* phones: the card follows the poster's shape and the screen height, as before */
-  .swipe__stage {
-    width: min(100%, clamp(320px, calc((100dvh - 507px) * 468 / 517 + 34px), 502px));
   }
 }
 
