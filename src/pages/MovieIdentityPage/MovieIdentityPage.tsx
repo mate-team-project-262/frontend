@@ -4,7 +4,7 @@ import AccountLayout from '../../components/AccountLayout/AccountLayout.tsx';
 import { ArrowIcon, PersonIcon, ThumbDownIcon } from '../../components/AccountLayout/icons.tsx';
 import BrandButton from '../../components/BrandButton/BrandButton.tsx';
 import GenreDonut from '../../components/GenreDonut/GenreDonut.tsx';
-import { GENRE_COLORS, toSlices } from '../../components/GenreDonut/slices.ts';
+import { GENRE_COLORS, roundPercents, toSlices } from '../../components/GenreDonut/slices.ts';
 import { StarIcon } from '../../components/MovieCard/MovieCard.tsx';
 import { useMovieIdentity } from '../../hooks/useAccountData.ts';
 import { usePageMeta } from '../../hooks/usePageMeta.ts';
@@ -21,6 +21,8 @@ const GHOST_BARS = [20, 31, 67, 55];
 function GenreMix({ identity }: { identity: MovieIdentity }) {
   const navigate = useNavigate();
   const slices = toSlices(identity.genreMix);
+  // the legend adds up to 100%, not 101% after rounding each genre on its own
+  const shownPercents = roundPercents(slices.map((slice) => slice.percent));
   const hasData = slices.length > 0;
 
   return (
@@ -47,7 +49,7 @@ function GenreMix({ identity }: { identity: MovieIdentity }) {
                   style={{ background: GENRE_COLORS[index] }}
                 />
                 <span className="identity-legend__name">{genre.name}</span>
-                <span>{Math.round(genre.percent)}%</span>
+                <span>{shownPercents[index]}%</span>
               </li>
             ))}
           </ul>

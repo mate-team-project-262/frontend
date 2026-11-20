@@ -40,11 +40,17 @@ interface Props {
   isPlaceholder?: boolean;
 }
 
-/** The shape of the "No data yet" ring: eight pieces of one colour. */
-const PLACEHOLDER = [21, 9, 9, 11, 13, 14, 10, 13].map((percent, index) => ({
+/**
+ * The shape of the "No data yet" ring (Figma "movie-identity" empty state): seven pieces of one
+ * colour, in degrees, drawn like the real chart from about 2 o'clock anticlockwise: the big one at
+ * the top, then smaller and smaller ones down to the narrow one at 3 o'clock.
+ */
+const PLACEHOLDER = [85, 67.5, 63.5, 53, 39, 28, 24].map((percent, index) => ({
   name: `placeholder-${index}`,
   percent,
 }));
+/** degrees: where the first piece ends (real chart -15: about 2:30; empty ring -22: about 2:15) */
+const START = { real: -15, placeholder: -22 };
 const PLACEHOLDER_COLOR = '#e0d4ff';
 
 /**
@@ -71,7 +77,9 @@ export default function GenreDonut({
     <div className="genre-donut" style={{ width: size, height: size }}>
       <svg viewBox="0 0 100 100" aria-hidden="true">
         {/* as in the design: the biggest slice ends at about 2 o'clock, the rest go anticlockwise */}
-        <g transform="rotate(-15 50 50) translate(0 100) scale(1 -1)">
+        <g
+          transform={`rotate(${isPlaceholder ? START.placeholder : START.real} 50 50) translate(0 100) scale(1 -1)`}
+        >
           {arcs.map((arc, index) => {
             const color = isPlaceholder ? PLACEHOLDER_COLOR : GENRE_COLORS[index];
             const visible = Math.max(arc.length - GAP, 0.5);

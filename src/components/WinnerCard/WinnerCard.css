@@ -122,6 +122,33 @@
   margin-bottom: 16px;
 }
 
+/*
+ * Designer: the text column ends where the poster ends, so the "View details" buttons of two
+ * winners are on one line. The title is never cut; the year, length and genres take one line
+ * (full text on hover); the overview takes the lines that are left (useFitLines in
+ * WinnerCard.tsx), at least two, and ends with "…".
+ */
+@media (min-width: 721px) {
+  .winner-card__info {
+    min-height: 400px;
+  }
+
+  .winner-card__meta {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .winner-card__overview {
+    flex-shrink: 1;
+    min-height: 0;
+  }
+
+  .winner-card__button {
+    flex-shrink: 0;
+  }
+}
+
 @media (max-width: 720px) {
   .winner-card,
   .winner-card--single,
