@@ -236,3 +236,14 @@
     font-size: 14px;
   }
 }
+
+/* Phones (designer, 20.11): 16px between the text and "View details", nothing more */
+@media (max-width: 720px) {
+  .winner-card__overview {
+    margin-bottom: 0;
+  }
+
+  .winner-card__button {
+    margin-top: 16px;
+  }
+}

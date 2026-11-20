@@ -241,12 +241,25 @@
  */
 @media (max-width: 600px) {
   .hero__title {
-    /* as large as fits: the 24px side paddings, and the line is ~9.5 times its font size */
-    font-size: min(calc((100vw - 48px) / 9.6), 46px);
+    /* 32px like every heading of the landing page (designer, 20.11); on phones narrower than
+       360px a little less, so "Stop arguing about" stays on one line */
+    font-size: min(calc((100vw - 48px) / 9.6), 32px);
   }
 
   .hero__lead {
     max-width: 18.75em; /* the 300px of the mockup at 16px: the same line breaks */
     font-size: clamp(16px, 4.4vw, 19px);
+  }
+}
+
+/* Phones (designer, 20.11): body text 14px, smaller text 12px */
+@media (max-width: 600px) {
+  .hero__lead {
+    max-width: 270px; /* the mockup's line breaks: "…agrees on —" / "no account required" */
+    font-size: 14px;
+  }
+
+  .hero__note {
+    font-size: 12px;
   }
 }

@@ -110,3 +110,10 @@
   font-size: 16px;
   line-height: 1.5;
 }
+
+/* Phones (designer, 20.11): body text 14px, smaller text 12px */
+@media (max-width: 600px) {
+  .create-room__subtitle {
+    font-size: 14px;
+  }
+}

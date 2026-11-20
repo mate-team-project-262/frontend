@@ -277,3 +277,11 @@
 .auth-form--left {
   text-align: left;
 }
+
+/* Phones (designer, 20.11): body text 14px, smaller text 12px */
+@media (max-width: 600px) {
+  .auth-card__subtitle,
+  .auth-card__footer {
+    font-size: 14px;
+  }
+}

@@ -78,8 +78,20 @@ function Participant({ person, index }: { person: SessionParticipant; index: num
         {person.isHost && <span className="session-person__host">Host</span>}
       </span>
       <span className="session-person__name">
-        {person.name}
-        {person.isMe && ' (you)'}
+        {person.isMe ? (
+          <>
+            <span className="session-person__full">
+              {person.name}
+              {' (you)'}
+            </span>
+            {/* phones: no room for the whole name, just "You" (designer, 20.11) */}
+            <span className="session-person__you" aria-hidden="true">
+              You
+            </span>
+          </>
+        ) : (
+          person.name
+        )}
         {person.isHost && <span className="visually-hidden">, host</span>}
       </span>
     </li>

@@ -107,8 +107,9 @@
 }
 
 @media (max-width: 700px) {
+  /* designer, 20.11: 24px above the greeting and under the tabs */
   .account-page__intro {
-    padding: 28px 16px 28px;
+    padding: 24px 16px;
   }
 
   .account-page__title {
@@ -126,9 +127,11 @@
     padding: 5px;
   }
 
+  /* designer, 20.11: three tabs of equal width (a short "Home" had the smallest pill) */
   .account-tabs__tab,
   .account-tabs__tab:first-child {
-    flex: 1 1 auto;
+    flex: 1 1 0;
+    min-width: 0;
     gap: 6px;
     padding: 0 8px;
     font-size: 13px;
@@ -165,4 +168,13 @@
   font: inherit;
   text-decoration: underline;
   cursor: pointer;
+}
+
+/* 320px phones: "Movie identity" still fits a third of the bar */
+@media (max-width: 359px) {
+  .account-tabs__tab,
+  .account-tabs__tab:first-child {
+    padding: 0 4px;
+    font-size: 12px;
+  }
 }

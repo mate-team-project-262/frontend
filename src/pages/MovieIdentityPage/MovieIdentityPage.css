@@ -334,8 +334,9 @@
 }
 
 @media (max-width: 700px) {
+  /* designer, 20.11: 24px, so it does not compete with the 30px "Welcome" above */
   .identity-head__title {
-    font-size: 30px;
+    font-size: 24px;
   }
 
   .identity-head__text {
@@ -486,5 +487,25 @@
   .identity-actors,
   .identity-actors--ghost {
     margin-top: 16px;
+  }
+}
+
+/* Phones (designer, 20.11): the titles of all cards 20px, the text under them 14px */
+@media (max-width: 700px) {
+  .identity-mix__title,
+  .identity-card__title {
+    font-size: 20px;
+  }
+
+  .identity-mix__lead,
+  .identity-card__lead {
+    font-size: 14px;
+  }
+}
+
+/* Phones (designer, 20.11): body text 14px, smaller text 12px */
+@media (max-width: 600px) {
+  .identity-fact__label {
+    font-size: 12px;
   }
 }

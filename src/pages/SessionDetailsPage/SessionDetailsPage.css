@@ -323,8 +323,9 @@
     margin-top: 14px;
   }
 
+  /* designer, 20.11: 24px, like "Your movie history" */
   .session-head__title {
-    font-size: 26px;
+    font-size: 24px;
   }
 
   .session-head__date {
@@ -394,5 +395,45 @@
   .session-movie__title,
   .session-movie__likes {
     font-size: 14px;
+  }
+}
+
+/* Phones (designer, 20.11): the poster takes the full height of the winner block */
+@media (max-width: 700px) {
+  .session-winner:not(.session-winner--none) {
+    align-items: stretch;
+  }
+
+  .session-winner__poster {
+    height: auto;
+    min-height: 128px;
+  }
+}
+
+.session-person__you {
+  display: none;
+}
+
+/*
+ * Phones (designer, 20.11): "Participants" looks like "All 20 movies in this session" (bold);
+ * the account's owner is just "You" (the full name stays for screen readers).
+ */
+@media (max-width: 700px) {
+  .session-summary__title {
+    font-size: 20px;
+    font-weight: 700;
+  }
+
+  .session-person__you {
+    display: inline;
+  }
+
+  .session-person__full {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
   }
 }

@@ -153,23 +153,6 @@ export function BackIcon() {
   );
 }
 
-/** An arrow entering a box: open the details. */
-export function OpenIcon() {
-  return (
-    <svg
-      width="20"
-      height="20"
-      viewBox="0 0 20 20"
-      {...stroke}
-      strokeWidth="1.3"
-      aria-hidden="true"
-    >
-      <path d="M7 3.5h8.5a1 1 0 0 1 1 1v11a1 1 0 0 1-1 1H7" />
-      <path d="M3 10h9M9 7l3 3-3 3" />
-    </svg>
-  );
-}
-
 /** A thumb pointing down: the least liked genre. */
 export function ThumbDownIcon() {
   return (

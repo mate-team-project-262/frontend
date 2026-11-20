@@ -6,13 +6,13 @@ import AccountLayout from '../../components/AccountLayout/AccountLayout.tsx';
 import {
   CalendarIcon,
   HeartIcon,
-  OpenIcon,
   PeopleIcon,
   PlusIcon,
 } from '../../components/AccountLayout/icons.tsx';
 import AccountStats from '../../components/AccountStats/AccountStats.tsx';
 import BrandButton from '../../components/BrandButton/BrandButton.tsx';
 import { StarIcon } from '../../components/MovieCard/MovieCard.tsx';
+import { ArrowRightIcon } from '../../components/WinnerCard/WinnerCard.tsx';
 import { useMovieIdentity, useSessionList } from '../../hooks/useAccountData.ts';
 import { usePageMeta } from '../../hooks/usePageMeta.ts';
 import { ROUTES, sessionDetailsPath } from '../../routes.ts';
@@ -89,7 +89,7 @@ function SessionRow({ session }: { session: SessionSummary }) {
         onClick={() => logEvent('session_details_clicked', { source: 'sessions' })}
       >
         View details
-        <OpenIcon />
+        <ArrowRightIcon />
       </Link>
     </li>
   );
