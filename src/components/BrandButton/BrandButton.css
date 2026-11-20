@@ -112,3 +112,13 @@
   border-color: #d8d2e6;
   background: transparent;
 }
+
+/*
+ * Phones (designer, 20.11): every button is 48px tall, like the fields. Two classes win over the
+ * page rules that set another height; the small "Create a room" of the header keeps its 40px.
+ */
+@media (max-width: 600px) {
+  .brand-button.brand-button:not(.landing-header__create) {
+    height: 48px;
+  }
+}

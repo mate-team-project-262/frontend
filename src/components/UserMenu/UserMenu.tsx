@@ -23,10 +23,33 @@ function Chevron() {
   );
 }
 
+/** A person (head and shoulders): stands for the name on phones (designer, 20.11) */
+function PersonIcon() {
+  return (
+    <svg
+      className="user-menu__icon"
+      width="18"
+      height="18"
+      viewBox="0 0 18 18"
+      fill="none"
+      aria-hidden="true"
+    >
+      <circle cx="9" cy="5.5" r="3.4" stroke="currentColor" strokeWidth="1.3" />
+      <path
+        d="M2.5 16.5c.4-3.4 3.1-5.6 6.5-5.6s6.1 2.2 6.5 5.6"
+        stroke="currentColor"
+        strokeWidth="1.3"
+        strokeLinecap="round"
+      />
+    </svg>
+  );
+}
+
 const LOGOUT_FAILED = 'Could not log out. Check your connection and try again.';
 
 /**
- * The pill with the user's name in the header (UI kit "user menu"). It opens a small menu:
+ * The pill with the user's name in the header (UI kit "user menu"); on phones a person icon
+ * instead of the name. It opens a small menu:
  * "My account" and "Log out", which asks first.
  * The menu closes on Esc, on a click outside and when focus leaves it.
  */
@@ -86,6 +109,8 @@ export default function UserMenu({ user }: { user: User }) {
         aria-controls={menuId}
         onClick={() => setIsOpen((value) => !value)}
       >
+        <PersonIcon />
+        {/* on phones only the icon is seen; the name stays for screen readers */}
         <span className="user-menu__name" title={user.name}>
           {getFirstName(user.name)}
         </span>

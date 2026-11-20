@@ -1,7 +1,8 @@
 import { useEffect, useRef } from 'react';
 import type { ResultCard } from '../../api/roomsApi.ts';
+import { useEqualHeights } from '../../hooks/useEqualHeights.ts';
 import { cx } from '../../utils/classNames.ts';
-import WinnerCard from '../WinnerCard/WinnerCard.tsx';
+import WinnerCard, { SIDE_BY_SIDE } from '../WinnerCard/WinnerCard.tsx';
 import './WinnersCarousel.css';
 
 const prefersReducedMotion = () =>
@@ -36,6 +37,8 @@ interface Props {
 export default function WinnersCarousel({ winners, total, highlightedId, onDetails }: Props) {
   const trackRef = useRef<HTMLUListElement>(null);
   const isCarousel = winners.length > 2;
+  // titles of equal height: the details, rating, overview and buttons of the cards line up
+  useEqualHeights(trackRef, '.winner-card__title', SIDE_BY_SIDE, winners);
 
   const scrollBy = (direction: 1 | -1) => {
     const track = trackRef.current;

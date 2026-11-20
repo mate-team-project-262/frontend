@@ -93,3 +93,17 @@
     font-size: min(8.6vw, 40px);
   }
 }
+
+/* Phones (designer, 20.11): 32px like every heading of the landing page */
+@media (max-width: 600px) {
+  .how-it-works__title {
+    font-size: 32px;
+  }
+}
+
+/* Phones (designer, 20.11): body text 14px, smaller text 12px */
+@media (max-width: 600px) {
+  .how-it-works__lead {
+    font-size: 14px;
+  }
+}

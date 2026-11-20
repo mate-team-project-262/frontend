@@ -1,4 +1,5 @@
 import type { ResultCard } from '../../api/roomsApi.ts';
+import { useFitLines } from '../../hooks/useFitLines.ts';
 import { cx } from '../../utils/classNames.ts';
 import { formatRating, getMetaParts } from '../../utils/movieFormat.ts';
 import BrandButton from '../BrandButton/BrandButton.tsx';
@@ -28,6 +29,9 @@ export function ArrowRightIcon() {
   );
 }
 
+/** matches the CSS: from 721px the text column stands beside the poster */
+export const SIDE_BY_SIDE = '(min-width: 721px)';
+
 interface Props {
   card: ResultCard;
   /** people in the room */
@@ -51,6 +55,10 @@ export default function WinnerCard({
   onDetails,
 }: Props) {
   const rating = formatRating(card.rating);
+  // poster beside the text (not on phones): the overview fills the rest of the poster's height
+  // (two lines at least: a very long title then pushes the button a little below the poster)
+  const overviewRef = useFitLines<HTMLParagraphElement>(SIDE_BY_SIDE, 2);
+  const meta = getMetaParts(card).join(' • ');
 
   return (
     <article
@@ -70,7 +78,9 @@ export default function WinnerCard({
           {card.likes} / {total} liked it
         </p>
         <h3 className="winner-card__title">{card.title}</h3>
-        <p className="winner-card__meta">{getMetaParts(card).join(' • ')}</p>
+        <p className="winner-card__meta" title={meta}>
+          {meta}
+        </p>
         {rating && (
           <p className="winner-card__rating">
             <StarIcon size={20} />
@@ -78,7 +88,11 @@ export default function WinnerCard({
             {rating} / 10
           </p>
         )}
-        {card.overview && <p className="winner-card__overview">{card.overview}</p>}
+        {card.overview && (
+          <p ref={overviewRef} className="winner-card__overview">
+            {card.overview}
+          </p>
+        )}
         <BrandButton
           variant={variant === 'single' ? 'primary' : 'ghost'}
           className="winner-card__button"

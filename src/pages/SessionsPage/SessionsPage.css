@@ -287,8 +287,9 @@
 }
 
 @media (max-width: 700px) {
+  /* designer, 20.11: 24px, so it does not compete with the 30px "Welcome" above */
   .sessions-head__title {
-    font-size: 30px;
+    font-size: 24px;
   }
 
   .sessions-head__text {
@@ -365,5 +366,13 @@
 
   .sessions-empty__button {
     width: 100%;
+  }
+}
+
+/* Phones (designer, 20.11): body text 14px, smaller text 12px */
+@media (max-width: 600px) {
+  .session-row__meta,
+  .session-row__meta + .session-row__meta {
+    font-size: 14px;
   }
 }

@@ -19,3 +19,14 @@
   font-size: 14px;
   line-height: 1.5;
 }
+
+/* Phones (designer, 20.11): the labels above the fields 14px; 8px between all chips */
+@media (max-width: 600px) {
+  .brand-form-section__label {
+    font-size: 14px;
+  }
+
+  .brand-form-section__options {
+    gap: 8px;
+  }
+}

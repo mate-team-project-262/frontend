@@ -125,3 +125,10 @@
   outline: 2px solid var(--l-cream);
   outline-offset: 3px;
 }
+
+/* Phones (designer, 20.11): 48px like every other button */
+@media (max-width: 600px) {
+  .result-card__details {
+    height: 48px;
+  }
+}

@@ -165,3 +165,26 @@
 .light-field--error .light-field__message {
   font-size: 14px;
 }
+
+/* Phones (designer, 20.11): every field is 48px tall, like the buttons */
+@media (max-width: 600px) {
+  .light-field__input.light-field__input {
+    height: 48px;
+    border-radius: 24px;
+  }
+}
+
+/* Phones (designer, 20.11): body text 14px, smaller text 12px */
+@media (max-width: 600px) {
+  .light-field__message {
+    font-size: 12px;
+  }
+}
+
+/* Phones (designer, 20.11): the labels above the fields 14px */
+@media (max-width: 600px) {
+  .light-field__label,
+  .light-field__action {
+    font-size: 14px;
+  }
+}

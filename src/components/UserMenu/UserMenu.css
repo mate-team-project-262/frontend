@@ -103,6 +103,42 @@
   border-radius: 4px;
 }
 
+/* the person icon is for phones only */
+.user-menu__icon {
+  display: none;
+}
+
+/*
+ * Phones (designer, 20.11): a person icon and the chevron instead of the whole pill with the
+ * name. The name is hidden from the eyes only, so the button is still "Sofiia" for screen readers.
+ */
+@media (max-width: 600px) {
+  .user-menu .user-menu__toggle {
+    gap: 6px;
+    min-width: 0;
+    height: 40px;
+    padding: 0 12px;
+  }
+
+  .user-menu__icon {
+    display: block;
+  }
+
+  .user-menu__name {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
+  }
+
+  /* the chevron turns, the person does not */
+  .user-menu__toggle--open .user-menu__icon {
+    transform: none;
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   .user-menu__toggle svg {
     transition: none;
