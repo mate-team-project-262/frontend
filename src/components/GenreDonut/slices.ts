@@ -20,3 +20,23 @@ export function toSlices(genres: GenreShare[]): { name: string; percent: number 
   const rest = sorted.slice(MAX_SEGMENTS - 1).reduce((sum, genre) => sum + genre.percent, 0);
   return [...shown, { name: 'Other', percent: rest }];
 }
+
+/**
+ * Whole percents that add up to the same total as the exact ones (usually 100): plain rounding of
+ * 16.6 + 16.6 + 66.8 gives 17 + 17 + 67 = 101. The leftover points go to the shares that lost the
+ * most when rounded down (the "largest remainder" rule), so every number moves by less than 1.
+ */
+export function roundPercents(percents: number[]): number[] {
+  const floors = percents.map((percent) => Math.floor(percent));
+  const target = Math.round(percents.reduce((sum, percent) => sum + percent, 0));
+  let left = target - floors.reduce((sum, value) => sum + value, 0);
+  const order = percents
+    .map((percent, index) => ({ index, rest: percent - floors[index] }))
+    .sort((a, b) => b.rest - a.rest || a.index - b.index);
+  for (const { index } of order) {
+    if (left <= 0) break;
+    floors[index] += 1;
+    left -= 1;
+  }
+  return floors;
+}
