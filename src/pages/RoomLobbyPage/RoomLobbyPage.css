@@ -184,3 +184,52 @@
     font-size: 28px;
   }
 }
+
+/* Phones (designer, 20.11): body text 14px, smaller text 12px */
+@media (max-width: 600px) {
+  .room-lobby__subtitle {
+    font-size: 14px;
+  }
+}
+
+/* Phones (designer, 20.11): the labels above the fields 14px */
+@media (max-width: 600px) {
+  .room-lobby__label {
+    font-size: 14px;
+  }
+}
+
+/*
+ * Phones (designer, 20.11): "Copy link" and "Share on Telegram" of equal width, no icon on the
+ * primary one (on a 360px phone the Telegram button went past the card).
+ */
+@media (max-width: 600px) {
+  .room-lobby__actions {
+    gap: 8px;
+  }
+
+  .room-lobby__action--copy,
+  .room-lobby__action--telegram {
+    flex: 1 1 0;
+    min-width: 0;
+    padding: 0 8px;
+    font-size: 14px;
+  }
+
+  .room-lobby__action--telegram svg {
+    display: none;
+  }
+}
+
+/* 320px phones: "Share on Telegram" does not fit half the card, so the buttons go one under the other */
+@media (max-width: 359px) {
+  .room-lobby__actions {
+    flex-direction: column;
+  }
+
+  .room-lobby__action--copy,
+  .room-lobby__action--telegram {
+    flex: none;
+    width: 100%;
+  }
+}

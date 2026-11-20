@@ -251,10 +251,11 @@
     margin-top: 24px;
   }
 
+  /* designer, 20.11: avatar 72px, full name 20px */
   .my-account__avatar {
-    width: 80px;
-    height: 80px;
-    font-size: 32px;
+    width: 72px;
+    height: 72px;
+    font-size: 28px;
   }
 
   .my-account__who {
@@ -262,7 +263,7 @@
   }
 
   .my-account__name {
-    font-size: 24px;
+    font-size: 20px;
   }
 
   .my-account__email {
@@ -352,5 +353,12 @@
 
   .my-account__danger-text {
     max-width: 16em;
+  }
+}
+
+/* Phones (designer, 20.11): the labels above the fields 14px */
+@media (max-width: 600px) {
+  .account-row__label {
+    font-size: 14px;
   }
 }

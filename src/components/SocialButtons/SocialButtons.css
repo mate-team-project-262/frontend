@@ -77,3 +77,10 @@
     gap: 12px;
   }
 }
+
+/* Phones (designer, 20.11): "or continue with" 14px */
+@media (max-width: 600px) {
+  .social-buttons__divider {
+    font-size: 14px;
+  }
+}

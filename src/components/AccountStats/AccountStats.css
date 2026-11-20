@@ -55,3 +55,10 @@
     font-size: 13px;
   }
 }
+
+/* Phones (designer, 20.11): body text 14px, smaller text 12px */
+@media (max-width: 600px) {
+  .account-stats__label {
+    font-size: 12px;
+  }
+}

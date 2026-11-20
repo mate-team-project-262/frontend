@@ -128,3 +128,17 @@
   box-shadow: 0 0 0 1000px #170e43 inset;
   transition: background-color 9999s ease-out;
 }
+
+/* Phones (designer, 20.11): every field is 48px tall, like the buttons */
+@media (max-width: 600px) {
+  .brand-field__input.brand-field__input {
+    height: 48px;
+  }
+}
+
+/* Phones (designer, 20.11): the labels above the fields 14px */
+@media (max-width: 600px) {
+  .brand-field__label {
+    font-size: 14px;
+  }
+}

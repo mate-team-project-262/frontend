@@ -236,8 +236,9 @@
  * to its title and the cards start clearly lower, so the heading reads as one group.
  */
 @media (max-width: 720px) {
+  /* designer, 20.11: 24px under the (now 64px) header */
   .results-hero__inner {
-    padding-top: 12px;
+    padding-top: 24px;
   }
 
   .results-list {
@@ -254,5 +255,12 @@
 
   .results-list__cards {
     margin-top: 32px;
+  }
+}
+
+/* Phones (designer, 20.11): 16px between the cards of "Also highly rated" */
+@media (max-width: 720px) {
+  .results-list__cards {
+    gap: 16px;
   }
 }

@@ -88,3 +88,15 @@
     display: none;
   }
 }
+
+/* Phones (designer, 20.11): a 64px header (as on the landing page), the logo 80px wide */
+@media (max-width: 600px) {
+  .brand-header__inner {
+    height: 64px;
+  }
+
+  .brand-header__logo img {
+    width: 80px;
+    height: auto;
+  }
+}

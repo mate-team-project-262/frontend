@@ -376,8 +376,9 @@
     padding: 20px 20px 24px;
   }
 
+  /* designer, 20.11: 24px, the cards below 20px */
   .home-start__title {
-    font-size: 28px;
+    font-size: 24px;
   }
 
   .home-start__text {
@@ -417,7 +418,7 @@
   }
 
   .home-card__title {
-    font-size: 24px;
+    font-size: 20px;
   }
 
   .home-card__link {
@@ -466,5 +467,58 @@
   .ghost-donut {
     width: 110px;
     height: 110px;
+  }
+}
+
+/*
+ * Phones (designer, 20.11): the legend did not fit next to the ring on a 360px phone. It goes
+ * under the ring, one genre per row with the percent on the right, like the legend of the
+ * Movie identity tab ("do it like this everywhere").
+ */
+@media (max-width: 600px) {
+  .identity-preview {
+    flex-direction: column;
+    gap: 24px;
+    margin: 24px 0 0;
+  }
+
+  .identity-preview .genre-donut {
+    width: 180px !important;
+    height: 180px !important;
+  }
+
+  .identity-preview .genre-donut__total {
+    font-size: 12px;
+  }
+
+  .identity-preview .genre-donut__total strong {
+    font-size: 22px;
+  }
+
+  /* the same sizes as .identity-legend on the Movie identity tab */
+  .identity-preview__legend {
+    flex: none;
+    gap: 14px;
+    width: 100%;
+    margin: 0;
+    font-size: 15px;
+    line-height: 1.5;
+  }
+
+  .identity-preview__legend li {
+    gap: 16px;
+  }
+
+  .identity-preview__dot {
+    width: 18px;
+    height: 18px;
+  }
+}
+
+/* Phones (designer, 20.11): body text 14px, smaller text 12px */
+@media (max-width: 600px) {
+  .home-start__text,
+  .home-card__lead {
+    font-size: 14px;
   }
 }

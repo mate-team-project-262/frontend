@@ -160,9 +160,10 @@
   margin: 0;
 }
 
+/* phones (designer, 20.11): 16px under the 64px header */
 @media (max-width: 560px) {
   .swipe {
-    padding-top: 4px;
+    padding-top: 16px;
   }
 }
 

@@ -13,7 +13,7 @@ import {
 } from '../../components/AccountLayout/icons.tsx';
 import BrandButton from '../../components/BrandButton/BrandButton.tsx';
 import GenreDonut from '../../components/GenreDonut/GenreDonut.tsx';
-import { GENRE_COLORS, toSlices } from '../../components/GenreDonut/slices.ts';
+import { GENRE_COLORS, roundPercents, toSlices } from '../../components/GenreDonut/slices.ts';
 import { StarIcon } from '../../components/MovieCard/MovieCard.tsx';
 import { useMovieIdentity, useSessionHistory } from '../../hooks/useAccountData.ts';
 import { usePageMeta } from '../../hooks/usePageMeta.ts';
@@ -87,7 +87,10 @@ function IdentityPlaceholder() {
 }
 
 function IdentityPreview({ identity }: { identity: MovieIdentity }) {
-  const legend = toSlices(identity.genreMix).slice(0, LEGEND_COUNT);
+  const slices = toSlices(identity.genreMix);
+  // whole percents that add up to 100, as on the Movie identity page
+  const percents = roundPercents(slices.map((slice) => slice.percent));
+  const legend = slices.slice(0, LEGEND_COUNT);
   return (
     <div className="identity-preview">
       <GenreDonut
@@ -100,7 +103,7 @@ function IdentityPreview({ identity }: { identity: MovieIdentity }) {
           <li key={genre.name}>
             <span className="identity-preview__dot" style={{ background: GENRE_COLORS[index] }} />
             <span className="identity-preview__name">{genre.name}</span>
-            <span>{Math.round(genre.percent)}%</span>
+            <span>{percents[index]}%</span>
           </li>
         ))}
       </ul>
