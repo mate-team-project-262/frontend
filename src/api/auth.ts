@@ -11,13 +11,18 @@
  */
 import { call } from './client.ts';
 import { RoomApiError } from './errors.ts';
-import type { RequestOptions } from './http.ts';
+import { BASE_URL, type RequestOptions } from './http.ts';
 import type { User, UserDto } from './types.ts';
 
-const toUser = (data: UserDto): User => ({
+/** "/me/avatar/image?v=3" -> "/api/me/avatar/image?v=3": the backend gives paths under the API */
+export const toApiUrl = (path: string | null | undefined): string | null =>
+  path ? (/^https?:\/\//.test(path) ? path : `${BASE_URL}${path}`) : null;
+
+export const toUser = (data: UserDto): User => ({
   id: data.id,
   email: data.email,
   name: data.displayName,
+  avatarUrl: toApiUrl(data.avatarUrl),
 });
 
 /**
@@ -165,4 +170,25 @@ export async function getCurrentUser(): Promise<User | null> {
     if (error instanceof RoomApiError && error.code === 'AUTHENTICATION_REQUIRED') return null;
     throw error;
   }
+}
+
+/**
+ * Sets the profile photo (JPG, PNG or WebP up to 2 MB; the page shrinks it first).
+ * PUT /me/avatar (multipart/form-data, field "file") -> the account with the new avatarUrl
+ *
+ * @throws {RoomApiError} VALIDATION_ERROR or FILE_TOO_LARGE (field 'file')
+ */
+export async function uploadAvatar(file: Blob, fileName = 'avatar'): Promise<User> {
+  const form = new FormData();
+  form.append('file', file, fileName);
+  const data = await accountPost<UserDto>('/me/avatar', { method: 'PUT', body: form });
+  return toUser(data);
+}
+
+/**
+ * Removes the profile photo; the initial is shown again.
+ * DELETE /me/avatar (204)
+ */
+export async function removeAvatar(): Promise<void> {
+  await accountPost<null>('/me/avatar', { method: 'DELETE' });
 }

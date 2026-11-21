@@ -38,3 +38,24 @@ describe('toRoomApiError', () => {
     expect(toRoomApiError(error)).toBe(error);
   });
 });
+
+describe('profile photo errors', () => {
+  it('turns the gateway 413 and a file validation error into one clear message', () => {
+    const tooBig = toRoomApiError(new ApiError({ status: 413, code: null, message: 'Too Large' }));
+    expect(tooBig).toMatchObject({
+      code: 'FILE_TOO_LARGE',
+      field: 'file',
+      message: 'Choose a JPG, PNG or WebP image up to 2 MB.',
+    });
+
+    const wrongType = toRoomApiError(
+      new ApiError({
+        status: 400,
+        code: 'VALIDATION_ERROR',
+        message: 'Validation failed',
+        fieldErrors: [{ field: 'file', message: 'Unsupported' }],
+      }),
+    );
+    expect(wrongType).toMatchObject({ code: 'VALIDATION_ERROR', field: 'file' });
+  });
+});

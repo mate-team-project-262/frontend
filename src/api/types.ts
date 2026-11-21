@@ -122,6 +122,8 @@ export interface User {
   email: string;
   /** unique name, 3-20 characters; the person signs in with it */
   name: string;
+  /** the profile photo, ready for <img src>; null = none (the initial is shown) */
+  avatarUrl: string | null;
 }
 
 /** A movie as the history keeps it (fewer fields than a deck card). */
@@ -164,6 +166,8 @@ export interface SessionParticipant {
   isHost: boolean;
   /** the account's owner */
   isMe: boolean;
+  /** their profile photo, null for guests and accounts without one */
+  avatarUrl: string | null;
 }
 
 /** One movie of a finished session with the group's reaction. */
@@ -231,6 +235,8 @@ export interface UserDto {
   id: number;
   email: string;
   displayName: string;
+  /** relative to the API base, e.g. "/me/avatar/image?v=3"; the version changes on every upload */
+  avatarUrl?: string | null;
 }
 
 export interface RoomDto {
@@ -334,7 +340,7 @@ export interface HistoryPageDto {
 
 export interface SessionDetailsDto {
   session: SessionSummaryDto;
-  participants?: { displayName: string; host: boolean; me: boolean }[];
+  participants?: { displayName: string; host: boolean; me: boolean; avatarUrl?: string | null }[];
   cards?: {
     position: number;
     title: HistoryTitleDto;

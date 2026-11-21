@@ -56,7 +56,13 @@ export function mockBackend(routes: Record<string, Answer>) {
       return new Response(JSON.stringify({ code: 'NOT_MOCKED' }), { status: 404 });
     let answer: any = routes[key];
     if (typeof answer === 'function')
-      answer = answer(options.body ? JSON.parse(String(options.body)) : null);
+      answer = answer(
+        options.body instanceof FormData
+          ? options.body
+          : options.body
+            ? JSON.parse(String(options.body))
+            : null,
+      );
     const { status = 200, body = answer } = answer?.status ? answer : {};
     return new Response(body == null ? null : JSON.stringify(body), { status });
   });

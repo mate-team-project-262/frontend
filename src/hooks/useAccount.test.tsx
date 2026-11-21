@@ -12,7 +12,12 @@ describe('useAccount', () => {
 
     expect(result.current).toMatchObject({ status: 'loading', user: null });
     await waitFor(() => expect(result.current.status).toBe('signed-in'));
-    expect(result.current.user).toEqual({ id: 7, email: 'sofiia@example.com', name: 'Sofiia' });
+    expect(result.current.user).toEqual({
+      id: 7,
+      email: 'sofiia@example.com',
+      name: 'Sofiia',
+      avatarUrl: null,
+    });
   });
 
   it('treats 401 as a guest', async () => {
@@ -37,7 +42,14 @@ describe('useAccount', () => {
     const { result } = renderHookWithQuery(() => useAccount());
     await waitFor(() => expect(result.current.status).toBe('guest'));
 
-    act(() => result.current.setUser({ id: 7, email: 'sofiia@example.com', name: 'Sofiia' }));
+    act(() =>
+      result.current.setUser({
+        id: 7,
+        email: 'sofiia@example.com',
+        name: 'Sofiia',
+        avatarUrl: null,
+      }),
+    );
     await waitFor(() => expect(result.current.status).toBe('signed-in'));
 
     act(() => result.current.setUser(null));

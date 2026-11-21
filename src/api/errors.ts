@@ -1,7 +1,7 @@
 import { ApiError } from './http.ts';
 
 /** Where to show the message: the name field, the room link/code, or nowhere special. */
-export type ErrorField = 'name' | 'room' | 'email' | 'password' | null;
+export type ErrorField = 'name' | 'room' | 'email' | 'password' | 'file' | null;
 
 /**
  * An error whose message is safe to show to the user.
@@ -31,6 +31,8 @@ export class RoomApiError extends Error {
 }
 
 const SESSION_EXPIRED = 'Your session has expired. Please join the room again.';
+/** what a profile photo must be (backend: JPG, PNG or WebP, at most 2 MB) */
+export const AVATAR_FILE_RULES = 'Choose a JPG, PNG or WebP image up to 2 MB.';
 
 // Backend error code -> [field, message for the user]
 const KNOWN_ERRORS: Record<string, [ErrorField, string]> = {
@@ -80,8 +82,15 @@ export function toRoomApiError(error: unknown): unknown {
     });
   }
 
+  // a file over the gateway's limit is stopped by nginx with its own 413 page
+  if (error.status === 413) {
+    return new RoomApiError(AVATAR_FILE_RULES, { code: 'FILE_TOO_LARGE', field: 'file' });
+  }
   if (error.code === 'VALIDATION_ERROR') {
     const has = (name: string) => error.fieldErrors.some(({ field }) => field.endsWith(name));
+    if (has('file')) {
+      return new RoomApiError(AVATAR_FILE_RULES, { code: error.code, field: 'file' });
+    }
     if (has('email')) {
       return new RoomApiError('Enter a valid email address', { code: error.code, field: 'email' });
     }
