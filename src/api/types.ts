@@ -25,6 +25,11 @@ export interface Participant {
   isHost: boolean;
   /** true for the person who is looking at the page */
   isMe: boolean;
+  /**
+   * Their profile photo as a path under the API ("/rooms/ABC/participants/7/avatar?v=3"), null for
+   * guests and accounts without one. Load it with getRoomAvatar(): it needs the participant token.
+   */
+  avatarPath: string | null;
 }
 
 export interface RoomPreferences {
@@ -229,6 +234,8 @@ export interface ParticipantDto {
   host: boolean;
   token?: string;
   finished?: boolean;
+  /** relative to the API; null for guests and accounts without a photo */
+  avatarUrl?: string | null;
 }
 
 export interface UserDto {

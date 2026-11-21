@@ -7,6 +7,7 @@ import { FEATURES } from '../config/features.ts';
 import { getDurationRanges } from '../utils/duration.ts';
 import { SESSION_EXPIRED_MESSAGE, call, encode, isSessionError, requireSession } from './client.ts';
 import { RoomApiError } from './errors.ts';
+import { apiImage } from './http.ts';
 import {
   type RoomSession,
   clearRoomSession,
@@ -39,6 +40,7 @@ function toRoom(data: RoomDto, session: RoomSession): Room {
       name: person.displayName,
       isHost: person.host,
       isMe: person.id === session.participantId,
+      avatarPath: person.avatarUrl ?? null,
     })),
   };
 }
@@ -153,4 +155,15 @@ export async function startSession(code: string): Promise<{ status: RoomStatus }
     token: session.token,
   });
   return { status: data.status };
+}
+
+/**
+ * A room participant's profile photo, or null (no photo any more, not in the room, offline).
+ * GET /rooms/{code}/participants/{id}/avatar?v=... with X-Participant-Token
+ *
+ * @param path  `avatarPath` of the participant, as the room gives it
+ */
+export async function getRoomAvatar(code: string, path: string): Promise<Blob | null> {
+  const session = getRoomSession(code);
+  return session ? apiImage(path, session.token) : null;
 }

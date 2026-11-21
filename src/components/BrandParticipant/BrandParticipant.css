@@ -26,6 +26,20 @@
   line-height: 1;
 }
 
+/* the profile photo fills the circle */
+.brand-participant__avatar {
+  position: relative;
+}
+
+.brand-participant__photo {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
 .brand-participant__name {
   min-width: 0;
   overflow: hidden;

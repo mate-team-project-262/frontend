@@ -4,7 +4,7 @@ import { type Room, leaveRoom } from '../../api/roomsApi.ts';
 import BrandButton from '../../components/BrandButton/BrandButton.tsx';
 import BrandHeader from '../../components/BrandHeader/BrandHeader.tsx';
 import BrandInfoChip from '../../components/BrandInfoChip/BrandInfoChip.tsx';
-import BrandParticipant from '../../components/BrandParticipant/BrandParticipant.tsx';
+import RoomParticipant from '../../components/RoomParticipant/RoomParticipant.tsx';
 import BrandSpinner from '../../components/BrandSpinner/BrandSpinner.tsx';
 import { ROUTES } from '../../routes.ts';
 import { getPreferenceGroups } from '../../utils/preferences.ts';
@@ -61,13 +61,7 @@ export default function WaitingRoomPage({ code, room }: { code: string; room: Ro
             <h2 className="waiting-room__label">People in room ({room.participants.length})</h2>
             <ul className="waiting-room__list">
               {room.participants.map((person, index) => (
-                <BrandParticipant
-                  key={person.id}
-                  name={person.name}
-                  index={index}
-                  isMe={person.isMe}
-                  isHost={person.isHost}
-                />
+                <RoomParticipant key={person.id} code={room.code} person={person} index={index} />
               ))}
             </ul>
           </div>

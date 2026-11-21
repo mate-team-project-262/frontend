@@ -13,7 +13,12 @@ import {
 } from '../../components/AccountLayout/icons.tsx';
 import BrandButton from '../../components/BrandButton/BrandButton.tsx';
 import GenreDonut from '../../components/GenreDonut/GenreDonut.tsx';
-import { GENRE_COLORS, roundPercents, toSlices } from '../../components/GenreDonut/slices.ts';
+import {
+  GENRE_COLORS,
+  legendName,
+  roundPercents,
+  toSlices,
+} from '../../components/GenreDonut/slices.ts';
 import { StarIcon } from '../../components/MovieCard/MovieCard.tsx';
 import { useMovieIdentity, useSessionHistory } from '../../hooks/useAccountData.ts';
 import { usePageMeta } from '../../hooks/usePageMeta.ts';
@@ -102,7 +107,9 @@ function IdentityPreview({ identity }: { identity: MovieIdentity }) {
         {legend.map((genre, index) => (
           <li key={genre.name}>
             <span className="identity-preview__dot" style={{ background: GENRE_COLORS[index] }} />
-            <span className="identity-preview__name">{genre.name}</span>
+            <span className="identity-preview__name" title={genre.name}>
+              {legendName(genre.name)}
+            </span>
             <span>{percents[index]}%</span>
           </li>
         ))}

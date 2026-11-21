@@ -1,5 +1,5 @@
 import { useGameProgress } from '../../hooks/useGameProgress.ts';
-import BrandParticipant from '../BrandParticipant/BrandParticipant.tsx';
+import RoomParticipant from '../RoomParticipant/RoomParticipant.tsx';
 import BrandSpinner from '../BrandSpinner/BrandSpinner.tsx';
 import './VotingDone.css';
 
@@ -56,12 +56,11 @@ export default function VotingDone({ code }: { code: string }) {
           </div>
           <ul className="swipe-done__list" aria-live="polite">
             {progress.participants.map((person, index) => (
-              <BrandParticipant
+              <RoomParticipant
                 key={person.id}
-                name={person.name}
+                code={code}
+                person={person}
                 index={index}
-                isMe={person.isMe}
-                isHost={person.isHost}
                 status={person.finished ? 'done' : 'swiping'}
               />
             ))}

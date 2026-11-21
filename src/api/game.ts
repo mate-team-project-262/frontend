@@ -39,6 +39,7 @@ export async function getProgress(code: string): Promise<GameProgress> {
       name: person.displayName,
       isHost: person.host,
       isMe: person.id === session.participantId,
+      avatarPath: person.avatarUrl ?? null,
       finished: person.finished,
     })),
   };

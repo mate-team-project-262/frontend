@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import { cx } from '../../utils/classNames.ts';
 import BrandSpinner from '../BrandSpinner/BrandSpinner.tsx';
 import './BrandParticipant.css';
@@ -49,10 +50,12 @@ interface Props {
   isMe?: boolean;
   isHost?: boolean;
   status?: ParticipantStatus;
+  /** their profile photo (ready for <img src>); without it the first letter is shown */
+  photoUrl?: string | null;
 }
 
 /**
- * One person in the room list: round avatar with the first letter, name, "Host" badge and,
+ * One person in the room list: round avatar (the photo, or the first letter), name, "Host" badge and,
  * on the voting progress screen, `status` 'done' | 'swiping' (then "(you)" is shown for the host too).
  */
 export default function BrandParticipant({
@@ -61,13 +64,28 @@ export default function BrandParticipant({
   isMe = false,
   isHost = false,
   status,
+  photoUrl = null,
 }: Props) {
   const avatar = AVATARS[index % AVATARS.length];
+  // a photo that does not load turns back into the letter
+  const [brokenUrl, setBrokenUrl] = useState<string | null>(null);
+  const photo = photoUrl && photoUrl !== brokenUrl ? photoUrl : null;
 
   return (
     <li className={cx('brand-participant', isHost && 'brand-participant--host')}>
       <span className="brand-participant__avatar" style={avatar} aria-hidden="true">
-        {name.trim().charAt(0).toUpperCase()}
+        {photo ? (
+          // onError is not a user interaction: it only swaps a broken photo for the letter
+          // eslint-disable-next-line jsx-a11y-x/no-noninteractive-element-interactions
+          <img
+            className="brand-participant__photo"
+            src={photo}
+            alt=""
+            onError={() => setBrokenUrl(photo)}
+          />
+        ) : (
+          name.trim().charAt(0).toUpperCase()
+        )}
       </span>
       <span className="brand-participant__name">
         {name}
