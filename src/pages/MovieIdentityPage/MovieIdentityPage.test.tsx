@@ -1,4 +1,4 @@
-import { screen, within } from '@testing-library/react';
+import { fireEvent, screen, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { MemoryRouter, Route, Routes } from 'react-router';
 import { mockBackend } from '../../test/fixtures.ts';
@@ -43,8 +43,12 @@ const full = {
   ],
   favoriteDecade: { decade: 2010, label: '2010s', likedCount: 18, percentage: 75 },
   favoriteActors: [
-    { name: 'Timothee Chalamet', likedTitlesCount: 3 },
-    { name: 'Natalie Portman', likedTitlesCount: 2 },
+    { name: 'Timothee Chalamet', likedTitlesCount: 3, profileUrl: null },
+    {
+      name: 'Natalie Portman',
+      likedTitlesCount: 2,
+      profileUrl: 'https://image.tmdb.org/t/p/w185/portman.jpg',
+    },
   ],
 };
 
@@ -90,6 +94,22 @@ describe('MovieIdentityPage', () => {
     expect(faces.getByText('Timothee Chalamet')).toBeInTheDocument();
     expect(faces.getByText('TC')).toBeInTheDocument();
     expect(faces.getByText('Natalie Portman')).toBeInTheDocument();
+  });
+
+  it('shows the TMDB photo of an actor and the initials when it fails to load', async () => {
+    setup(full);
+
+    const faces = within(
+      (await screen.findByRole('heading', { name: 'Faces you like' })).closest('section')!,
+    );
+    const photo = faces
+      .getAllByRole('presentation', { hidden: true })
+      .find((img) => img.getAttribute('src')?.includes('portman'))!;
+    expect(photo).toHaveAttribute('src', 'https://image.tmdb.org/t/p/w185/portman.jpg');
+    expect(faces.queryByText('NP')).not.toBeInTheDocument();
+
+    fireEvent.error(photo);
+    expect(faces.getByText('NP')).toBeInTheDocument();
   });
 
   it('explains every card before the first likes', async () => {
