@@ -53,6 +53,8 @@
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
+  /* the pill has line-height 1: with "overflow: hidden" that cut the tails of g, y, p, j */
+  line-height: 1.4;
 }
 
 .user-menu__list {
