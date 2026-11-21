@@ -53,6 +53,8 @@
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
+  /* the pill has line-height 1: with "overflow: hidden" that cut the tails of g, y, p, j */
+  line-height: 1.4;
 }
 
 .user-menu__list {
@@ -131,6 +133,14 @@
     overflow: hidden;
     clip-path: inset(50%);
     white-space: nowrap;
+  }
+
+  /* the profile photo (T2-224) instead of the person icon */
+  .user-menu__photo {
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    object-fit: cover;
   }
 
   /* the chevron turns, the person does not */

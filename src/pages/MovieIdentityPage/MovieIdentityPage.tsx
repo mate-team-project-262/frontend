@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import { useNavigate } from 'react-router';
 import type { MovieIdentity } from '../../api/roomsApi.ts';
 import AccountLayout from '../../components/AccountLayout/AccountLayout.tsx';
@@ -134,13 +135,11 @@ function Faces({ identity }: { identity: MovieIdentity }) {
         <ul className="identity-actors">
           {actors.map((actor, index) => (
             <li key={actor.name}>
-              <span
-                className="identity-actors__avatar"
-                style={{ background: AVATAR_COLORS[index] }}
-                aria-hidden="true"
-              >
-                {getInitials(actor.name)}
-              </span>
+              <ActorAvatar
+                name={actor.name}
+                photoUrl={actor.photoUrl}
+                color={AVATAR_COLORS[index]}
+              />
               <span className="identity-actors__name">{actor.name}</span>
             </li>
           ))}
@@ -157,6 +156,42 @@ function Faces({ identity }: { identity: MovieIdentity }) {
         </ul>
       )}
     </section>
+  );
+}
+
+/**
+ * An actor's round avatar: the TMDB photo, or the initials on a colour when there is no photo
+ * or it does not load. Decorative: the name is written under it.
+ */
+function ActorAvatar({
+  name,
+  photoUrl,
+  color,
+}: {
+  name: string;
+  photoUrl: string | null;
+  color: string;
+}) {
+  const [failedUrl, setFailedUrl] = useState<string | null>(null);
+  const showPhoto = photoUrl !== null && photoUrl !== failedUrl;
+
+  return (
+    <span className="identity-actors__avatar" style={{ background: color }} aria-hidden="true">
+      {showPhoto ? (
+        // onError is not a user interaction: it only swaps a broken photo for the initials
+        // eslint-disable-next-line jsx-a11y-x/no-noninteractive-element-interactions
+        <img
+          className="identity-actors__photo"
+          src={photoUrl}
+          alt=""
+          loading="lazy"
+          decoding="async"
+          onError={() => setFailedUrl(photoUrl)}
+        />
+      ) : (
+        getInitials(name)
+      )}
+    </span>
   );
 }
 

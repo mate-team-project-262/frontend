@@ -4,7 +4,7 @@
  * GET /me/movie-identity, POST /me/participants/link. All need the account session (cookie); a guest gets
  * AUTHENTICATION_REQUIRED.
  */
-import { accountPost } from './auth.ts';
+import { accountPost, toApiUrl } from './auth.ts';
 import { call } from './client.ts';
 import { errorCode } from './errors.ts';
 import { toPosterUrl } from './game.ts';
@@ -79,6 +79,7 @@ export async function getSessionDetails(sessionId: number): Promise<SessionDetai
       name: person.displayName,
       isHost: person.host,
       isMe: person.me,
+      avatarUrl: toApiUrl(person.avatarUrl),
     })),
     cards: [...(data.cards ?? [])]
       .sort((a, b) => a.position - b.position)
@@ -136,6 +137,7 @@ export async function getMovieIdentity(): Promise<MovieIdentity> {
     favoriteActors: (data.favoriteActors ?? []).map((actor) => ({
       name: actor.name,
       likedTitles: actor.likedTitlesCount,
+      photoUrl: actor.profileUrl ?? null,
     })),
   };
 }

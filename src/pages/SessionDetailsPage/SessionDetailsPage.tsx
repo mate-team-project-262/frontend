@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import { Link, useParams } from 'react-router';
 import type { SessionCard, SessionDetails, SessionParticipant } from '../../api/roomsApi.ts';
 import { errorCode } from '../../api/roomsApi.ts';
@@ -67,6 +68,9 @@ function Winner({ winners }: { winners: SessionCard[] }) {
 }
 
 function Participant({ person, index }: { person: SessionParticipant; index: number }) {
+  // a photo that does not load (removed since the session) is shown as the letter
+  const [isBroken, setIsBroken] = useState(false);
+  const photo = person.avatarUrl && !isBroken ? person.avatarUrl : null;
   return (
     <li className="session-person">
       <span
@@ -74,7 +78,19 @@ function Participant({ person, index }: { person: SessionParticipant; index: num
         style={{ background: AVATAR_COLORS[index % AVATAR_COLORS.length] }}
         aria-hidden="true"
       >
-        {getInitial(person.name)}
+        {photo ? (
+          // onError is not a user interaction: it only swaps a broken photo for the letter
+          // eslint-disable-next-line jsx-a11y-x/no-noninteractive-element-interactions
+          <img
+            className="session-person__photo"
+            src={photo}
+            alt=""
+            loading="lazy"
+            onError={() => setIsBroken(true)}
+          />
+        ) : (
+          getInitial(person.name)
+        )}
         {person.isHost && <span className="session-person__host">Host</span>}
       </span>
       <span className="session-person__name">

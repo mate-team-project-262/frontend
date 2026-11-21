@@ -8,7 +8,7 @@
  *  - client.ts, http.ts, errors.ts, roomSession.ts - shared plumbing
  * Loading, caching and re-asking (polling) is done by TanStack Query in the hooks (src/hooks).
  */
-export { RoomApiError, errorCode, errorMessage } from './errors.ts';
+export { AVATAR_FILE_RULES, RoomApiError, errorCode, errorMessage } from './errors.ts';
 export { isSessionError } from './client.ts';
 export * from './rooms.ts';
 export * from './game.ts';

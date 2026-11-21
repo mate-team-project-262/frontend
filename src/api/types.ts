@@ -122,6 +122,8 @@ export interface User {
   email: string;
   /** unique name, 3-20 characters; the person signs in with it */
   name: string;
+  /** the profile photo, ready for <img src>; null = none (the initial is shown) */
+  avatarUrl: string | null;
 }
 
 /** A movie as the history keeps it (fewer fields than a deck card). */
@@ -164,6 +166,8 @@ export interface SessionParticipant {
   isHost: boolean;
   /** the account's owner */
   isMe: boolean;
+  /** their profile photo, null for guests and accounts without one */
+  avatarUrl: string | null;
 }
 
 /** One movie of a finished session with the group's reaction. */
@@ -213,7 +217,8 @@ export interface MovieIdentity {
   /** liked movies per decade, oldest first */
   decadeMix: { decade: number; label: string; likes: number; percent: number }[];
   favoriteDecade: { decade: number; label: string } | null;
-  favoriteActors: { name: string; likedTitles: number }[];
+  /** `photoUrl`: the actor's TMDB photo, null when there is none (then the initials are shown) */
+  favoriteActors: { name: string; likedTitles: number; photoUrl: string | null }[];
 }
 
 /* ---- Backend JSON (docs/frontend-api.md of the backend repository) ---- */
@@ -230,6 +235,8 @@ export interface UserDto {
   id: number;
   email: string;
   displayName: string;
+  /** relative to the API base, e.g. "/me/avatar/image?v=3"; the version changes on every upload */
+  avatarUrl?: string | null;
 }
 
 export interface RoomDto {
@@ -333,7 +340,7 @@ export interface HistoryPageDto {
 
 export interface SessionDetailsDto {
   session: SessionSummaryDto;
-  participants?: { displayName: string; host: boolean; me: boolean }[];
+  participants?: { displayName: string; host: boolean; me: boolean; avatarUrl?: string | null }[];
   cards?: {
     position: number;
     title: HistoryTitleDto;
@@ -352,5 +359,5 @@ export interface MovieIdentityDto {
   leastLikedGenre?: { id: number; name: string; dislikePercentage: number } | null;
   decadeMix?: { decade: number; label: string; likedCount: number; percentage: number }[];
   favoriteDecade?: { decade: number; label: string } | null;
-  favoriteActors?: { name: string; likedTitlesCount: number }[];
+  favoriteActors?: { name: string; likedTitlesCount: number; profileUrl?: string | null }[];
 }

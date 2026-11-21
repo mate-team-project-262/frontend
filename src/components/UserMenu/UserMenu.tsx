@@ -109,7 +109,11 @@ export default function UserMenu({ user }: { user: User }) {
         aria-controls={menuId}
         onClick={() => setIsOpen((value) => !value)}
       >
-        <PersonIcon />
+        {user.avatarUrl ? (
+          <img className="user-menu__icon user-menu__photo" src={user.avatarUrl} alt="" />
+        ) : (
+          <PersonIcon />
+        )}
         {/* on phones only the icon is seen; the name stays for screen readers */}
         <span className="user-menu__name" title={user.name}>
           {getFirstName(user.name)}
