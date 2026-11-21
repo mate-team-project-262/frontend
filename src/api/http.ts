@@ -92,3 +92,18 @@ export async function apiRequest<T = unknown>(
   }
   return data as T;
 }
+
+/**
+ * A picture from the API that needs a header (the participant token): `<img src>` cannot send
+ * one, so it is fetched here and shown through an object URL. 404 and other failures -> null.
+ */
+export async function apiImage(path: string, token: string): Promise<Blob | null> {
+  try {
+    const response = await fetch(`${BASE_URL}${path}`, {
+      headers: { 'X-Participant-Token': token },
+    });
+    return response.ok ? await response.blob() : null;
+  } catch {
+    return null;
+  }
+}

@@ -6,7 +6,7 @@ import { type Room, RoomApiError, leaveRoom, startSession } from '../../api/room
 import BrandButton from '../../components/BrandButton/BrandButton.tsx';
 import BrandField from '../../components/BrandField/BrandField.tsx';
 import BrandHeader from '../../components/BrandHeader/BrandHeader.tsx';
-import BrandParticipant from '../../components/BrandParticipant/BrandParticipant.tsx';
+import RoomParticipant from '../../components/RoomParticipant/RoomParticipant.tsx';
 import BrandQrCode from '../../components/BrandQrCode/BrandQrCode.tsx';
 import { useCopyToClipboard } from '../../hooks/useCopyToClipboard.ts';
 import { ROUTES } from '../../routes.ts';
@@ -145,13 +145,7 @@ export default function RoomLobbyPage({ code, room, onStarted }: Props) {
             <h2 className="room-lobby__label">People in room ({participants.length})</h2>
             <ul className="room-lobby__list">
               {participants.map((person, index) => (
-                <BrandParticipant
-                  key={person.id}
-                  name={person.name}
-                  index={index}
-                  isMe={person.isMe}
-                  isHost={person.isHost}
-                />
+                <RoomParticipant key={person.id} code={code} person={person} index={index} />
               ))}
             </ul>
           </div>

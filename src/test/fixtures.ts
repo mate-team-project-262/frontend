@@ -29,8 +29,8 @@ export const testRoom = (meId = 1, extra: Partial<Room> = {}): Room => ({
   maxParticipants: 5,
   preferences: { contentType: 'MOVIES', genreIds: [], maxDurationMin: null },
   participants: [
-    { id: 1, name: 'Anna', isHost: true, isMe: meId === 1 },
-    { id: 2, name: 'Egor', isHost: false, isMe: meId === 2 },
+    { id: 1, name: 'Anna', isHost: true, isMe: meId === 1, avatarPath: null },
+    { id: 2, name: 'Egor', isHost: false, isMe: meId === 2, avatarPath: null },
   ],
   ...extra,
 });

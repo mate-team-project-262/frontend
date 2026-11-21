@@ -9,6 +9,8 @@ export const queryKeys = {
   deck: (code: string) => ['room', code, 'deck'] as const,
   progress: (code: string) => ['room', code, 'progress'] as const,
   results: (code: string) => ['room', code, 'results'] as const,
+  /** one participant's photo (the path carries its version, so a new photo is a new key) */
+  roomAvatar: (code: string, path: string) => ['room', code, 'avatar', path] as const,
   /** the signed-in account (or null for a guest) */
   me: ['me'] as const,
   /** the account's finished sessions, newest first */
