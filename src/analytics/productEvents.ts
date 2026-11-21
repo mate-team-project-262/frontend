@@ -58,6 +58,7 @@ export interface ProductEvents {
   // home and settings
   session_details_clicked: { source: 'home' | 'sessions' };
   settings_clicked: Record<string, never>;
+  profile_photo_upload_clicked: Record<string, never>;
   change_password_clicked: Record<string, never>;
   delete_account_clicked: Record<string, never>;
 }

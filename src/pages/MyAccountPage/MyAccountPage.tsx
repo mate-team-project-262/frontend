@@ -8,7 +8,6 @@ import { ArrowRightIcon } from '../../components/WinnerCard/WinnerCard.tsx';
 import { useAccount } from '../../hooks/useAccount.ts';
 import { usePageMeta } from '../../hooks/usePageMeta.ts';
 import { ROUTES } from '../../routes.ts';
-import { getInitial } from '../../utils/sessionFormat.ts';
 import {
   DISPLAY_NAME_MAX_LENGTH,
   EMAIL_MAX_LENGTH,
@@ -19,6 +18,7 @@ import '../../styles/landing.css';
 import DeleteModal from './DeleteModal.tsx';
 import EditableField from './EditableField.tsx';
 import PasswordModal from './PasswordModal.tsx';
+import ProfileAvatar from './ProfileAvatar.tsx';
 import './MyAccountPage.css';
 
 /** Twelve dots in place of the password: the real one is never known to the page. */
@@ -68,9 +68,7 @@ export default function MyAccountPage() {
         <p className="my-account__subtitle">Manage your personal information</p>
 
         <section className="my-account__profile" aria-label="Profile">
-          <span className="my-account__avatar" aria-hidden="true">
-            {getInitial(user.name)}
-          </span>
+          <ProfileAvatar user={user} />
           <div className="my-account__who">
             <p className="my-account__name">{user.name}</p>
             <p className="my-account__email">{user.email}</p>

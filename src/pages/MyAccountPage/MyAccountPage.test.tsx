@@ -199,3 +199,81 @@ describe('MyAccountPage', () => {
     expect(screen.getByRole('heading', { name: 'Home page' })).toBeInTheDocument();
   });
 });
+
+describe('MyAccountPage profile photo', () => {
+  const withPhoto = { ...sofiia, avatarUrl: '/me/avatar/image?v=2' };
+  const photoFile = () => new File(['photo'], 'me.jpg', { type: 'image/jpeg' });
+
+  it('uploads a photo and shows it in the avatar', async () => {
+    const user = userEvent.setup();
+    const fetchMock = setup({ 'PUT /me/avatar': withPhoto });
+
+    await screen.findByRole('button', { name: 'Add profile photo' });
+    const input = document.querySelector<HTMLInputElement>('input[type="file"]')!;
+    await user.upload(input, photoFile());
+
+    const avatar = await screen.findByRole('button', { name: 'Change profile photo' });
+    expect(avatar.querySelector('img')).toHaveAttribute('src', '/api/me/avatar/image?v=2');
+    const [, options] = fetchMock.mock.calls.find(([url]) => String(url) === '/api/me/avatar')!;
+    expect(options?.method).toBe('PUT');
+    expect((options?.body as FormData).get('file')).toBeInstanceOf(Blob);
+    expect(options?.headers).toMatchObject({ 'X-XSRF-TOKEN': 'csrf-1' });
+  });
+
+  it('does not send a file that is not a JPG, PNG or WebP', async () => {
+    const user = userEvent.setup({ applyAccept: false });
+    const fetchMock = setup();
+
+    await screen.findByRole('button', { name: 'Add profile photo' });
+    const input = document.querySelector<HTMLInputElement>('input[type="file"]')!;
+    await user.upload(input, new File(['gif'], 'me.gif', { type: 'image/gif' }));
+
+    expect(screen.getByRole('alert')).toHaveTextContent(
+      'Choose a JPG, PNG or WebP image up to 2 MB.',
+    );
+    expect(fetchMock.mock.calls.some(([url]) => String(url) === '/api/me/avatar')).toBe(false);
+  });
+
+  it('shows the backend error about the file', async () => {
+    const user = userEvent.setup();
+    setup({
+      'PUT /me/avatar': {
+        status: 400,
+        body: {
+          code: 'VALIDATION_ERROR',
+          message: 'Validation failed',
+          fieldErrors: [{ field: 'file', message: 'Too big' }],
+        },
+      },
+    });
+
+    await screen.findByRole('button', { name: 'Add profile photo' });
+    await user.upload(document.querySelector<HTMLInputElement>('input[type="file"]')!, photoFile());
+
+    expect(await screen.findByRole('alert')).toHaveTextContent(
+      'Choose a JPG, PNG or WebP image up to 2 MB.',
+    );
+  });
+
+  it('removes the photo and shows the letter again', async () => {
+    const user = userEvent.setup();
+    mockBackend({
+      'GET /me': withPhoto,
+      ...csrf,
+      'DELETE /me/avatar': { status: 204, body: null },
+    });
+    renderWithQuery(
+      <MemoryRouter initialEntries={['/account']}>
+        <Routes>
+          <Route path="/account" element={<MyAccountPage />} />
+        </Routes>
+      </MemoryRouter>,
+    );
+
+    await user.click(await screen.findByRole('button', { name: 'Remove' }));
+
+    const avatar = await screen.findByRole('button', { name: 'Add profile photo' });
+    expect(avatar.querySelector('img')).toBeNull();
+    expect(avatar).toHaveTextContent('S');
+  });
+});

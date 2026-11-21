@@ -362,3 +362,152 @@
     font-size: 14px;
   }
 }
+
+/* Profile photo (T2-224): the avatar is a button that opens the file picker */
+.profile-avatar {
+  display: flex;
+  flex: none;
+  flex-direction: column;
+  align-items: center;
+  max-width: 180px;
+}
+
+.profile-avatar__circle {
+  position: relative;
+  padding: 0;
+  border: 0;
+  cursor: pointer;
+  transition: filter 0.2s ease;
+}
+
+.profile-avatar__circle:hover:not(:disabled) {
+  filter: brightness(1.08);
+}
+
+.profile-avatar__circle:focus-visible {
+  outline: 2px solid var(--l-cream);
+  outline-offset: 4px;
+}
+
+.profile-avatar__circle:disabled {
+  cursor: progress;
+  opacity: 0.6;
+}
+
+/* laid over the whole circle: inside the grid button a 100% height did not apply, and the photo
+   kept its own proportions (an oval taller than the circle) */
+.profile-avatar__photo {
+  position: absolute;
+  inset: 0;
+  display: block;
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+/* the little camera at the bottom right says "you can change this" */
+.profile-avatar__badge {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  display: grid;
+  place-items: center;
+  width: 34px;
+  height: 34px;
+  border: 2px solid #170e43;
+  border-radius: 50%;
+  background: #7835ff;
+  color: #fff;
+}
+
+.profile-avatar__actions {
+  display: flex;
+  gap: 14px;
+  margin-top: 12px;
+}
+
+.profile-avatar__action {
+  padding: 4px 0;
+  border: 0;
+  background: none;
+  color: var(--l-cream);
+  font-family: var(--l-font-display);
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 1.2;
+  white-space: nowrap;
+  cursor: pointer;
+}
+
+.profile-avatar__action:hover:not(:disabled) {
+  text-decoration: underline;
+  text-underline-offset: 4px;
+}
+
+.profile-avatar__action:focus-visible {
+  outline: 2px solid var(--l-cream);
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
+.profile-avatar__action:disabled {
+  opacity: 0.6;
+  cursor: progress;
+}
+
+.profile-avatar__action--remove {
+  color: #ff7c87;
+}
+
+.profile-avatar__status:empty {
+  display: none;
+}
+
+.profile-avatar__status,
+.profile-avatar__error {
+  margin: 8px 0 0;
+  font-family: var(--l-font-text);
+  font-size: 12px;
+  line-height: 1.4;
+  text-align: center;
+}
+
+.profile-avatar__status {
+  color: var(--l-lavender);
+}
+
+.profile-avatar__error {
+  color: #ff7c87;
+}
+
+@media (max-width: 760px) {
+  .profile-avatar {
+    max-width: 130px;
+  }
+
+  .profile-avatar__badge {
+    width: 26px;
+    height: 26px;
+  }
+
+  .profile-avatar__badge svg {
+    width: 13px;
+    height: 13px;
+  }
+
+  .profile-avatar__actions {
+    gap: 10px;
+    margin-top: 8px;
+  }
+
+  .profile-avatar__action {
+    font-size: 12px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .profile-avatar__circle {
+    transition: none;
+  }
+}

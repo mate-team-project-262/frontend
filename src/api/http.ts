@@ -64,7 +64,9 @@ export async function apiRequest<T = unknown>(
   { method = 'GET', body, token, headers: extraHeaders }: RequestOptions = {},
 ): Promise<T> {
   const headers: Record<string, string> = { ...extraHeaders };
-  if (body !== undefined) headers['Content-Type'] = 'application/json';
+  // a file upload: the browser sets "multipart/form-data" with its boundary itself
+  const isForm = typeof FormData !== 'undefined' && body instanceof FormData;
+  if (body !== undefined && !isForm) headers['Content-Type'] = 'application/json';
   if (token) headers['X-Participant-Token'] = token;
 
   let response: Response;
@@ -72,7 +74,7 @@ export async function apiRequest<T = unknown>(
     response = await fetch(`${BASE_URL}${path}`, {
       method,
       headers,
-      body: body === undefined ? undefined : JSON.stringify(body),
+      body: body === undefined ? undefined : isForm ? (body as FormData) : JSON.stringify(body),
     });
   } catch {
     throw new ApiError({ status: 0, code: 'NETWORK_ERROR', message: 'Network error' });

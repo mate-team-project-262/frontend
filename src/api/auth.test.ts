@@ -9,6 +9,7 @@ import {
   resetPassword,
   signIn,
   signOut,
+  toApiUrl,
   updateAccount,
 } from './auth.ts';
 
@@ -29,7 +30,7 @@ describe('account API', () => {
     const fetchMock = mockBackend({ ...csrf, 'POST /auth/register': { status: 201, body: anna } });
     const user = await register({ email: 'anna@example.com', name: 'Anna', password: 'secret12' });
 
-    expect(user).toEqual({ id: 7, email: 'anna@example.com', name: 'Anna' });
+    expect(user).toEqual({ id: 7, email: 'anna@example.com', name: 'Anna', avatarUrl: null });
     const [first, second] = requests(fetchMock);
     expect(first.url).toBe('/api/auth/csrf');
     expect(second).toMatchObject({
@@ -80,6 +81,7 @@ describe('account API', () => {
       id: 7,
       email: 'anna@example.com',
       name: 'Anna',
+      avatarUrl: null,
     });
   });
 
@@ -95,6 +97,7 @@ describe('account API', () => {
       id: 7,
       email: 'anna@example.com',
       name: 'Anna',
+      avatarUrl: null,
     });
     await changePassword({ currentPassword: 'old12345', newPassword: 'new12345' });
     await deleteAccount('new12345');
@@ -148,5 +151,16 @@ describe('account API', () => {
     const fetchMock = mockBackend({ ...csrf, 'POST /auth/logout': { status: 204, body: null } });
     await signOut();
     expect(requests(fetchMock)[1].headers['X-CSRF-TOKEN']).toBe('csrf-1');
+  });
+});
+
+describe('toApiUrl', () => {
+  it('puts the API base in front of the backend paths and keeps full URLs', () => {
+    expect(toApiUrl('/me/avatar/image?v=2')).toBe('/api/me/avatar/image?v=2');
+    expect(toApiUrl('https://image.tmdb.org/t/p/w185/a.jpg')).toBe(
+      'https://image.tmdb.org/t/p/w185/a.jpg',
+    );
+    expect(toApiUrl(null)).toBeNull();
+    expect(toApiUrl(undefined)).toBeNull();
   });
 });

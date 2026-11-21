@@ -86,7 +86,9 @@ describe('account data API', () => {
 
     const details = await getSessionDetails(2);
 
-    expect(details.participants).toEqual([{ name: 'Sofiia', isHost: true, isMe: true }]);
+    expect(details.participants).toEqual([
+      { name: 'Sofiia', isHost: true, isMe: true, avatarUrl: null },
+    ]);
     expect(details.cards.map((card) => card.title.title)).toEqual(['Dune', 'Moana']);
     expect(details.cards[0]).toMatchObject({ likes: 3, isWinner: true, myVote: true });
     // no vote from this person
