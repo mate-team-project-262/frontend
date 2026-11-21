@@ -12,6 +12,17 @@ export const GENRE_COLORS = [
 ];
 const MAX_SEGMENTS = GENRE_COLORS.length;
 
+/** TMDB names that are too long for a chart legend -> the short names of the mockup */
+const SHORT_NAMES: Record<string, string> = {
+  'Science Fiction': 'Sci-Fi',
+  'Sci-Fi & Fantasy': 'Sci-Fi',
+  'Action & Adventure': 'Action',
+  'War & Politics': 'War',
+};
+
+/** The genre's name as the legend shows it ("Science Fiction" -> "Sci-Fi"). */
+export const legendName = (name: string): string => SHORT_NAMES[name] ?? name;
+
 /** At most seven slices: the smallest genres are merged into "Other". */
 export function toSlices(genres: GenreShare[]): { name: string; percent: number }[] {
   const sorted = [...genres].sort((a, b) => b.percent - a.percent);
