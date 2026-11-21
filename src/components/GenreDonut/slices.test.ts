@@ -1,4 +1,4 @@
-import { roundPercents } from './slices.ts';
+import { legendName, roundPercents } from './slices.ts';
 
 describe('roundPercents', () => {
   it('keeps the total at 100 where plain rounding gives 101', () => {
@@ -15,5 +15,13 @@ describe('roundPercents', () => {
   it('leaves whole numbers and an empty list alone', () => {
     expect(roundPercents([40, 35, 25])).toEqual([40, 35, 25]);
     expect(roundPercents([])).toEqual([]);
+  });
+});
+
+describe('legendName', () => {
+  it('shortens the long TMDB genre names as in the mockup', () => {
+    expect(legendName('Science Fiction')).toBe('Sci-Fi');
+    expect(legendName('Action & Adventure')).toBe('Action');
+    expect(legendName('Comedy')).toBe('Comedy');
   });
 });
