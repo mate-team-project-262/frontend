@@ -213,7 +213,8 @@ export interface MovieIdentity {
   /** liked movies per decade, oldest first */
   decadeMix: { decade: number; label: string; likes: number; percent: number }[];
   favoriteDecade: { decade: number; label: string } | null;
-  favoriteActors: { name: string; likedTitles: number }[];
+  /** `photoUrl`: the actor's TMDB photo, null when there is none (then the initials are shown) */
+  favoriteActors: { name: string; likedTitles: number; photoUrl: string | null }[];
 }
 
 /* ---- Backend JSON (docs/frontend-api.md of the backend repository) ---- */
@@ -352,5 +353,5 @@ export interface MovieIdentityDto {
   leastLikedGenre?: { id: number; name: string; dislikePercentage: number } | null;
   decadeMix?: { decade: number; label: string; likedCount: number; percentage: number }[];
   favoriteDecade?: { decade: number; label: string } | null;
-  favoriteActors?: { name: string; likedTitlesCount: number }[];
+  favoriteActors?: { name: string; likedTitlesCount: number; profileUrl?: string | null }[];
 }

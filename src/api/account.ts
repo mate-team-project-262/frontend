@@ -136,6 +136,7 @@ export async function getMovieIdentity(): Promise<MovieIdentity> {
     favoriteActors: (data.favoriteActors ?? []).map((actor) => ({
       name: actor.name,
       likedTitles: actor.likedTitlesCount,
+      photoUrl: actor.profileUrl ?? null,
     })),
   };
 }
