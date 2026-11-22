@@ -38,6 +38,9 @@
 
 .sessions-list {
   display: grid;
+  /* one column that may not grow past the page: without minmax(0, …) a card with a long
+     winner's title on one line made the whole column (and the card) wider than the screen */
+  grid-template-columns: minmax(0, 1fr);
   gap: 16px;
   margin: 14px 0 0;
   padding: 0;
@@ -312,6 +315,13 @@
   .session-row__poster {
     width: 72px;
     height: 76px;
+  }
+
+  /* in a wrapping row "auto" meant "as wide as the title on one line": a long winner
+     ("Home Alone 2: Lost in New York") pushed the card past the screen. Start from 0 instead,
+     so the text takes the room next to the poster and the title ends with "…" */
+  .session-row__body {
+    flex: 1 1 0;
   }
 
   .session-row__title {
