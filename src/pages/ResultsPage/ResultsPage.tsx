@@ -305,6 +305,7 @@ export default function ResultsPage({ code, room }: { code: string; room: Room }
             <AccountBenefits
               id="results-account"
               variant="stacked"
+              roomCode={code}
               title={
                 <>
                   Want us to learn <span className="account__title-accent">your taste</span> better?

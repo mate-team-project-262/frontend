@@ -5,6 +5,7 @@ import BrandButton from '../../components/BrandButton/BrandButton.tsx';
 import illustration from '../../assets/landing/account-illustration.webp';
 import { ACCOUNT_BENEFITS } from '../../data/content.ts';
 import { ROUTES } from '../../routes.ts';
+import { rememberRoomToSave } from '../../utils/pendingRoomLink.ts';
 import './AccountBenefits.css';
 
 function StarIcon() {
@@ -36,6 +37,7 @@ export default function AccountBenefits({
   buttonLabel = 'Create free account',
   signInText = 'Already have one?',
   variant,
+  roomCode,
 }: {
   id?: string;
   title?: ReactNode;
@@ -43,6 +45,8 @@ export default function AccountBenefits({
   buttonLabel?: string;
   signInText?: string;
   variant?: 'stacked';
+  /** the room just played (results page): it is saved to the account after sign up / sign in */
+  roomCode?: string;
 }) {
   const navigate = useNavigate();
   // analytics: the same block sits on the landing page and on the results page
@@ -59,6 +63,7 @@ export default function AccountBenefits({
               className="account__button"
               onClick={() => {
                 logEvent('sign_up_clicked', { source });
+                if (roomCode) rememberRoomToSave(roomCode);
                 navigate(ROUTES.signUp);
               }}
             >
@@ -71,6 +76,7 @@ export default function AccountBenefits({
                 className="account__sign-in-link"
                 onClick={() => {
                   logEvent('account_section_sign_in_clicked', { source });
+                  if (roomCode) rememberRoomToSave(roomCode);
                   navigate(ROUTES.signIn);
                 }}
               >

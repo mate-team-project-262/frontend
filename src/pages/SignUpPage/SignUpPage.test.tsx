@@ -1,7 +1,8 @@
 import { screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { MemoryRouter, Route, Routes } from 'react-router';
-import { mockBackend } from '../../test/fixtures.ts';
+import { mockBackend, signIn } from '../../test/fixtures.ts';
+import { getRoomToSave, rememberRoomToSave } from '../../utils/pendingRoomLink.ts';
 import { renderWithQuery } from '../../test/render.tsx';
 import SignUpPage from './SignUpPage.tsx';
 
@@ -15,6 +16,7 @@ function setup(routes: Record<string, unknown>) {
       <Routes>
         <Route path="/sign-up" element={<SignUpPage />} />
         <Route path="/home" element={<h1>Home page</h1>} />
+        <Route path="/room/:code" element={<h1>Room page</h1>} />
       </Routes>
     </MemoryRouter>,
   );
@@ -85,5 +87,51 @@ describe('SignUpPage', () => {
     // editing the field clears the backend's message
     await user.type(screen.getByLabelText(label), 'x');
     await waitFor(() => expect(screen.queryByText(message)).not.toBeInTheDocument());
+  });
+});
+
+describe('SignUpPage from "Save and build my profile"', () => {
+  const anna = { id: 7, email: 'anna@example.com', displayName: 'Anna' };
+
+  beforeEach(() => {
+    sessionStorage.clear();
+    signIn('ABC123', 2); // the guest's pass of the room just played
+    rememberRoomToSave('ABC123');
+  });
+
+  it('ties the game just played to the new account before opening the home page', async () => {
+    const user = userEvent.setup();
+    const fetchMock = setup({
+      'POST /auth/register': { status: 201, body: anna },
+      'POST /me/participants/link': { status: 204, body: null },
+    });
+
+    await fill(user);
+    await user.click(screen.getByRole('button', { name: /Create account/ }));
+
+    expect(await screen.findByRole('heading', { name: 'Home page' })).toBeInTheDocument();
+    const link = fetchMock.mock.calls.find(([url]) => String(url) === '/api/me/participants/link');
+    expect(link?.[1]?.headers).toMatchObject({
+      'X-Participant-Token': expect.any(String),
+      'X-CSRF-TOKEN': 't',
+    });
+    const urls = fetchMock.mock.calls.map(([url]) => String(url));
+    expect(urls.indexOf('/api/auth/register')).toBeLessThan(
+      urls.indexOf('/api/me/participants/link'),
+    );
+    expect(getRoomToSave()).toBeNull();
+  });
+
+  it('goes back to the room when the game could not be tied (the room page tries again)', async () => {
+    const user = userEvent.setup();
+    setup({
+      'POST /auth/register': { status: 201, body: anna },
+      'POST /me/participants/link': { status: 500, body: { code: 'INTERNAL' } },
+    });
+
+    await fill(user);
+    await user.click(screen.getByRole('button', { name: /Create account/ }));
+
+    expect(await screen.findByRole('heading', { name: 'Room page' })).toBeInTheDocument();
   });
 });
