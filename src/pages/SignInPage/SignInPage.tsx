@@ -1,5 +1,5 @@
 import { type FormEvent, useEffect, useState } from 'react';
-import { Link, Navigate, useLocation, useNavigate } from 'react-router';
+import { Link, Navigate, useLocation } from 'react-router';
 import { track } from '../../analytics/analytics.ts';
 import { logEvent } from '../../analytics/productEvents.ts';
 import { RoomApiError, signIn } from '../../api/roomsApi.ts';
@@ -9,6 +9,7 @@ import LightField from '../../components/LightField/LightField.tsx';
 import SocialButtons from '../../components/SocialButtons/SocialButtons.tsx';
 import { ArrowRightIcon } from '../../components/WinnerCard/WinnerCard.tsx';
 import { useAccount } from '../../hooks/useAccount.ts';
+import { useFinishSignIn } from '../../hooks/useFinishSignIn.ts';
 import { useFormFields } from '../../hooks/useFormFields.ts';
 import { usePageMeta } from '../../hooks/usePageMeta.ts';
 import { ROUTES } from '../../routes.ts';
@@ -25,10 +26,10 @@ const FAILED = 'We could not sign you in. Please try again.';
  */
 export default function SignInPage() {
   usePageMeta();
-  const navigate = useNavigate();
   const { notice, signedOut = false } =
     (useLocation().state as { notice?: string; signedOut?: boolean } | null) ?? {};
   const { status, setUser } = useAccount();
+  const finishSignIn = useFinishSignIn();
 
   // the previous page ended the session on the backend (a password change): forget the user here
   useEffect(() => {
@@ -57,7 +58,8 @@ export default function SignInPage() {
       const user = await signIn({ name: form.values.name.trim(), password: form.values.password });
       track('login', { method: 'password' });
       setUser(user);
-      navigate(ROUTES.dashboard);
+      // from "Save and build my profile": the game is tied to the account before the dashboard
+      await finishSignIn();
     } catch (error) {
       setFormError(error instanceof RoomApiError ? error.message : FAILED);
       setIsSubmitting(false);

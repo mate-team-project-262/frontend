@@ -1,7 +1,8 @@
 import { screen, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { MemoryRouter, Route, Routes } from 'react-router';
-import { mockBackend } from '../../test/fixtures.ts';
+import { mockBackend, signIn } from '../../test/fixtures.ts';
+import { rememberRoomToSave } from '../../utils/pendingRoomLink.ts';
 import { renderWithQuery } from '../../test/render.tsx';
 import SignInPage from './SignInPage.tsx';
 
@@ -9,7 +10,7 @@ const csrf = { 'GET /auth/csrf': { headerName: 'X-CSRF-TOKEN', token: 't' } };
 const anna = { id: 1, email: 'anna@example.com', displayName: 'Anna' };
 
 function setup(routes: Record<string, unknown>) {
-  mockBackend({
+  const fetchMock = mockBackend({
     'GET /me': { status: 401, body: { code: 'AUTHENTICATION_REQUIRED' } },
     ...csrf,
     ...routes,
@@ -23,6 +24,7 @@ function setup(routes: Record<string, unknown>) {
       </Routes>
     </MemoryRouter>,
   );
+  return fetchMock;
 }
 
 /** the form's button (the header has a "Sign In" link of its own) */
@@ -43,6 +45,25 @@ describe('SignInPage', () => {
     await user.type(screen.getByLabelText('Password'), 'secret12');
     await user.click(submitButton());
     expect(await screen.findByRole('heading', { name: 'Home page' })).toBeInTheDocument();
+  });
+
+  it('from the results page: ties the game just played to the account, then opens home', async () => {
+    sessionStorage.clear();
+    signIn('ABC123', 2);
+    rememberRoomToSave('ABC123');
+    const user = userEvent.setup();
+    const fetchMock = setup({
+      'POST /auth/login': anna,
+      'POST /me/participants/link': { status: 204, body: null },
+    });
+    await user.type(screen.getByLabelText('Your name'), 'Anna');
+    await user.type(screen.getByLabelText('Password'), 'secret12');
+    await user.click(submitButton());
+
+    expect(await screen.findByRole('heading', { name: 'Home page' })).toBeInTheDocument();
+    expect(fetchMock.mock.calls.some(([url]) => String(url) === '/api/me/participants/link')).toBe(
+      true,
+    );
   });
 
   it('shows one message for a wrong name or password and lets the person try again', async () => {
