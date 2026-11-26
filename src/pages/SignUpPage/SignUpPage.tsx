@@ -1,5 +1,5 @@
 import { type FormEvent, useState } from 'react';
-import { Link, Navigate, useNavigate } from 'react-router';
+import { Link, Navigate } from 'react-router';
 import { track } from '../../analytics/analytics.ts';
 import { logEvent } from '../../analytics/productEvents.ts';
 import { RoomApiError, register } from '../../api/roomsApi.ts';
@@ -9,6 +9,7 @@ import LightField from '../../components/LightField/LightField.tsx';
 import SocialButtons from '../../components/SocialButtons/SocialButtons.tsx';
 import { ArrowRightIcon } from '../../components/WinnerCard/WinnerCard.tsx';
 import { useAccount } from '../../hooks/useAccount.ts';
+import { useFinishSignIn } from '../../hooks/useFinishSignIn.ts';
 import { useFormFields } from '../../hooks/useFormFields.ts';
 import { usePageMeta } from '../../hooks/usePageMeta.ts';
 import { ROUTES } from '../../routes.ts';
@@ -31,8 +32,8 @@ const FAILED = 'We could not create the account. Please try again.';
  */
 export default function SignUpPage() {
   usePageMeta();
-  const navigate = useNavigate();
   const { status, setUser } = useAccount();
+  const finishSignIn = useFinishSignIn();
   const form = useFormFields({
     name: validateAccountName,
     email: validateEmail,
@@ -60,7 +61,8 @@ export default function SignUpPage() {
       track('sign_up', { method: 'password' });
       logEvent('sign_up_succeeded');
       setUser(user);
-      navigate(ROUTES.dashboard);
+      // from "Save and build my profile": the game is tied to the account before the dashboard
+      await finishSignIn();
     } catch (error) {
       const message = error instanceof RoomApiError ? error.message : FAILED;
       const field = error instanceof RoomApiError ? error.field : null;
